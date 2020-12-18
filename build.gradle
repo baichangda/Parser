@@ -1,0 +1,55 @@
+buildscript {
+    ext {
+        nettyVersion = '4.1.56.Final'
+        slf4jVersion = '2.0.0-alpha1'
+        mavenRepoUrl = 'https://maven.aliyun.com/repository/central'
+        publishRepoUrl = 'http://repository.incarcloud.com/content/repositories/snapshots/'
+
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'maven-publish'
+
+group 'com.bcd'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    maven { url "${mavenRepoUrl}" }
+}
+
+dependencies {
+    //集成netty
+    compile group: 'io.netty', name: 'netty-all', version: "${nettyVersion}"
+    // https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+    compile group: 'org.slf4j', name: 'slf4j-api', version: "${slf4jVersion}"
+}
+
+//生成jar时打包源码
+task sourceJar(type: Jar) {
+    from sourceSets.main.java.srcDirs
+    classifier "sources"
+}
+
+//发布到本地MAVEN仓库使用 gradle PublishToMavenLocal
+//发布到远程MAVEN仓库使用 gradle publishMavenPublicationToMavenRepository
+publishing{
+    publications {
+        maven(MavenPublication){
+            from components.java
+            artifact(sourceJar)
+        }
+    }
+    repositories {
+        maven{
+            url "${publishRepoUrl}"
+            credentials {
+                username 'deployment'
+                password 'deploy123456'
+            }
+        }
+    }
+}
