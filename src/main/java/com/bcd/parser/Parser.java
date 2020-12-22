@@ -308,7 +308,7 @@ public abstract class Parser {
                 parseOffsetField(packetInfo,instance);
             }
             return instance;
-        } catch (Exception e) {
+        } catch (IllegalAccessException| InstantiationException e) {
             throw BaseRuntimeException.getException(e);
         }
     }

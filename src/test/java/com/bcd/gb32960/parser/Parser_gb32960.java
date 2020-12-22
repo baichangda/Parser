@@ -46,7 +46,7 @@ public class Parser_gb32960 extends Parser{
     }
 
     private static void testSingleThreadPerformance(String data,Parser parser){
-        int num=1000000;
+        int num=3000000;
         byte [] bytes= ByteBufUtil.decodeHexDump(data);
         ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
         byteBuf.markReaderIndex();
@@ -58,7 +58,8 @@ public class Parser_gb32960 extends Parser{
             parser.parse(Packet.class,byteBuf);
         }
         long t2=System.currentTimeMillis();
-        logger.info("cost time:{}ms",t2-t1);
+        long diff=t2-t1;
+        logger.info("num:{} , cost time:{}ms , speed:{}/s",num,diff,(int)(num/(diff/1000d)));
     }
 
     private static void testPerformance(String data, Parser parser){
