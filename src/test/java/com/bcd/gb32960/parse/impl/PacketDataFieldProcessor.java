@@ -7,9 +7,9 @@ import com.bcd.parser.process.FieldProcessor;
 import io.netty.buffer.ByteBuf;
 
 
-public class PacketDataFieldParser extends FieldProcessor<PacketData> {
+public class PacketDataFieldProcessor extends FieldProcessor<PacketData> {
 
-    public PacketDataFieldParser() {
+    public PacketDataFieldProcessor() {
     }
 
     public PacketData parse(ByteBuf data, int flag, FieldProcessContext processContext){

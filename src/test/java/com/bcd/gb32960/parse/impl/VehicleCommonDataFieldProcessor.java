@@ -8,8 +8,8 @@ import io.netty.buffer.ByteBuf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class VehicleCommonDataFieldParser extends FieldProcessor<VehicleCommonData> {
-    Logger logger= LoggerFactory.getLogger(VehicleCommonDataFieldParser.class);
+public class VehicleCommonDataFieldProcessor extends FieldProcessor<VehicleCommonData> {
+    Logger logger= LoggerFactory.getLogger(VehicleCommonDataFieldProcessor.class);
 
     @Override
     public VehicleCommonData process(ByteBuf data, FieldProcessContext processContext) {

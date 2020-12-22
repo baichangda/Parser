@@ -17,11 +17,11 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class GB32960Parser extends Parser{
+public class Parser_gb32960 extends Parser{
 
-    static Logger logger= LoggerFactory.getLogger(GB32960Parser.class);
+    static Logger logger= LoggerFactory.getLogger(Parser_gb32960.class);
 
-    public GB32960Parser() {
+    public Parser_gb32960() {
     }
 
     @Override
@@ -35,7 +35,7 @@ public class GB32960Parser extends Parser{
     }
 
     public static void main(String[] args) throws Exception{
-        Parser parser= new GB32960Parser();
+        Parser parser= new Parser_gb32960();
 //        parser.setEnableOffsetField(true);
         parser.init();
         String data="232303FE4C534A4132343033304853313932393639010135" +
