@@ -67,7 +67,8 @@ public class PerformanceUtil {
 
         ScheduledExecutorService monitor=Executors.newSingleThreadScheduledExecutor();
         monitor.scheduleAtFixedRate(()->{
-            logger.info("speed/s:{}",count.getAndSet(0)/3);
+            int cur=count.getAndSet(0)/3;
+            logger.info("core:{} , speed/s:{} , avgSpeed/s:{}",poolSize,cur,cur/poolSize);
         },3,3,TimeUnit.SECONDS);
 
         try {
