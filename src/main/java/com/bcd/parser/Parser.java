@@ -250,27 +250,27 @@ public abstract class Parser {
                 double destVal = RpnUtil.calcRPN_char_double_singleVar(offsetFieldInfo.getRpn(),((Number) sourceVal).doubleValue());
                 switch (offsetFieldInfo.getFieldType()) {
                     case 1: {
-                        offsetFieldInfo.getField().set(instance, (byte)destVal);
+                        offsetFieldInfo.getField().setByte(instance, (byte)destVal);
                         break;
                     }
                     case 2: {
-                        offsetFieldInfo.getField().set(instance, (short)destVal);
+                        offsetFieldInfo.getField().setShort(instance, (short)destVal);
                         break;
                     }
                     case 3: {
-                        offsetFieldInfo.getField().set(instance, (int)destVal);
+                        offsetFieldInfo.getField().setInt(instance, (int)destVal);
                         break;
                     }
                     case 4: {
-                        offsetFieldInfo.getField().set(instance, (long)destVal);
+                        offsetFieldInfo.getField().setLong(instance, (long)destVal);
                         break;
                     }
                     case 5: {
-                        offsetFieldInfo.getField().set(instance, (float)destVal);
+                        offsetFieldInfo.getField().setFloat(instance, (float)destVal);
                         break;
                     }
                     case 6: {
-                        offsetFieldInfo.getField().set(instance, destVal);
+                        offsetFieldInfo.getField().setDouble(instance, destVal);
                         break;
                     }
                 }
