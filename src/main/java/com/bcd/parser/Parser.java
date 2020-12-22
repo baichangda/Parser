@@ -25,7 +25,7 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public abstract class Parser {
 
-    Logger logger= LoggerFactory.getLogger(this.getClass());
+    final Logger logger= LoggerFactory.getLogger(this.getClass());
 
     public final Map<Class, PacketInfo> packetInfoCache =new HashMap<>();
 
@@ -43,12 +43,12 @@ public abstract class Parser {
      * 基础处理器,内置
      */
     protected List<FieldProcessor> baseProcessorList;
-    protected FieldProcessor byteProcessor=new ByteProcessor();
-    protected FieldProcessor shortProcessor=new ShortProcessor();
-    protected FieldProcessor integerProcessor=new IntegerProcessor();
-    protected FieldProcessor longProcessor=new LongProcessor();
-    protected FieldProcessor floatProcessor=new FloatProcessor();
-    protected FieldProcessor doubleProcessor=new DoubleProcessor();
+    protected FieldProcessor<Byte> byteProcessor=new ByteProcessor();
+    protected FieldProcessor<Short> shortProcessor=new ShortProcessor();
+    protected FieldProcessor<Integer> integerProcessor=new IntegerProcessor();
+    protected FieldProcessor<Long> longProcessor=new LongProcessor();
+    protected FieldProcessor<Float> floatProcessor=new FloatProcessor();
+    protected FieldProcessor<Double> doubleProcessor=new DoubleProcessor();
     protected FieldProcessor<byte[]> byteArrayProcessor=new ByteArrayProcessor();
     protected FieldProcessor<short[]> shortArrayProcessor=new ShortArrayProcessor();
     protected FieldProcessor<int[]> integerArrayProcessor=new IntegerArrayProcessor();
