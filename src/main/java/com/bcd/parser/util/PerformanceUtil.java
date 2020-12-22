@@ -47,15 +47,15 @@ public class PerformanceUtil {
      * @param data
      * @param parser
      * @param clazz
-     * @param poolSize
+     * @param threadNum
      * @param num
      * @param <T>
      */
-    public static <T>void testPerformance(String data, Parser parser,Class<T> clazz,int poolSize,int num){
-        logger.info("poolSize:{}",poolSize);
+    public static <T>void testMultiThreadPerformance(String data, Parser parser, Class<T> clazz, int threadNum, int num){
+        logger.info("threadNum:{}",threadNum);
         AtomicInteger count=new AtomicInteger(0);
 
-        ExecutorService[]pools=new ExecutorService[poolSize];
+        ExecutorService[]pools=new ExecutorService[threadNum];
         for(int i=0;i<pools.length;i++){
             pools[i] = Executors.newSingleThreadExecutor();
         }
@@ -68,7 +68,7 @@ public class PerformanceUtil {
         ScheduledExecutorService monitor=Executors.newSingleThreadScheduledExecutor();
         monitor.scheduleAtFixedRate(()->{
             int cur=count.getAndSet(0)/3;
-            logger.info("core:{} , speed/s:{} , avgSpeed/s:{}",poolSize,cur,cur/poolSize);
+            logger.info("threadNum:{} , totalSpeed/s:{} , perThreadSpeed/s:{}",threadNum,cur,cur/threadNum);
         },3,3,TimeUnit.SECONDS);
 
         try {
