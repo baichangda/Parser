@@ -169,8 +169,113 @@ public abstract class Parser {
      */
     protected abstract List<Class> getParsableClass();
 
+    /**
+     * 解析对象
+     * @param clazz 解析class类
+     * @param data 解析数据源
+     * @param <T> 结果对象类型
+     * @return
+     */
     public final <T>T parse(Class<T> clazz, ByteBuf data){
         return parse(clazz,data,null);
+    }
+
+    /**
+     * 解析{@link com.bcd.parser.anno.PacketField}字段
+     * @param packetInfo 当前class对应的{@link PacketInfo}
+     * @param data 解析ByteBuf数据源
+     * @param instance 当前class对象实例
+     * @param parentContext 当前解析所属环境
+     * @throws IllegalAccessException
+     */
+    private void parsePacketField(PacketInfo packetInfo, ByteBuf data,Object instance,FieldProcessContext parentContext) throws IllegalAccessException {
+        //进行解析
+        int varValArrLen=packetInfo.getVarValArrLen();
+        int varValArrOffset=packetInfo.getVarValArrOffset();
+        int [] vals=varValArrLen==0?null:new int[varValArrLen];
+        FieldProcessContext processContext=new FieldProcessContext();
+        processContext.setParentContext(parentContext);
+        processContext.setInstance(instance);
+        for (FieldInfo fieldInfo : packetInfo.getFieldInfos()) {
+            int processorIndex=fieldInfo.getProcessorIndex();
+            /**
+             * 代表 {@link PacketField#lenExpr()}
+             */
+            Object[] lenRpn= fieldInfo.getLenRpn();
+            /**
+             * 代表 {@link PacketField#listLenExpr()}
+             */
+            Object[] listLenRpn= fieldInfo.getListLenRpn();
+            int len;
+            int listLen=0;
+            if(lenRpn==null){
+                len=fieldInfo.getPacketField_len();
+            }else{
+                if(lenRpn.length==1){
+                    len=vals[(char)lenRpn[0]-varValArrOffset];
+                }else {
+                    len = RpnUtil.calcRPN_char_int(lenRpn, vals,varValArrOffset);
+                }
+            }
+            if(listLenRpn!=null){
+                if(listLenRpn.length==1){
+                    listLen=vals[(char)listLenRpn[0]-varValArrOffset];
+                }else {
+                    listLen = RpnUtil.calcRPN_char_int(listLenRpn, vals,varValArrOffset);
+                }
+            }
+            processContext.setFieldInfo(fieldInfo);
+            processContext.setLen(len);
+            processContext.setListLen(listLen);
+            Object val=fieldProcessors[processorIndex].process(data,processContext);
+            if(fieldInfo.isVar()){
+                vals[fieldInfo.getPacketField_var()-varValArrOffset]=((Number)val).intValue();
+            }
+            fieldInfo.getField().set(instance,val);
+        }
+    }
+
+    /**
+     * 解析{@link com.bcd.parser.anno.OffsetField}字段
+     * @param packetInfo 当前class对应的{@link PacketInfo}
+     * @param instance 当前class对象实例
+     * @throws IllegalAccessException
+     */
+    private void parseOffsetField(PacketInfo packetInfo,Object instance) throws IllegalAccessException {
+        //偏移量值计算
+        OffsetFieldInfo[] offsetFieldInfos = packetInfo.getOffsetFieldInfos();
+        if (offsetFieldInfos != null && offsetFieldInfos.length>0) {
+            for (OffsetFieldInfo offsetFieldInfo : offsetFieldInfos) {
+                Object sourceVal = offsetFieldInfo.getSourceField().get(instance);
+                double destVal = RpnUtil.calcRPN_char_double_singleVar(offsetFieldInfo.getRpn(),((Number) sourceVal).doubleValue());
+                switch (offsetFieldInfo.getFieldType()) {
+                    case 1: {
+                        offsetFieldInfo.getField().set(instance, (byte)destVal);
+                        break;
+                    }
+                    case 2: {
+                        offsetFieldInfo.getField().set(instance, (short)destVal);
+                        break;
+                    }
+                    case 3: {
+                        offsetFieldInfo.getField().set(instance, (int)destVal);
+                        break;
+                    }
+                    case 4: {
+                        offsetFieldInfo.getField().set(instance, (long)destVal);
+                        break;
+                    }
+                    case 5: {
+                        offsetFieldInfo.getField().set(instance, (float)destVal);
+                        break;
+                    }
+                    case 6: {
+                        offsetFieldInfo.getField().set(instance, destVal);
+                        break;
+                    }
+                }
+            }
+        }
     }
 
 
@@ -179,7 +284,7 @@ public abstract class Parser {
      * 所有涉及解析对象必须有空参数的构造方法
      * @param clazz
      * @param data
-     * @param parentContext 当前对象作为其他类的字段解析时候的环境、顶层环境传入nullc
+     * @param parentContext 当前对象作为其他类的字段解析时候的环境、顶层环境传入null
      * @param <T>
      * @return
      */
@@ -192,105 +297,27 @@ public abstract class Parser {
         try {
             //构造实例
             T instance= clazz.newInstance();
-            //进行解析
-            int varValArrLen=packetInfo.getVarValArrLen();
-            int varValArrOffset=packetInfo.getVarValArrOffset();
-            int [] vals;
-            if(varValArrLen!=0){
-                vals=new int[varValArrLen];
-            }else{
-                vals=null;
-            }
-            FieldProcessContext processContext=new FieldProcessContext();
-            processContext.setParentContext(parentContext);
-            processContext.setInstance(instance);
-            for (FieldInfo fieldInfo : packetInfo.getFieldInfos()) {
-                int processorIndex=fieldInfo.getProcessorIndex();
-                /**
-                 * 代表 {@link PacketField#lenExpr()}
-                 */
-                Object[] lenRpn= fieldInfo.getLenRpn();
-                /**
-                 * 代表 {@link PacketField#listLenExpr()}
-                 */
-                Object[] listLenRpn= fieldInfo.getListLenRpn();
-                int len;
-                int listLen=0;
-                if(lenRpn==null){
-                    len=fieldInfo.getPacketField_len();
-                }else{
-                    if(lenRpn.length==1){
-                        len=vals[(char)lenRpn[0]-varValArrOffset];
-                    }else {
-                        len = RpnUtil.calcRPN_char_int(lenRpn, vals,varValArrOffset);
-                    }
-                }
-                if(listLenRpn!=null){
-                    if(listLenRpn.length==1){
-                        listLen=vals[(char)listLenRpn[0]-varValArrOffset];
-                    }else {
-                        listLen = RpnUtil.calcRPN_char_int(listLenRpn, vals,varValArrOffset);
-                    }
-                }
-                processContext.setFieldInfo(fieldInfo);
-                processContext.setLen(len);
-                processContext.setListLen(listLen);
-                Object val=fieldProcessors[processorIndex].process(data,processContext);
-                if(fieldInfo.isVar()){
-                    vals[fieldInfo.getPacketField_var()-varValArrOffset]=((Number)val).intValue();
-                }
-                fieldInfo.getField().set(instance,val);
-            }
-
+            /**
+             * 解析{@link com.bcd.parser.anno.PacketField}字段
+             */
+            parsePacketField(packetInfo,data,instance,parentContext);
             if(enableOffsetField) {
-                //偏移量值计算
-                OffsetFieldInfo[] offsetFieldInfos = packetInfo.getOffsetFieldInfos();
-                if (offsetFieldInfos != null && offsetFieldInfos.length>0) {
-                    //define temp var
-                    Object sourceVal;
-                    double destVal;
-                    int fieldType;
-                    for (OffsetFieldInfo offsetFieldInfo : offsetFieldInfos) {
-                        fieldType=offsetFieldInfo.getFieldType();
-                        sourceVal = offsetFieldInfo.getSourceField().get(instance);
-                        destVal = RpnUtil.calcRPN_char_double_singleVar(offsetFieldInfo.getRpn(),((Number) sourceVal).doubleValue());
-                        switch (fieldType) {
-                            case 1: {
-                                offsetFieldInfo.getField().set(instance, (byte)destVal);
-                                break;
-                            }
-                            case 2: {
-                                offsetFieldInfo.getField().set(instance, (short)destVal);
-                                break;
-                            }
-                            case 3: {
-                                offsetFieldInfo.getField().set(instance, (int)destVal);
-                                break;
-                            }
-                            case 4: {
-                                offsetFieldInfo.getField().set(instance, (long)destVal);
-                                break;
-                            }
-                            case 5: {
-                                offsetFieldInfo.getField().set(instance, (float)destVal);
-                                break;
-                            }
-                            case 6: {
-                                offsetFieldInfo.getField().set(instance, destVal);
-                                break;
-                            }
-                        }
-                    }
-                }
+                /**
+                 * 解析{@link com.bcd.parser.anno.OffsetField}字段
+                 */
+                parseOffsetField(packetInfo,instance);
             }
-
             return instance;
-        } catch (InstantiationException |IllegalAccessException e) {
+        } catch (Exception e) {
             throw BaseRuntimeException.getException(e);
         }
     }
 
-
+    /**
+     * 将对象转换为byteBuf
+     * @param t 不能为null
+     * @param res 结果接收容器
+     */
     public final void deParse(Object t, ByteBuf res){
         deParse(t, res,null);
     }
@@ -298,8 +325,8 @@ public abstract class Parser {
     /**
      * 将对象转换为byteBuf
      * @param t 不能为null
-     * @param res
-     * @param parentContext
+     * @param res 结果接收容器
+     * @param parentContext 反解析环境
      */
     public final void deParse(Object t, ByteBuf res, FieldDeProcessContext parentContext){
         try{
