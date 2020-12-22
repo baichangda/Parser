@@ -44,7 +44,8 @@ import java.util.*;
  * {@link PacketInfo}是所有{@link Parsable}的class转换成的描述信息、被解析的类必须标注{@link Parsable}注解
  *
  * 性能表现:
- * 以gb32960协议为例子
+ * 以gb32960协议为例子c
+ * cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
  * 单线程、在cpu使用率90%+ 的情况下、解析速度约为 33w/s、多个线程成倍数增长
  * 注意:
  * 因为是cpu密集型运算、所以性能达到计算机物理核心个数后已经达到上限、不能以逻辑核心为准、此时虽然整体cpu使用率没有满、但这只是使用率显示问题
