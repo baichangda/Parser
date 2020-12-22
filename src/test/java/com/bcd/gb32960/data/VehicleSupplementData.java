@@ -1,7 +1,7 @@
 package com.bcd.gb32960.data;
 
 
-import com.bcd.gb32960.parse.impl.VehicleCommonDataFieldProcessor;
+import com.bcd.gb32960.parser.impl.VehicleCommonDataFieldProcessor;
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
 

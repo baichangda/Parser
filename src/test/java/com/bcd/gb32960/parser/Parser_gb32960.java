@@ -1,4 +1,4 @@
-package com.bcd.gb32960.parse;
+package com.bcd.gb32960.parser;
 
 import com.bcd.gb32960.data.Packet;
 import com.bcd.parser.Parser;

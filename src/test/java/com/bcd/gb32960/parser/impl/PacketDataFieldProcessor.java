@@ -1,4 +1,4 @@
-package com.bcd.gb32960.parse.impl;
+package com.bcd.gb32960.parser.impl;
 
 import com.bcd.gb32960.data.*;
 import com.bcd.parser.process.FieldDeProcessContext;
