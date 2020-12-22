@@ -1,5 +1,6 @@
 package com.bcd.parser;
 
+import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
 import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.info.FieldInfo;
@@ -22,6 +23,34 @@ import java.io.IOException;
 import java.util.*;
 
 
+/**
+ * 协议解析器
+ * 主要功能如下:
+ * 1、解析
+ * 从{@link ByteBuf}中获取二进制数据、解析成{@link Parsable}的class对象实例
+ * 解析规则参照{@link com.bcd.parser.anno.PacketField}、{@link com.bcd.parser.anno.OffsetField}
+ *
+ * 2、反解析
+ * 将{@link Parsable}的class对象实例反解析成为ByteBuf二进制数据流
+ * 反解析规则参照{@link com.bcd.parser.anno.PacketField}、注意反解析不支持{@link PacketField#valExpr()}
+ *
+ * {@link FieldProcessor}说明:
+ * {@link FieldProcessor}是针对每个字段类型定义的处理器、所有需要解析的字段类型必须要有对应的处理器
+ * 目前大致分为如下2类:
+ * 1、默认基础解析器、针对一些常用的字段类型、具体查看{@link #baseProcessorList}
+ * 2、自定义扩展解析器、通过重写{@link #initExtProcessor()}方法集成进来、这些解析器使用在{@link PacketField#processorClass()}上
+ *
+ * {@link PacketInfo}说明:
+ * {@link PacketInfo}是所有{@link Parsable}的class转换成的描述信息、被解析的类必须标注{@link Parsable}注解
+ *
+ * 性能表现:
+ * 以gb32960协议为例子
+ * 单线程、在cpu使用率90%+ 的情况下、解析速度约为 33w/s、多个线程成倍数增长
+ * 注意:
+ * 因为是cpu密集型运算、所以性能达到计算机物理核心个数后已经达到上限、不能以逻辑核心为准、此时虽然整体cpu使用率没有满、但这只是使用率显示问题
+ * 例如 2核4线程 、物理核心2个、逻辑核心4个、此时使用2个线程就能用尽cpu资源、即使指标显示cpu使用率50%、其实再加线程已经没有提升
+ *
+ */
 @SuppressWarnings("unchecked")
 public abstract class Parser {
 
@@ -130,9 +159,11 @@ public abstract class Parser {
 //    }
 
     /**
-     * 初始化 classToParser
-     * 去除接口和抽象类
-     * 通过扫描
+     * 扫描包下面所有{@link FieldProcessor}的子类、去除接口和抽象类
+     * 去除属于基础处理器类型 {@link #baseProcessorList}
+     * 实例化这些类对象(这些class必须都有空参构造方法)
+     * @param pkg
+     * @return
      */
     protected List<FieldProcessor> initProcessorByScanClass(String pkg){
         List<FieldProcessor> processorList=new ArrayList<>();
