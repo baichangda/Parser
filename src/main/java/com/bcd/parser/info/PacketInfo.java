@@ -7,8 +7,8 @@ import com.bcd.parser.anno.PacketField;
 import java.util.ArrayList;
 
 public class PacketInfo {
+    //对应的class
     private Class clazz;
-
     //解析的字段信息集合
     private FieldInfo[] fieldInfos;
     //计算偏移量字段集合
