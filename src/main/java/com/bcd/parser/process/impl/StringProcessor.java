@@ -16,8 +16,7 @@ public class StringProcessor extends FieldProcessor<String> {
     @Override
     public String process(ByteBuf data, FieldProcessContext processContext) {
         int discardLen=0;
-        int len =processContext.getLen();
-        byte[] bytes=new byte[len];
+        byte[] bytes=new byte[processContext.getLen()];
         data.readBytes(bytes);
         for(int i=bytes.length-1;i>=0;i--){
             if(bytes[i]==0){

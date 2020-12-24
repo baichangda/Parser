@@ -234,8 +234,13 @@ public abstract class Parser {
             /**
              * 代表 {@link PacketField#lenExpr()}
              */
-            int len;
             Object[] lenRpn= fieldInfo.getLenRpn();
+            /**
+             * 代表 {@link PacketField#listLenExpr()}
+             */
+            Object[] listLenRpn= fieldInfo.getListLenRpn();
+
+            int len;
             if(lenRpn==null){
                 len=fieldInfo.getPacketField_len();
             }else{
@@ -246,12 +251,7 @@ public abstract class Parser {
                 }
             }
 
-
-            /**
-             * 代表 {@link PacketField#listLenExpr()}
-             */
             int listLen;
-            Object[] listLenRpn= fieldInfo.getListLenRpn();
             if(listLenRpn!=null){
                 if(listLenRpn.length==1){
                     listLen=vals[(char)listLenRpn[0]-varValArrOffset];
