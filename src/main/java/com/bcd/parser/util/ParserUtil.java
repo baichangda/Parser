@@ -206,6 +206,7 @@ public class ParserUtil {
             fieldInfo.setPacketField_listLenExpr(packetField.listLenExpr());
             fieldInfo.setPacketField_singleLen(packetField.singleLen());
             fieldInfo.setPacketField_var(packetField.var());
+            fieldInfo.setPacketField_var_int((int)packetField.var());
             fieldInfo.setPacketField_parserClass(packetField.processorClass());
             fieldInfo.setPacketField_valExpr(packetField.valExpr());
             return fieldInfo;

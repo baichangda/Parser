@@ -21,6 +21,9 @@ public class FieldInfo {
     public Class packetField_parserClass;
     public String packetField_valExpr;
 
+    //packetField_var对应的int
+    public int packetField_var_int;
+
     /**
      * {@link Parser#fieldProcessors} 索引
      * 0、byte/Byte
@@ -189,5 +192,13 @@ public class FieldInfo {
 
     public void setValRpn(Object[] valRpn) {
         this.valRpn = valRpn;
+    }
+
+    public int getPacketField_var_int() {
+        return packetField_var_int;
+    }
+
+    public void setPacketField_var_int(int packetField_var_int) {
+        this.packetField_var_int = packetField_var_int;
     }
 }

@@ -228,18 +228,14 @@ public abstract class Parser {
         FieldProcessContext processContext=new FieldProcessContext();
         processContext.setParentContext(parentContext);
         processContext.setInstance(instance);
-        for (FieldInfo fieldInfo : packetInfo.getFieldInfos()) {
-            int processorIndex=fieldInfo.getProcessorIndex();
+        FieldInfo[] fieldInfos= packetInfo.getFieldInfos();
+        for(int i=0,end=fieldInfos.length;i<end;i++){
+            FieldInfo fieldInfo=fieldInfos[i];
             /**
              * 代表 {@link PacketField#lenExpr()}
              */
-            Object[] lenRpn= fieldInfo.getLenRpn();
-            /**
-             * 代表 {@link PacketField#listLenExpr()}
-             */
-            Object[] listLenRpn= fieldInfo.getListLenRpn();
             int len;
-            int listLen=0;
+            Object[] lenRpn= fieldInfo.getLenRpn();
             if(lenRpn==null){
                 len=fieldInfo.getPacketField_len();
             }else{
@@ -249,19 +245,28 @@ public abstract class Parser {
                     len = RpnUtil.calcRPN_char_int(lenRpn, vals,varValArrOffset);
                 }
             }
+
+
+            /**
+             * 代表 {@link PacketField#listLenExpr()}
+             */
+            int listLen;
+            Object[] listLenRpn= fieldInfo.getListLenRpn();
             if(listLenRpn!=null){
                 if(listLenRpn.length==1){
                     listLen=vals[(char)listLenRpn[0]-varValArrOffset];
                 }else {
                     listLen = RpnUtil.calcRPN_char_int(listLenRpn, vals,varValArrOffset);
                 }
+                processContext.setListLen(listLen);
             }
-            processContext.setFieldInfo(fieldInfo);
+
             processContext.setLen(len);
-            processContext.setListLen(listLen);
-            Object val=fieldProcessors[processorIndex].process(data,processContext);
+            processContext.setFieldInfo(fieldInfo);
+
+            Object val=fieldProcessors[fieldInfo.getProcessorIndex()].process(data,processContext);
             if(fieldInfo.isVar()){
-                vals[fieldInfo.getPacketField_var()-varValArrOffset]=((Number)val).intValue();
+                vals[fieldInfo.getPacketField_var_int()-varValArrOffset]=((Number)val).intValue();
             }
             fieldInfo.getField().set(instance,val);
         }
@@ -277,7 +282,8 @@ public abstract class Parser {
         //偏移量值计算
         OffsetFieldInfo[] offsetFieldInfos = packetInfo.getOffsetFieldInfos();
         if (offsetFieldInfos != null && offsetFieldInfos.length>0) {
-            for (OffsetFieldInfo offsetFieldInfo : offsetFieldInfos) {
+            for(int i=0,end=offsetFieldInfos.length;i<end;i++){
+                OffsetFieldInfo offsetFieldInfo=offsetFieldInfos[i];
                 Object sourceVal = offsetFieldInfo.getSourceField().get(instance);
                 double destVal = RpnUtil.calcRPN_char_double_singleVar(offsetFieldInfo.getRpn(),((Number) sourceVal).doubleValue());
                 switch (offsetFieldInfo.getFieldType()) {
