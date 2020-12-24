@@ -10,6 +10,12 @@ import java.util.Arrays;
  * 2、在业务需要出异常的时候,定义异常并且抛出
  */
 public class BaseRuntimeException extends RuntimeException {
+    protected String code;
+
+    public String getCode() {
+        return code;
+    }
+
     private BaseRuntimeException(String message) {
         super(message);
     }
@@ -24,17 +30,31 @@ public class BaseRuntimeException extends RuntimeException {
 
     /**
      * 将异常信息转换为格式化
+     * val表达式从{0}开始
      * @param message
      * @param params
      * @return
      */
     public static BaseRuntimeException getException(String message, Object ... params){
-        Object[] newParams=Arrays.stream(params).map(e->e==null?"":e.toString()).toArray();
-        return new BaseRuntimeException(MessageFormat.format(message,newParams));
+        return new BaseRuntimeException(MessageFormat.format(
+                //转义特殊字符'为''
+                message.replaceAll("'","''")
+                //去除null
+                ,Arrays.stream(params).map(e->e==null?"":e.toString()).toArray())
+        );
     }
 
     public static BaseRuntimeException getException(Throwable e) {
         return new BaseRuntimeException(e);
+    }
+
+    public static BaseRuntimeException getException(Throwable e, String code) {
+        return new BaseRuntimeException(e).withCode(code);
+    }
+
+    public BaseRuntimeException withCode(String code) {
+        this.code = code;
+        return this;
     }
 
     public static void main(String[] args) {
