@@ -40,6 +40,16 @@ task sourceJar(type: Jar) {
     classifier "sources"
 }
 
+
+//---------------------------------
+// 在gradle运行时环境下执行main函数
+//---------------------------------
+task gb32960_performance(type: JavaExec, dependsOn: 'jar') {
+    description 'gb32960性能测试'
+    classpath = sourceSets.test.runtimeClasspath
+    main = 'com.bcd.gb32960.parser.Parser_gb32960'
+}
+
 //发布到本地MAVEN仓库使用 gradle PublishToMavenLocal
 //发布到远程MAVEN仓库使用 gradle publishMavenPublicationToMavenRepository
 publishing{
