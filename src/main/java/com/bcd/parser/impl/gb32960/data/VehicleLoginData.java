@@ -2,9 +2,14 @@ package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
+@Getter
+@Setter
 @Parsable
 public class VehicleLoginData extends PacketData{
     //数据采集时间
@@ -39,43 +44,4 @@ public class VehicleLoginData extends PacketData{
         this.collectTime = collectTime;
     }
 
-    public int getSn() {
-        return sn;
-    }
-
-    public void setSn(int sn) {
-        this.sn = sn;
-    }
-
-    public String getIccid() {
-        return iccid;
-    }
-
-    public void setIccid(String iccid) {
-        this.iccid = iccid;
-    }
-
-    public short getSubSystemNum() {
-        return subSystemNum;
-    }
-
-    public void setSubSystemNum(short subSystemNum) {
-        this.subSystemNum = subSystemNum;
-    }
-
-    public byte getSystemCodeLen() {
-        return systemCodeLen;
-    }
-
-    public void setSystemCodeLen(byte systemCodeLen) {
-        this.systemCodeLen = systemCodeLen;
-    }
-
-    public String getSystemCode() {
-        return systemCode;
-    }
-
-    public void setSystemCode(String systemCode) {
-        this.systemCode = systemCode;
-    }
 }

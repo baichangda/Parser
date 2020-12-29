@@ -2,10 +2,15 @@ package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 整车数据
  */
+@Getter
+@Setter
 @Parsable
 public class VehicleBaseData {
     //车辆状态
@@ -21,16 +26,12 @@ public class VehicleBaseData {
     short runMode;
 
     //车速
-    @PacketField(index = 4,len=2
-//            ,valExpr = "x*0.1"
-    )
+    @PacketField(index = 4,len=2)
     int vehicleSpeed;
 
     //累计里程
-    @PacketField(index = 5,len=4
-//            ,valExpr = "x*0.1"
-    )
-    long totalMileage;
+    @PacketField(index = 5,len=4)
+    int totalMileage;
 
     //总电压
     @PacketField(index = 6,len=2)
@@ -64,92 +65,5 @@ public class VehicleBaseData {
     @PacketField(index = 12,len=1)
     short pedalStatus;
 
-    public short getVehicleStatus() {
-        return vehicleStatus;
-    }
-
-    public void setVehicleStatus(short vehicleStatus) {
-        this.vehicleStatus = vehicleStatus;
-    }
-
-    public short getChargeStatus() {
-        return chargeStatus;
-    }
-
-    public void setChargeStatus(short chargeStatus) {
-        this.chargeStatus = chargeStatus;
-    }
-
-    public short getRunMode() {
-        return runMode;
-    }
-
-    public void setRunMode(short runMode) {
-        this.runMode = runMode;
-    }
-
-    public int getTotalVoltage() {
-        return totalVoltage;
-    }
-
-    public void setTotalVoltage(int totalVoltage) {
-        this.totalVoltage = totalVoltage;
-    }
-
-    public int getTotalCurrent() {
-        return totalCurrent;
-    }
-
-    public void setTotalCurrent(int totalCurrent) {
-        this.totalCurrent = totalCurrent;
-    }
-
-    public short getSoc() {
-        return soc;
-    }
-
-    public void setSoc(short soc) {
-        this.soc = soc;
-    }
-
-    public short getDcStatus() {
-        return dcStatus;
-    }
-
-    public void setDcStatus(short dcStatus) {
-        this.dcStatus = dcStatus;
-    }
-
-    public int getGearPosition() {
-        return gearPosition;
-    }
-
-    public void setGearPosition(int gearPosition) {
-        this.gearPosition = gearPosition;
-    }
-
-    public int getResistance() {
-        return resistance;
-    }
-
-    public void setResistance(int resistance) {
-        this.resistance = resistance;
-    }
-
-    public short getPedalVal() {
-        return pedalVal;
-    }
-
-    public void setPedalVal(short pedalVal) {
-        this.pedalVal = pedalVal;
-    }
-
-    public short getPedalStatus() {
-        return pedalStatus;
-    }
-
-    public void setPedalStatus(short pedalStatus) {
-        this.pedalStatus = pedalStatus;
-    }
 
 }

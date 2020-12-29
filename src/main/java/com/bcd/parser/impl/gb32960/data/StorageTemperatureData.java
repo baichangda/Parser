@@ -2,10 +2,15 @@ package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 每个可充电储能子系统上温度数据格式
  */
+@Getter
+@Setter
 @Parsable
 public class StorageTemperatureData {
     //可充电储能子系统号
@@ -19,28 +24,4 @@ public class StorageTemperatureData {
     //可充电储能子系统各温度探针检测到的温度值
     @PacketField(index = 3,lenExpr = "n")
     short[] temperatures;
-
-    public short getNo() {
-        return no;
-    }
-
-    public void setNo(short no) {
-        this.no = no;
-    }
-
-    public int getNum() {
-        return num;
-    }
-
-    public void setNum(int num) {
-        this.num = num;
-    }
-
-    public short[] getTemperatures() {
-        return temperatures;
-    }
-
-    public void setTemperatures(short[] temperatures) {
-        this.temperatures = temperatures;
-    }
 }

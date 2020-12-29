@@ -2,10 +2,15 @@ package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 极值数据
  */
+@Getter
+@Setter
 @Parsable
 public class VehicleLimitValueData {
     //最高电压电池子系统号
@@ -56,99 +61,4 @@ public class VehicleLimitValueData {
     @PacketField(index = 12,len = 1)
     short minTemperature;
 
-    public short getMaxVoltageSystemNo() {
-        return maxVoltageSystemNo;
-    }
-
-    public void setMaxVoltageSystemNo(short maxVoltageSystemNo) {
-        this.maxVoltageSystemNo = maxVoltageSystemNo;
-    }
-
-    public short getMaxVoltageCode() {
-        return maxVoltageCode;
-    }
-
-    public void setMaxVoltageCode(short maxVoltageCode) {
-        this.maxVoltageCode = maxVoltageCode;
-    }
-
-    public int getMaxVoltage() {
-        return maxVoltage;
-    }
-
-    public void setMaxVoltage(int maxVoltage) {
-        this.maxVoltage = maxVoltage;
-    }
-
-    public short getMinVoltageSystemNo() {
-        return minVoltageSystemNo;
-    }
-
-    public void setMinVoltageSystemNo(short minVoltageSystemNo) {
-        this.minVoltageSystemNo = minVoltageSystemNo;
-    }
-
-    public short getMinVoltageCode() {
-        return minVoltageCode;
-    }
-
-    public void setMinVoltageCode(short minVoltageCode) {
-        this.minVoltageCode = minVoltageCode;
-    }
-
-    public int getMinVoltage() {
-        return minVoltage;
-    }
-
-    public void setMinVoltage(int minVoltage) {
-        this.minVoltage = minVoltage;
-    }
-
-    public short getMaxTemperatureSystemNo() {
-        return maxTemperatureSystemNo;
-    }
-
-    public void setMaxTemperatureSystemNo(short maxTemperatureSystemNo) {
-        this.maxTemperatureSystemNo = maxTemperatureSystemNo;
-    }
-
-    public short getMaxTemperatureNo() {
-        return maxTemperatureNo;
-    }
-
-    public void setMaxTemperatureNo(short maxTemperatureNo) {
-        this.maxTemperatureNo = maxTemperatureNo;
-    }
-
-    public short getMaxTemperature() {
-        return maxTemperature;
-    }
-
-    public void setMaxTemperature(short maxTemperature) {
-        this.maxTemperature = maxTemperature;
-    }
-
-    public short getMinTemperatureSystemNo() {
-        return minTemperatureSystemNo;
-    }
-
-    public void setMinTemperatureSystemNo(short minTemperatureSystemNo) {
-        this.minTemperatureSystemNo = minTemperatureSystemNo;
-    }
-
-    public short getMinTemperatureNo() {
-        return minTemperatureNo;
-    }
-
-    public void setMinTemperatureNo(short minTemperatureNo) {
-        this.minTemperatureNo = minTemperatureNo;
-    }
-
-    public short getMinTemperature() {
-        return minTemperature;
-    }
-
-    public void setMinTemperature(short minTemperature) {
-        this.minTemperature = minTemperature;
-    }
 }

@@ -2,10 +2,15 @@ package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * 报警数据
  */
+@Getter
+@Setter
 @Parsable
 public class VehicleAlarmData {
     //最高报警等级
@@ -48,83 +53,4 @@ public class VehicleAlarmData {
     @PacketField(index = 10,lenExpr = "d*4")
     int[] otherBadCodes;
 
-    public short getMaxAlarmLevel() {
-        return maxAlarmLevel;
-    }
-
-    public void setMaxAlarmLevel(short maxAlarmLevel) {
-        this.maxAlarmLevel = maxAlarmLevel;
-    }
-
-    public int getAlarmFlag() {
-        return alarmFlag;
-    }
-
-    public void setAlarmFlag(int alarmFlag) {
-        this.alarmFlag = alarmFlag;
-    }
-
-    public short getChargeBadNum() {
-        return chargeBadNum;
-    }
-
-    public void setChargeBadNum(short chargeBadNum) {
-        this.chargeBadNum = chargeBadNum;
-    }
-
-    public int[] getChargeBadCodes() {
-        return chargeBadCodes;
-    }
-
-    public void setChargeBadCodes(int[] chargeBadCodes) {
-        this.chargeBadCodes = chargeBadCodes;
-    }
-
-    public short getDriverBadNum() {
-        return driverBadNum;
-    }
-
-    public void setDriverBadNum(short driverBadNum) {
-        this.driverBadNum = driverBadNum;
-    }
-
-    public int[] getDriverBadCodes() {
-        return driverBadCodes;
-    }
-
-    public void setDriverBadCodes(int[] driverBadCodes) {
-        this.driverBadCodes = driverBadCodes;
-    }
-
-    public short getEngineBadNum() {
-        return engineBadNum;
-    }
-
-    public void setEngineBadNum(short engineBadNum) {
-        this.engineBadNum = engineBadNum;
-    }
-
-    public int[] getEngineBadCodes() {
-        return engineBadCodes;
-    }
-
-    public void setEngineBadCodes(int[] engineBadCodes) {
-        this.engineBadCodes = engineBadCodes;
-    }
-
-    public short getOtherBadNum() {
-        return otherBadNum;
-    }
-
-    public void setOtherBadNum(short otherBadNum) {
-        this.otherBadNum = otherBadNum;
-    }
-
-    public int[] getOtherBadCodes() {
-        return otherBadCodes;
-    }
-
-    public void setOtherBadCodes(int[] otherBadCodes) {
-        this.otherBadCodes = otherBadCodes;
-    }
 }

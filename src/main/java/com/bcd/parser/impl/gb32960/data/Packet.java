@@ -4,6 +4,12 @@ import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
 import com.bcd.parser.impl.gb32960.processer.PacketDataFieldProcessor;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 @Parsable
 public class Packet {
     //头 0-2
@@ -32,77 +38,5 @@ public class Packet {
     //异或校验位
     @PacketField(index = 8,len = 1)
     byte code;
-
-    public byte[] getHeader() {
-        return header;
-    }
-
-    public void setHeader(byte[] header) {
-        this.header = header;
-    }
-
-    public short getFlag() {
-        return flag;
-    }
-
-    public void setFlag(short flag) {
-        this.flag = flag;
-    }
-
-    public short getReplyFlag() {
-        return replyFlag;
-    }
-
-    public void setReplyFlag(short replyFlag) {
-        this.replyFlag = replyFlag;
-    }
-
-    public String getVin() {
-        return vin;
-    }
-
-    public void setVin(String vin) {
-        this.vin = vin;
-    }
-
-    public short getEncodeWay() {
-        return encodeWay;
-    }
-
-    public void setEncodeWay(short encodeWay) {
-        this.encodeWay = encodeWay;
-    }
-
-    public int getContentLength() {
-        return contentLength;
-    }
-
-    public void setContentLength(int contentLength) {
-        this.contentLength = contentLength;
-    }
-
-    public byte[] getDataContent() {
-        return dataContent;
-    }
-
-    public void setDataContent(byte[] dataContent) {
-        this.dataContent = dataContent;
-    }
-
-    public byte getCode() {
-        return code;
-    }
-
-    public void setCode(byte code) {
-        this.code = code;
-    }
-
-    public PacketData getData() {
-        return data;
-    }
-
-    public void setData(PacketData data) {
-        this.data = data;
-    }
 
 }

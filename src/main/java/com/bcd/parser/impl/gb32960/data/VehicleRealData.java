@@ -4,9 +4,14 @@ package com.bcd.parser.impl.gb32960.data;
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
 import com.bcd.parser.impl.gb32960.processer.VehicleCommonDataFieldProcessor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
+@Getter
+@Setter
 @Parsable
 public class VehicleRealData extends PacketData{
     //数据采集时间
@@ -25,11 +30,4 @@ public class VehicleRealData extends PacketData{
         this.collectTime = collectTime;
     }
 
-    public VehicleCommonData getVehicleCommonData() {
-        return vehicleCommonData;
-    }
-
-    public void setVehicleCommonData(VehicleCommonData vehicleCommonData) {
-        this.vehicleCommonData = vehicleCommonData;
-    }
 }

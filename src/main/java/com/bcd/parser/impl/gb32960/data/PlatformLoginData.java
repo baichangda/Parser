@@ -2,9 +2,14 @@ package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
+@Getter
+@Setter
 @Parsable
 public class PlatformLoginData extends PacketData {
     //平台登入时间
@@ -35,37 +40,5 @@ public class PlatformLoginData extends PacketData {
     @Override
     public void setCollectTime(Date collectTime) {
         this.collectTime = collectTime;
-    }
-
-    public int getSn() {
-        return sn;
-    }
-
-    public void setSn(int sn) {
-        this.sn = sn;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public short getEncode() {
-        return encode;
-    }
-
-    public void setEncode(short encode) {
-        this.encode = encode;
     }
 }
