@@ -81,7 +81,7 @@ public class Parser_gb32960 extends Parser{
 
             packet.setContentLength(byteBuf.readUnsignedShort());
 
-            ByteBuf dataContent=Unpooled.buffer(packet.getContentLength());
+            byte[] dataContent=new byte[packet.getContentLength()];
             byteBuf.readBytes(dataContent);
             packet.setDataContent(dataContent);
 
