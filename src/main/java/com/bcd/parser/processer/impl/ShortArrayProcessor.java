@@ -1,13 +1,11 @@
-package com.bcd.parser.process.impl;
+package com.bcd.parser.processer.impl;
 
-import com.bcd.parser.info.FieldInfo;
-import com.bcd.parser.process.FieldDeProcessContext;
-import com.bcd.parser.process.FieldProcessContext;
-import com.bcd.parser.process.FieldProcessor;
+import com.bcd.parser.processer.FieldDeProcessContext;
+import com.bcd.parser.processer.FieldProcessContext;
+import com.bcd.parser.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
-import java.util.List;
 import java.util.Objects;
 
 /**

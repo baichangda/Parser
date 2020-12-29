@@ -7,7 +7,7 @@ import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.info.FieldInfo;
 import com.bcd.parser.info.OffsetFieldInfo;
 import com.bcd.parser.info.PacketInfo;
-import com.bcd.parser.process.FieldProcessor;
+import com.bcd.parser.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
 
 import java.io.IOException;

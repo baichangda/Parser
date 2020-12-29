@@ -30,7 +30,7 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-api', version: "${slf4jVersion}"
 
     // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
-    testCompile group: 'ch.qos.logback', name: 'logback-classic', version: "${logbackVersion}"
+    compile group: 'ch.qos.logback', name: 'logback-classic', version: "${logbackVersion}"
 
 }
 
@@ -46,8 +46,8 @@ task sourceJar(type: Jar) {
 //---------------------------------
 task gb32960_performance(type: JavaExec, dependsOn: 'jar') {
     description 'gb32960性能测试'
-    classpath = sourceSets.test.runtimeClasspath
-    main = 'com.bcd.gb32960.parser.Parser_gb32960'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'com.bcd.parser.impl.gb32960.Parser_gb32960'
 }
 
 //发布到本地MAVEN仓库使用 gradle PublishToMavenLocal

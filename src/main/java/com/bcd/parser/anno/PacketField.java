@@ -89,7 +89,7 @@ public @interface PacketField {
 
     /**
      * 处理类
-     * 用于处理特殊情况,class类型必须是{@link com.bcd.parser.process.FieldProcessor}子类
+     * 用于处理特殊情况,class类型必须是{@link com.bcd.parser.processer.FieldProcessor}子类
      */
     Class processorClass() default Void.class;
 }
