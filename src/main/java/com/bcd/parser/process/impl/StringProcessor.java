@@ -11,6 +11,11 @@ import java.util.Objects;
 
 /**
  * 解析{@link String}类型字段
+ * 步骤如下:
+ * 1、先读取到定长的byte[]中
+ * 2、从尾部检测无效字节长度(byte=0)
+ * 3、将有效字节转换为字符串
+ *
  */
 public class StringProcessor extends FieldProcessor<String> {
     @Override

@@ -93,7 +93,7 @@ public class PerformanceUtil {
         for(int i=1;i<=num;i++) {
             byteBuf.resetReaderIndex();
             byteBuf.resetWriterIndex();
-            parser.parse(clazz,byteBuf);
+            T t= parser.parse(clazz,byteBuf);
             count.incrementAndGet();
         }
     }
