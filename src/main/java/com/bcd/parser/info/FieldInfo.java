@@ -76,6 +76,7 @@ public class FieldInfo {
      * 对应 {@link PacketField#valExpr()}表达式
      */
     public Object[] valRpn;
+    public Object[] reverseValRpn;
 
     public Field getField() {
         return field;
@@ -203,5 +204,13 @@ public class FieldInfo {
 
     public void setPacketField_var_int(int packetField_var_int) {
         this.packetField_var_int = packetField_var_int;
+    }
+
+    public Object[] getReverseValRpn() {
+        return reverseValRpn;
+    }
+
+    public void setReverseValRpn(Object[] reverseValRpn) {
+        this.reverseValRpn = reverseValRpn;
     }
 }

@@ -51,17 +51,27 @@ public class LongProcessor extends FieldProcessor<Long> {
     @Override
     public void deProcess(Long data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
-        checkValRpnNull(processContext);
+        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        long newData;
+        if(reverseValRpn==null){
+            newData=data;
+        }else{
+            if(checkInvalidOrExceptionVal(data,processContext.getFieldInfo().getPacketField_singleLen())){
+                newData = (long) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data);
+            }else {
+                newData=data;
+            }
+        }
         int len=processContext.getLen();
         if(len==BYTE_LENGTH){
-            dest.writeLong(data);
+            dest.writeLong(newData);
         }else if(len>BYTE_LENGTH){
             dest.writeBytes(new byte[len-BYTE_LENGTH]);
-            dest.writeLong(data);
+            dest.writeLong(newData);
         }else{
             for(int i=len;i>=1;i--){
                 int move=8*(i-1);
-                dest.writeByte((byte)(data>>>move));
+                dest.writeByte((byte)(newData>>>move));
             }
         }
     }

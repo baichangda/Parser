@@ -39,17 +39,4 @@ public abstract class FieldProcessor<T> {
         throw BaseRuntimeException.getException("deProcess not support");
     }
 
-    /**
-     * 验证{@link PacketField#valExpr()}是否为空
-     * @param processContext
-     */
-    protected void checkValRpnNull(FieldDeProcessContext processContext){
-        if(processContext.getFieldInfo().getValRpn()!=null){
-            Field field=processContext.getFieldInfo().getField();
-            throw BaseRuntimeException.getException("class[{0}] field[{1}] has valExpr,deProcess not support",
-                    field.getDeclaringClass().getName(),
-                    field.getName());
-        }
-    }
-
 }

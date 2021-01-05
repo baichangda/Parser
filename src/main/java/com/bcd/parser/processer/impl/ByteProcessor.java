@@ -33,9 +33,9 @@ public class ByteProcessor extends FieldProcessor<Byte> {
             return res;
         }else{
             if(checkInvalidOrExceptionVal(res)){
-                return res;
-            }else{
                 return (byte)RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+            }else{
+                return res;
             }
         }
     }
@@ -43,13 +43,20 @@ public class ByteProcessor extends FieldProcessor<Byte> {
     @Override
     public void deProcess(Byte data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
-        checkValRpnNull(processContext);
-        if(processContext.getFieldInfo().getValRpn()!=null){
-            throw BaseRuntimeException.getException("class[{0}] field[{1}] not support",processContext.getFieldInfo().getClazz().getName(),processContext.getFieldInfo().getField().getName());
+        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        byte newData;
+        if(reverseValRpn==null){
+            newData=data;
+        }else{
+            if(checkInvalidOrExceptionVal(data)){
+                newData=data;
+            }else {
+                newData = (byte) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data);
+            }
         }
         int len=processContext.getLen();
         byte[] content=new byte[len];
-        content[len-BYTE_LENGTH]=data;
+        content[len-BYTE_LENGTH]=newData;
         dest.writeBytes(content);
     }
 

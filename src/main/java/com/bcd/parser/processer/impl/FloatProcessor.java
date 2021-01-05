@@ -51,18 +51,27 @@ public class FloatProcessor extends FieldProcessor<Float> {
     @Override
     public void deProcess(Float data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
-        checkValRpnNull(processContext);
-        int intData=data.intValue();
+        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        int newData;
+        if(reverseValRpn==null){
+            newData=data.intValue();
+        }else{
+            if(checkInvalidOrExceptionVal(data.intValue(),processContext.getFieldInfo().getPacketField_singleLen())){
+                newData = (int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data);
+            }else {
+                newData=data.intValue();
+            }
+        }
         int len=processContext.getLen();
         if(len==BYTE_LENGTH){
-            dest.writeInt(intData);
+            dest.writeInt(newData);
         }else if(len>BYTE_LENGTH){
             dest.writeBytes(new byte[len-BYTE_LENGTH]);
-            dest.writeInt(intData);
+            dest.writeInt(newData);
         }else{
             for(int i=len;i>=1;i--){
                 int move=8*(i-1);
-                dest.writeByte((byte)(intData>>>move));
+                dest.writeByte((byte)(newData>>>move));
             }
         }
     }

@@ -65,17 +65,33 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
     public void deProcess(short[] data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
+
+        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        short[] newData;
+        if(reverseValRpn==null){
+            newData=data;
+        }else{
+            newData=new short[data.length];
+            for(int i=0;i<data.length;i++){
+                if(checkInvalidOrExceptionVal(data[i],singleLen)){
+                    newData[i]=(short) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i]);
+                }else{
+                    newData[i]=data[i];
+                }
+            }
+        }
+
         if(singleLen==BYTE_LENGTH){
-            for (short num : data) {
+            for (short num : newData) {
                 dest.writeShort(num);
             }
         }else if(singleLen>BYTE_LENGTH){
-            for (short num : data) {
+            for (short num : newData) {
                 dest.writeBytes(new byte[singleLen-BYTE_LENGTH]);
                 dest.writeShort(num);
             }
         }else{
-            for (short num : data) {
+            for (short num : newData) {
                 for(int i=singleLen;i>=1;i--){
                     int move=8*(i-1);
                     dest.writeByte((byte)(num>>>move));

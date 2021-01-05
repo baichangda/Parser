@@ -71,17 +71,33 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
     public void deProcess(double[] data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
+
+        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        double[] newData;
+        if(reverseValRpn==null){
+            newData=data;
+        }else{
+            newData=new double[data.length];
+            for(int i=0;i<data.length;i++){
+                if(checkInvalidOrExceptionVal((long)data[i],singleLen)){
+                    newData[i]= RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i]);
+                }else{
+                    newData[i]=data[i];
+                }
+            }
+        }
+
         if(singleLen==BYTE_LENGTH){
-            for (double num : data) {
+            for (double num : newData) {
                 dest.writeLong((long)num);
             }
         }else if(singleLen>BYTE_LENGTH){
-            for (double num : data) {
+            for (double num : newData) {
                 dest.writeBytes(new byte[singleLen-BYTE_LENGTH]);
                 dest.writeLong((long)num);
             }
         }else{
-            for (double num : data) {
+            for (double num : newData) {
                 for(int i=singleLen;i>=1;i--){
                     int move=8*(i-1);
                     dest.writeByte((byte)((long)num>>>move));

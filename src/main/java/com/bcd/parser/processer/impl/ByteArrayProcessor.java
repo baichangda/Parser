@@ -48,10 +48,24 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
     public void deProcess(byte[] data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
+        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        byte[] newData;
+        if(reverseValRpn==null){
+            newData=data;
+        }else{
+            newData=new byte[data.length];
+            for(int i=0;i<data.length;i++){
+                if(checkInvalidOrExceptionVal(data[i])){
+                    newData[i]=(byte) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i]);
+                }else{
+                    newData[i]=data[i];
+                }
+            }
+        }
         if(singleLen==BYTE_LENGTH){
-            dest.writeBytes(data);
+            dest.writeBytes(newData);
         }else if(singleLen>BYTE_LENGTH){
-            for (byte num : data) {
+            for (byte num : newData) {
                 dest.writeBytes(new byte[singleLen-BYTE_LENGTH]);
                 dest.writeByte(num);
             }

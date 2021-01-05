@@ -51,18 +51,27 @@ public class DoubleProcessor extends FieldProcessor<Double> {
     @Override
     public void deProcess(Double data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
-        checkValRpnNull(processContext);
-        long longData=data.longValue();
+        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        long newData;
+        if(reverseValRpn==null){
+            newData=data.longValue();
+        }else{
+            if(checkInvalidOrExceptionVal(data.longValue(),processContext.getFieldInfo().getPacketField_singleLen())){
+                newData = (long) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data);
+            }else {
+                newData=data.longValue();
+            }
+        }
         int len=processContext.getLen();
         if(len==BYTE_LENGTH){
-            dest.writeLong(longData);
+            dest.writeLong(newData);
         }else if(len>BYTE_LENGTH){
             dest.writeBytes(new byte[len-BYTE_LENGTH]);
-            dest.writeLong(longData);
+            dest.writeLong(newData);
         }else{
             for(int i=len;i>=1;i--){
                 int move=8*(i-1);
-                dest.writeByte((byte)(longData>>>move));
+                dest.writeByte((byte)(newData>>>move));
             }
         }
     }

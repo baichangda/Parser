@@ -51,17 +51,27 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
     @Override
     public void deProcess(Integer data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
-        checkValRpnNull(processContext);
+        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        int newData;
+        if(reverseValRpn==null){
+            newData=data;
+        }else{
+            if(checkInvalidOrExceptionVal(data,processContext.getFieldInfo().getPacketField_singleLen())){
+                newData = (int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data);
+            }else {
+                newData=data;
+            }
+        }
         int len=processContext.getLen();
         if(len==BYTE_LENGTH){
-            dest.writeInt(data);
+            dest.writeInt(newData);
         }else if(len>BYTE_LENGTH){
             dest.writeBytes(new byte[len-BYTE_LENGTH]);
-            dest.writeInt(data);
+            dest.writeInt(newData);
         }else{
             for(int i=len;i>=1;i--){
                 int move=8*(i-1);
-                dest.writeByte((byte)(data>>>move));
+                dest.writeByte((byte)(newData>>>move));
             }
         }
     }

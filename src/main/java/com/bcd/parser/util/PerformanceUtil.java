@@ -62,6 +62,7 @@ public class PerformanceUtil {
         for (ExecutorService pool : pools) {
             pool.execute(() -> {
                 testParse(data, parser,clazz,num, count);
+//                testDeParse(data, parser,clazz,num, count);
             });
         }
 
@@ -85,7 +86,7 @@ public class PerformanceUtil {
         }
     }
 
-    private static <T>void testParse(String data, Parser parser,Class<T> clazz, int num, AtomicInteger count){
+    public static <T>void testParse(String data, Parser parser,Class<T> clazz, int num, AtomicInteger count){
         byte [] bytes= ByteBufUtil.decodeHexDump(data);
         ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
         byteBuf.markReaderIndex();
@@ -98,7 +99,7 @@ public class PerformanceUtil {
         }
     }
 
-    private static <T>void testDeParse(String data, Parser parser,Class<T> clazz, int num, AtomicInteger count){
+    public static <T>void testDeParse(String data, Parser parser,Class<T> clazz, int num, AtomicInteger count){
         byte [] bytes= ByteBufUtil.decodeHexDump(data);
         ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
         T packet= parser.parse(clazz, byteBuf);
@@ -109,6 +110,7 @@ public class PerformanceUtil {
             res.resetReaderIndex();
             res.resetWriterIndex();
             parser.deParse(packet,res);
+//            System.out.println(ByteBufUtil.hexDump(res));
             count.incrementAndGet();
         }
     }

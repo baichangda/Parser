@@ -64,17 +64,33 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
     public void deProcess(int[] data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
+
+        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        int[] newData;
+        if(reverseValRpn==null){
+            newData=data;
+        }else{
+            newData=new int[data.length];
+            for(int i=0;i<data.length;i++){
+                if(checkInvalidOrExceptionVal(data[i],singleLen)){
+                    newData[i]=(int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i]);
+                }else{
+                    newData[i]=data[i];
+                }
+            }
+        }
+
         if(singleLen==BYTE_LENGTH){
-            for (int num : data) {
+            for (int num : newData) {
                 dest.writeInt(num);
             }
         }else if(singleLen>BYTE_LENGTH){
-            for (int num : data) {
+            for (int num : newData) {
                 dest.writeBytes(new byte[singleLen-BYTE_LENGTH]);
                 dest.writeInt(num);
             }
         }else{
-            for (int num : data) {
+            for (int num : newData) {
                 for(int i=singleLen;i>=1;i--){
                     int move=8*(i-1);
                     dest.writeByte((byte)(num>>>move));

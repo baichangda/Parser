@@ -226,4 +226,72 @@ public class RpnUtil {
             }
         }
     }
+
+    /**
+     * 解y=ax+b
+     * 转换成x=(y-b)/a
+     * 其中a、b皆为常量 a!=0
+     * example:
+     * y=0.1x+100 --> x=(y-100)/0.1 此时rpn长度为5
+     * y=0.1x --> x=y/0.1 此时rpn长度为3
+     * y=x --> x=y 此时rpn长度为1
+     *
+     * @param rpn
+     * @return
+     */
+    public static String[] reverseSimpleRPN(String[] rpn){
+        switch (rpn.length){
+            case 1:{
+                return new String[]{rpn[0]};
+            }
+            case 3:{
+                String[] res=new String[3];
+                res[0]=rpn[0];
+                res[1]=rpn[1];
+                res[2]=reverseSymbol(rpn[2]);
+                return res;
+            }
+            case 5:{
+                String[] res=new String[5];
+                res[0]=rpn[0];
+                res[1]=rpn[3];
+                res[2]=reverseSymbol(rpn[4]);
+                res[3]=rpn[1];
+                res[4]=reverseSymbol(rpn[2]);
+                return res;
+            }
+            default:{
+                throw BaseRuntimeException.getException("rpn[{0}] not support",Arrays.toString(rpn));
+            }
+        }
+    }
+
+    private static String reverseSymbol(String symbol){
+        switch (symbol){
+            case "+":{
+                return "-";
+            }
+            case "-":{
+                return "+";
+            }
+            case "*":{
+                return "/";
+            }
+            case "/":{
+                return "*";
+            }
+            default:{
+                throw BaseRuntimeException.getException("reverseSymbol[{0}] not support",symbol);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        String[] res1=parseArithmeticToRPN("x*0.01-1000");
+        System.out.println(Arrays.toString(res1));
+        System.out.println(Arrays.toString(reverseSimpleRPN(res1)));
+        String[] res2=parseArithmeticToRPN("(y+1000)/0.01");
+        System.out.println(Arrays.toString(res2));
+
+    }
 }

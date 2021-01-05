@@ -71,17 +71,33 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
     public void deProcess(float[] data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
+
+        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        float[] newData;
+        if(reverseValRpn==null){
+            newData=data;
+        }else{
+            newData=new float[data.length];
+            for(int i=0;i<data.length;i++){
+                if(checkInvalidOrExceptionVal((int)data[i],singleLen)){
+                    newData[i]=(float) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i]);
+                }else{
+                    newData[i]=data[i];
+                }
+            }
+        }
+
         if(singleLen==BYTE_LENGTH){
-            for (float num : data) {
+            for (float num : newData) {
                 dest.writeInt((int)num);
             }
         }else if(singleLen>BYTE_LENGTH){
-            for (float num : data) {
+            for (float num : newData) {
                 dest.writeBytes(new byte[singleLen-BYTE_LENGTH]);
                 dest.writeInt((int)num);
             }
         }else{
-            for (float num : data) {
+            for (float num : newData) {
                 for(int i=singleLen;i>=1;i--){
                     int move=8*(i-1);
                     dest.writeByte((byte)((int)num>>>move));

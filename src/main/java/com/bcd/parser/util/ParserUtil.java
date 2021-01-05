@@ -157,6 +157,7 @@ public class ParserUtil {
             Object[] lenRpn=null;
             Object[] listLenRpn=null;
             Object[] valRpn=null;
+            Object[] reserveValRpn=null;
             if(!packetField.lenExpr().isEmpty()){
                 lenRpn= RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.lenExpr()));
             }
@@ -164,7 +165,10 @@ public class ParserUtil {
                 listLenRpn= RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.listLenExpr()));
             }
             if(!packetField.valExpr().isEmpty()){
-                valRpn= RpnUtil.doWithRpnList_char_double(RpnUtil.parseArithmeticToRPN(packetField.valExpr()));
+                String[] curValRpn=RpnUtil.parseArithmeticToRPN(packetField.valExpr());
+                String[] curReserveValRpn=RpnUtil.reverseSimpleRPN(curValRpn);
+                valRpn= RpnUtil.doWithRpnList_char_double(curValRpn);
+                reserveValRpn= RpnUtil.doWithRpnList_char_double(curReserveValRpn);
             }
 
             //判断是否变量
@@ -206,13 +210,14 @@ public class ParserUtil {
             fieldInfo.setLenRpn(lenRpn);
             fieldInfo.setListLenRpn(listLenRpn);
             fieldInfo.setValRpn(valRpn);
+            fieldInfo.setReverseValRpn(reserveValRpn);
             fieldInfo.setPacketField_index(packetField.index());
             fieldInfo.setPacketField_len(packetField.len());
             fieldInfo.setPacketField_lenExpr(packetField.lenExpr());
             fieldInfo.setPacketField_listLenExpr(packetField.listLenExpr());
             fieldInfo.setPacketField_singleLen(packetField.singleLen());
             fieldInfo.setPacketField_var(packetField.var());
-            fieldInfo.setPacketField_var_int((int)packetField.var());
+            fieldInfo.setPacketField_var_int(packetField.var());
             fieldInfo.setPacketField_parserClass(packetField.processorClass());
             fieldInfo.setPacketField_valExpr(packetField.valExpr());
             return fieldInfo;

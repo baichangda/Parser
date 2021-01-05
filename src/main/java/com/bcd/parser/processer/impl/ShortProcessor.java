@@ -51,17 +51,27 @@ public class ShortProcessor extends FieldProcessor<Short> {
     @Override
     public void deProcess(Short data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
-        checkValRpnNull(processContext);
+        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        short newData;
+        if(reverseValRpn==null){
+            newData=data;
+        }else{
+            if(checkInvalidOrExceptionVal(data,processContext.getFieldInfo().getPacketField_singleLen())){
+                newData = (short) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data);
+            }else {
+                newData=data;
+            }
+        }
         int len=processContext.getLen();
         if(len==BYTE_LENGTH){
-            dest.writeShort(data);
+            dest.writeShort(newData);
         }else if(len>BYTE_LENGTH){
             dest.writeBytes(new byte[len-BYTE_LENGTH]);
-            dest.writeShort(data);
+            dest.writeShort(newData);
         }else{
             for(int i=len;i>=1;i--){
                 int move=8*(i-1);
-                dest.writeByte((byte)(data>>>move));
+                dest.writeByte((byte)(newData>>>move));
             }
         }
     }
