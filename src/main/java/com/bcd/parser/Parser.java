@@ -56,6 +56,10 @@ import java.util.*;
  * 1、如果当一个字段需要作为变量供其他表达式使用、且此时变量解析出来的值为无效或者异常、会导致解析出错;
  *    要解决这个问题需要设置字段自定义处理器{@link PacketField#processorClass()}
  *
+ * 注意事项:
+ * 1、在使用时候需要定义字段类型 能完全 容纳下协议文档中所占用字节数
+ *   (包括容纳下异常值、无效值,这两种值一般是0xfe、0xff结尾; 例如两个字节即为0xfffe、0xffff、此时需要用int存储才能正确表示其值)
+ *
  */
 @SuppressWarnings("unchecked")
 public abstract class Parser {

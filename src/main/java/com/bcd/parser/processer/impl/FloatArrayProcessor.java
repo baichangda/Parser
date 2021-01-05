@@ -12,6 +12,7 @@ import java.util.Objects;
 
 /**
  * 解析float[]类型字段
+ * 读取为int类型再转换为float
  */
 public class FloatArrayProcessor extends FieldProcessor<float[]> {
     private final static int BYTE_LENGTH=4;

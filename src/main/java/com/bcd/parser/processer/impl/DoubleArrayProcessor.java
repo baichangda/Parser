@@ -12,6 +12,7 @@ import java.util.Objects;
 
 /**
  * 解析double[]类型字段
+ * 读取为long类型再转换为double
  */
 public class DoubleArrayProcessor extends FieldProcessor<double[]> {
     public final static int BYTE_LENGTH=8;
