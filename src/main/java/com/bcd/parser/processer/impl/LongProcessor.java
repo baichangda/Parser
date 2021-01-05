@@ -41,9 +41,9 @@ public class LongProcessor extends FieldProcessor<Long> {
             return res;
         }else{
             if(checkInvalidOrExceptionVal(res,len)){
-                return res;
-            }else{
                 return (long)RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+            }else{
+                return res;
             }
         }
     }
@@ -69,28 +69,28 @@ public class LongProcessor extends FieldProcessor<Long> {
     public boolean checkInvalidOrExceptionVal(long val,int len){
         switch (len) {
             case 1: {
-                return val == 0xff || val == 0xfe;
+                return val != 0xff && val != 0xfe;
             }
             case 2: {
-                return val == 0xffff || val == 0xfffe;
+                return val != 0xffff && val != 0xfffe;
             }
             case 3: {
-                return val == 0xffffff || val == 0xfffffe;
+                return val != 0xffffff && val != 0xfffffe;
             }
             case 4: {
-                return val == 0xffffffff || val == 0xfffffffe;
+                return val != 0xffffffff && val != 0xfffffffe;
             }
             case 5: {
-                return val == 0xffffffffffL || val == 0xfffffffffeL;
+                return val != 0xffffffffffL && val != 0xfffffffffeL;
             }
             case 6: {
-                return val == 0xffffffffffffL || val == 0xfffffffffffeL;
+                return val != 0xffffffffffffL && val != 0xfffffffffffeL;
             }
             case 7: {
-                return val == 0xffffffffffffffL || val == 0xfffffffffffffeL;
+                return val != 0xffffffffffffffL && val != 0xfffffffffffffeL;
             }
             case 8: {
-                return val == 0xffffffffffffffffL || val == 0xfffffffffffffffeL;
+                return val != 0xffffffffffffffffL && val != 0xfffffffffffffffeL;
             }
             default: {
                 throw BaseRuntimeException.getException("param len[{0}] not support", len);

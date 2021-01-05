@@ -21,20 +21,20 @@ public class VehicleBaseData {
     short runMode;
 
     //车速
-    @PacketField(index = 4,len=2)
-    int vehicleSpeed;
+    @PacketField(index = 4,len=2,valExpr = "x*0.1")
+    float vehicleSpeed;
 
     //累计里程
-    @PacketField(index = 5,len=4)
-    int totalMileage;
+    @PacketField(index = 5,len=4,valExpr = "x*0.1")
+    double totalMileage;
 
     //总电压
-    @PacketField(index = 6,len=2)
-    int totalVoltage;
+    @PacketField(index = 6,len=2,valExpr = "x*0.1")
+    float totalVoltage;
 
     //总电流
-    @PacketField(index = 7,len=2)
-    int totalCurrent;
+    @PacketField(index = 7,len=2,valExpr = "x*0.1-1000")
+    float totalCurrent;
 
     //soc
     @PacketField(index = 8,len=1)
@@ -85,35 +85,35 @@ public class VehicleBaseData {
         this.runMode = runMode;
     }
 
-    public int getVehicleSpeed() {
+    public float getVehicleSpeed() {
         return vehicleSpeed;
     }
 
-    public void setVehicleSpeed(int vehicleSpeed) {
+    public void setVehicleSpeed(float vehicleSpeed) {
         this.vehicleSpeed = vehicleSpeed;
     }
 
-    public int getTotalMileage() {
+    public double getTotalMileage() {
         return totalMileage;
     }
 
-    public void setTotalMileage(int totalMileage) {
+    public void setTotalMileage(double totalMileage) {
         this.totalMileage = totalMileage;
     }
 
-    public int getTotalVoltage() {
+    public float getTotalVoltage() {
         return totalVoltage;
     }
 
-    public void setTotalVoltage(int totalVoltage) {
+    public void setTotalVoltage(float totalVoltage) {
         this.totalVoltage = totalVoltage;
     }
 
-    public int getTotalCurrent() {
+    public float getTotalCurrent() {
         return totalCurrent;
     }
 
-    public void setTotalCurrent(int totalCurrent) {
+    public void setTotalCurrent(float totalCurrent) {
         this.totalCurrent = totalCurrent;
     }
 

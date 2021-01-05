@@ -46,10 +46,16 @@ import java.util.*;
  * 性能表现:
  * 以gb32960协议为例子
  * cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
- * 单线程、在cpu使用率90%+ 的情况下、解析速度约为 33-35w/s、多个线程成倍数增长
+ * 单线程、在cpu使用率90%+ 的情况下、解析速度约为 28-30w/s、多个线程成倍数增长
+ * 具体查看{@link com.bcd.parser.impl.gb32960.Parser_gb32960#main(String[])}
  * 注意:
  * 因为是cpu密集型运算、所以性能达到计算机物理核心个数后已经达到上限、不能以逻辑核心为准、此时虽然整体cpu使用率没有满、但这只是使用率显示问题
  * 例如 2核4线程 、物理核心2个、逻辑核心4个、此时使用2个线程就能用尽cpu资源、即使指标显示cpu使用率50%、其实再加线程已经没有提升
+ *
+ * 遗留问题:
+ * 1、如果当一个字段需要作为变量供其他表达式使用、且此时变量解析出来的值为无效或者异常、会导致解析出错
+ * 2、{@link FieldProcessor#deProcess(Object, ByteBuf, FieldDeProcessContext)}反解析方法目前无法识别{@link PacketField#valExpr()}表达式
+ *    完成自动逆解析
  *
  */
 @SuppressWarnings("unchecked")
@@ -83,6 +89,8 @@ public abstract class Parser {
     protected FieldProcessor<short[]> shortArrayProcessor=new ShortArrayProcessor();
     protected FieldProcessor<int[]> integerArrayProcessor=new IntegerArrayProcessor();
     protected FieldProcessor<long[]> longArrayProcessor=new LongArrayProcessor();
+    protected FieldProcessor<float[]> floatArrayProcessor=new FloatArrayProcessor();
+    protected FieldProcessor<double[]> doubleArrayProcessor=new DoubleArrayProcessor();
     protected FieldProcessor<String> stringProcessor=new StringProcessor();
     protected FieldProcessor<Date> dateProcessor=new DateProcessor();
     protected FieldProcessor<ByteBuf> byteBufProcessor=new ByteBufProcessor();
@@ -131,6 +139,8 @@ public abstract class Parser {
         processorList.add(this.shortArrayProcessor);
         processorList.add(this.integerArrayProcessor);
         processorList.add(this.longArrayProcessor);
+        processorList.add(this.floatArrayProcessor);
+        processorList.add(this.doubleArrayProcessor);
         processorList.add(this.stringProcessor);
         processorList.add(this.dateProcessor);
         processorList.add(this.byteBufProcessor);

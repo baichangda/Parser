@@ -1,8 +1,10 @@
 package com.bcd.parser.processer.impl;
 
+import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
@@ -46,6 +48,15 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
                 }
             }
         }
+        //值表达式处理
+        Object[] valRpn=processContext.getFieldInfo().getValRpn();
+        if(valRpn!=null){
+            for(int i=0;i<res.length-1;i++){
+                if(checkInvalidOrExceptionVal(res[i],singleLen)){
+                    res[i] = (long) RpnUtil.calcRPN_char_double_singleVar(valRpn, res[i]);
+                }
+            }
+        }
         return res;
     }
 
@@ -68,6 +79,38 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
                     int move=8*(i-1);
                     dest.writeByte((byte)(num>>>move));
                 }
+            }
+        }
+    }
+
+    public boolean checkInvalidOrExceptionVal(long val,int len){
+        switch (len) {
+            case 1: {
+                return val != 0xff && val != 0xfe;
+            }
+            case 2: {
+                return val != 0xffff && val != 0xfffe;
+            }
+            case 3: {
+                return val != 0xffffff && val != 0xfffffe;
+            }
+            case 4: {
+                return val != 0xffffffff && val != 0xfffffffe;
+            }
+            case 5: {
+                return val != 0xffffffffffL && val != 0xfffffffffeL;
+            }
+            case 6: {
+                return val != 0xffffffffffffL && val != 0xfffffffffffeL;
+            }
+            case 7: {
+                return val != 0xffffffffffffffL && val != 0xfffffffffffffeL;
+            }
+            case 8: {
+                return val != 0xffffffffffffffffL && val != 0xfffffffffffffffeL;
+            }
+            default: {
+                throw BaseRuntimeException.getException("param len[{0}] not support", len);
             }
         }
     }

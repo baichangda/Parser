@@ -41,9 +41,9 @@ public class ShortProcessor extends FieldProcessor<Short> {
             return res;
         }else{
             if(checkInvalidOrExceptionVal(res,len)){
-                return res;
-            }else{
                 return (short)RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+            }else{
+                return res;
             }
         }
     }
@@ -69,10 +69,10 @@ public class ShortProcessor extends FieldProcessor<Short> {
     public boolean checkInvalidOrExceptionVal(short val,int len){
         switch (len) {
             case 1: {
-                return val == 0xff || val == 0xfe;
+                return val != 0xff && val != 0xfe;
             }
             case 2: {
-                return val == (short)0xffff || val == (short)0xfffe;
+                return val != (short)0xffff && val != (short)0xfffe;
             }
             default: {
                 throw BaseRuntimeException.getException("param len[{0}] not support", len);

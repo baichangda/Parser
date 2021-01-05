@@ -13,12 +13,12 @@ public class StorageVoltageData {
     short no;
 
     //可充电储能装置电压
-    @PacketField(index = 2,len = 2)
-    int voltage;
+    @PacketField(index = 2,len = 2,valExpr = "x*0.1")
+    float voltage;
 
     //可充电储能状态电流
-    @PacketField(index = 3,len = 2)
-    int current;
+    @PacketField(index = 3,len = 2,valExpr = "x*0.1-1000")
+    float current;
 
     //单体电池总数
     @PacketField(index = 4,len = 2)
@@ -33,8 +33,8 @@ public class StorageVoltageData {
     short frameTotal;
 
     //单体电池电压
-    @PacketField(index = 7,singleLen = 2,lenExpr = "2*m")
-    int[] singleVoltage;
+    @PacketField(index = 7,singleLen = 2,lenExpr = "2*m",valExpr = "x*0.001")
+    float[] singleVoltage;
 
     public short getNo() {
         return no;
@@ -44,19 +44,19 @@ public class StorageVoltageData {
         this.no = no;
     }
 
-    public int getVoltage() {
+    public float getVoltage() {
         return voltage;
     }
 
-    public void setVoltage(int voltage) {
+    public void setVoltage(float voltage) {
         this.voltage = voltage;
     }
 
-    public int getCurrent() {
+    public float getCurrent() {
         return current;
     }
 
-    public void setCurrent(int current) {
+    public void setCurrent(float current) {
         this.current = current;
     }
 
@@ -84,11 +84,11 @@ public class StorageVoltageData {
         this.frameTotal = frameTotal;
     }
 
-    public int[] getSingleVoltage() {
+    public float[] getSingleVoltage() {
         return singleVoltage;
     }
 
-    public void setSingleVoltage(int[] singleVoltage) {
+    public void setSingleVoltage(float[] singleVoltage) {
         this.singleVoltage = singleVoltage;
     }
 }

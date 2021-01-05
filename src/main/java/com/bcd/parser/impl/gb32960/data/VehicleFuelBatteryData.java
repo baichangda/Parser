@@ -9,44 +9,44 @@ import com.bcd.parser.anno.Parsable;
 @Parsable
 public class VehicleFuelBatteryData {
     //燃料电池电压
-    @PacketField(index = 1,len = 2)
-    int voltage;
+    @PacketField(index = 1,len = 2,valExpr = "x*0.1")
+    float voltage;
 
     //燃料电池电流
-    @PacketField(index = 2,len = 2)
-    int current;
+    @PacketField(index = 2,len = 2,valExpr = "x*0.1")
+    float current;
 
     //燃料消耗率
-    @PacketField(index = 3,len = 2)
-    int consumptionRate;
+    @PacketField(index = 3,len = 2,valExpr = "x*0.01")
+    float consumptionRate;
 
     //燃料电池温度探针总数
     @PacketField(index = 4,len = 2,var = 'a')
     int num;
 
     //探针温度值
-    @PacketField(index =5,lenExpr = "num")
+    @PacketField(index =5,lenExpr = "a",valExpr = "x-40")
     short[] temperatures;
 
     //氢系统中最高温度
-    @PacketField(index = 6,len = 2)
-    int maxTemperature;
+    @PacketField(index = 6,len = 2,valExpr = "x*0.1-40")
+    float maxTemperature;
 
     //氢系统中最高温度探针代号
     @PacketField(index = 7,len = 1)
     short maxTemperatureCode;
 
     //氢气最高浓度
-    @PacketField(index = 8,len = 2)
+    @PacketField(index = 8,len = 2,valExpr = "x-10000")
     int maxConcentration;
 
     //氢气最高浓度传感器代号
     @PacketField(index = 9,len = 1)
     short maxConcentrationCode;
 
-    //氢气最高压力传感器代号
-    @PacketField(index = 10,len = 2)
-    short maxPressure;
+    //氢气最高压力
+    @PacketField(index = 10,len = 2,valExpr = "x*0.1")
+    float maxPressure;
 
     //氢气最高压力传感器代号
     @PacketField(index = 11,len = 1)
@@ -57,27 +57,27 @@ public class VehicleFuelBatteryData {
     short dcStatus;
 
 
-    public int getVoltage() {
+    public float getVoltage() {
         return voltage;
     }
 
-    public void setVoltage(int voltage) {
+    public void setVoltage(float voltage) {
         this.voltage = voltage;
     }
 
-    public int getCurrent() {
+    public float getCurrent() {
         return current;
     }
 
-    public void setCurrent(int current) {
+    public void setCurrent(float current) {
         this.current = current;
     }
 
-    public int getConsumptionRate() {
+    public float getConsumptionRate() {
         return consumptionRate;
     }
 
-    public void setConsumptionRate(int consumptionRate) {
+    public void setConsumptionRate(float consumptionRate) {
         this.consumptionRate = consumptionRate;
     }
 
@@ -97,11 +97,11 @@ public class VehicleFuelBatteryData {
         this.temperatures = temperatures;
     }
 
-    public int getMaxTemperature() {
+    public float getMaxTemperature() {
         return maxTemperature;
     }
 
-    public void setMaxTemperature(int maxTemperature) {
+    public void setMaxTemperature(float maxTemperature) {
         this.maxTemperature = maxTemperature;
     }
 
@@ -129,11 +129,11 @@ public class VehicleFuelBatteryData {
         this.maxConcentrationCode = maxConcentrationCode;
     }
 
-    public short getMaxPressure() {
+    public float getMaxPressure() {
         return maxPressure;
     }
 
-    public void setMaxPressure(short maxPressure) {
+    public void setMaxPressure(float maxPressure) {
         this.maxPressure = maxPressure;
     }
 

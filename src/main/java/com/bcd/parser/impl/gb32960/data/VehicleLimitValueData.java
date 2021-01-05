@@ -17,8 +17,8 @@ public class VehicleLimitValueData {
     short maxVoltageCode;
 
     //电池单体电压最高值
-    @PacketField(index = 3,len = 2)
-    int maxVoltage;
+    @PacketField(index = 3,len = 2,valExpr = "x*0.001")
+    float maxVoltage;
 
     //最低电压电池子系统号
     @PacketField(index = 4,len = 1)
@@ -29,8 +29,8 @@ public class VehicleLimitValueData {
     short minVoltageCode;
 
     //电池单体电压最低值
-    @PacketField(index = 6,len = 2)
-    int minVoltage;
+    @PacketField(index = 6,len = 2,valExpr = "x*0.001")
+    float minVoltage;
 
     //最高温度子系统号
     @PacketField(index = 7,len = 1)
@@ -41,7 +41,7 @@ public class VehicleLimitValueData {
     short maxTemperatureNo;
 
     //最高温度值
-    @PacketField(index = 9,len = 1)
+    @PacketField(index = 9,len = 1,valExpr = "x-40")
     short maxTemperature;
 
     //最低温度子系统号
@@ -53,7 +53,7 @@ public class VehicleLimitValueData {
     short minTemperatureNo;
 
     //最低温度值
-    @PacketField(index = 12,len = 1)
+    @PacketField(index = 12,len = 1,valExpr = "x-40")
     short minTemperature;
 
     public short getMaxVoltageSystemNo() {
@@ -72,11 +72,11 @@ public class VehicleLimitValueData {
         this.maxVoltageCode = maxVoltageCode;
     }
 
-    public int getMaxVoltage() {
+    public float getMaxVoltage() {
         return maxVoltage;
     }
 
-    public void setMaxVoltage(int maxVoltage) {
+    public void setMaxVoltage(float maxVoltage) {
         this.maxVoltage = maxVoltage;
     }
 
@@ -96,11 +96,11 @@ public class VehicleLimitValueData {
         this.minVoltageCode = minVoltageCode;
     }
 
-    public int getMinVoltage() {
+    public float getMinVoltage() {
         return minVoltage;
     }
 
-    public void setMinVoltage(int minVoltage) {
+    public void setMinVoltage(float minVoltage) {
         this.minVoltage = minVoltage;
     }
 

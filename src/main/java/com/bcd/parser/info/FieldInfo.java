@@ -36,12 +36,15 @@ public class FieldInfo {
      * 7、short[]
      * 8、int[]
      * 9、long[]
-     * 10、String
-     * 11、Date
-     * 12、ByteBuf
-     * 13、List
+     * 10、float[]
+     * 11、double[]
+     * 12、String
+     * 13、Date
+     * 14、ByteBuf
+     * 15、List
+     * 16、@Parsable标注实体类对象
      *
-     * >=14、代表自定义的类型
+     * >=17、自定义处理器
      *
      */
     public int processorIndex;

@@ -17,8 +17,8 @@ public class VehicleEngineData {
     int speed;
 
     //燃料消耗率
-    @PacketField(index = 3,len = 2)
-    int rate;
+    @PacketField(index = 3,len = 2,valExpr = "x*0.01")
+    float rate;
 
     public short getStatus() {
         return status;
@@ -36,11 +36,11 @@ public class VehicleEngineData {
         this.speed = speed;
     }
 
-    public int getRate() {
+    public float getRate() {
         return rate;
     }
 
-    public void setRate(int rate) {
+    public void setRate(float rate) {
         this.rate = rate;
     }
 }

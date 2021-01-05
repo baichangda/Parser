@@ -4,6 +4,7 @@ import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 
 import java.util.Objects;
@@ -31,6 +32,15 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
         }else{
             throw BaseRuntimeException.getException("packetField_singleLen can not less than 1");
         }
+        //值表达式处理
+        Object[] valRpn=processContext.getFieldInfo().getValRpn();
+        if(valRpn!=null){
+            for(int i=0;i<res.length-1;i++){
+                if(checkInvalidOrExceptionVal(res[i])){
+                    res[i]=(byte) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i]);
+                }
+            }
+        }
         return res;
     }
 
@@ -46,5 +56,9 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
                 dest.writeByte(num);
             }
         }
+    }
+
+    public boolean checkInvalidOrExceptionVal(byte val){
+        return val != (byte) 0xff && val != (byte) 0xfe;
     }
 }

@@ -17,28 +17,28 @@ public class MotorData {
     short status;
 
     //驱动电机控制器温度
-    @PacketField(index = 3,len = 1)
-    int controllerTemperature;
+    @PacketField(index = 3,len = 1,valExpr = "x-40")
+    short controllerTemperature;
 
     //驱动电机转速
-    @PacketField(index = 4,len = 2)
+    @PacketField(index = 4,len = 2,valExpr = "x-20000")
     int rotateSpeed;
 
     //驱动电机转矩
-    @PacketField(index = 5,len = 2)
-    int rotateRectangle;
+    @PacketField(index = 5,len = 2,valExpr = "x*0.1-2000")
+    float rotateRectangle;
 
     //驱动电机温度
-    @PacketField(index = 6,len = 1)
+    @PacketField(index = 6,len = 1,valExpr = "x-40")
     short temperature;
 
     //电机控制器输入电压
-    @PacketField(index = 7,len = 2)
-    int inputVoltage;
+    @PacketField(index = 7,len = 2,valExpr = "x*0.1")
+    float inputVoltage;
 
     //电机控制器直流母线电流
-    @PacketField(index = 8,len = 2)
-    int current;
+    @PacketField(index = 8,len = 2,valExpr = "x*0.1-1000")
+    float current;
 
     public short getNo() {
         return no;
@@ -56,11 +56,11 @@ public class MotorData {
         this.status = status;
     }
 
-    public int getControllerTemperature() {
+    public short getControllerTemperature() {
         return controllerTemperature;
     }
 
-    public void setControllerTemperature(int controllerTemperature) {
+    public void setControllerTemperature(short controllerTemperature) {
         this.controllerTemperature = controllerTemperature;
     }
 
@@ -72,11 +72,11 @@ public class MotorData {
         this.rotateSpeed = rotateSpeed;
     }
 
-    public int getRotateRectangle() {
+    public float getRotateRectangle() {
         return rotateRectangle;
     }
 
-    public void setRotateRectangle(int rotateRectangle) {
+    public void setRotateRectangle(float rotateRectangle) {
         this.rotateRectangle = rotateRectangle;
     }
 
@@ -88,19 +88,19 @@ public class MotorData {
         this.temperature = temperature;
     }
 
-    public int getInputVoltage() {
+    public float getInputVoltage() {
         return inputVoltage;
     }
 
-    public void setInputVoltage(int inputVoltage) {
+    public void setInputVoltage(float inputVoltage) {
         this.inputVoltage = inputVoltage;
     }
 
-    public int getCurrent() {
+    public float getCurrent() {
         return current;
     }
 
-    public void setCurrent(int current) {
+    public void setCurrent(float current) {
         this.current = current;
     }
 }

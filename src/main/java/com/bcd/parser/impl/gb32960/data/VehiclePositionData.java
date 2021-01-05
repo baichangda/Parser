@@ -13,12 +13,12 @@ public class VehiclePositionData {
     byte status;
 
     //经度
-    @PacketField(index = 2,len = 4)
-    int lng;
+    @PacketField(index = 2,len = 4,valExpr = "x*0.000001")
+    double lng;
 
     //纬度
-    @PacketField(index = 3,len = 4)
-    int lat;
+    @PacketField(index = 3,len = 4,valExpr = "x*0.000001")
+    double lat;
 
 
     public byte getStatus() {
@@ -29,19 +29,19 @@ public class VehiclePositionData {
         this.status = status;
     }
 
-    public int getLng() {
+    public double getLng() {
         return lng;
     }
 
-    public void setLng(int lng) {
+    public void setLng(double lng) {
         this.lng = lng;
     }
 
-    public int getLat() {
+    public double getLat() {
         return lat;
     }
 
-    public void setLat(int lat) {
+    public void setLat(double lat) {
         this.lat = lat;
     }
 }

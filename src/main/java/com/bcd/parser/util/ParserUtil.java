@@ -73,21 +73,23 @@ public class ParserUtil {
             boolean isVar=false;
             int processorIndex;
             /**
-             *         processorList.add(this.byteProcessor);
-             *         processorList.add(this.shortProcessor);
-             *         processorList.add(this.integerProcessor);
-             *         processorList.add(this.longProcessor);
-             *         processorList.add(this.floatProcessor);
-             *         processorList.add(this.doubleProcessor);
-             *         processorList.add(this.byteArrayProcessor);
-             *         processorList.add(this.shortArrayProcessor);
-             *         processorList.add(this.integerArrayProcessor);
-             *         processorList.add(this.longArrayProcessor);
-             *         processorList.add(this.stringProcessor);
-             *         processorList.add(this.dateProcessor);
-             *         processorList.add(this.byteBufProcessor);
-             *         processorList.add(this.listProcessor);
-             *         processorList.add(this.parsableObjectProcessor);
+             processorList.add(this.byteProcessor);
+             processorList.add(this.shortProcessor);
+             processorList.add(this.integerProcessor);
+             processorList.add(this.longProcessor);
+             processorList.add(this.floatProcessor);
+             processorList.add(this.doubleProcessor);
+             processorList.add(this.byteArrayProcessor);
+             processorList.add(this.shortArrayProcessor);
+             processorList.add(this.integerArrayProcessor);
+             processorList.add(this.longArrayProcessor);
+             processorList.add(this.floatArrayProcessor);
+             processorList.add(this.doubleArrayProcessor);
+             processorList.add(this.stringProcessor);
+             processorList.add(this.dateProcessor);
+             processorList.add(this.byteBufProcessor);
+             processorList.add(this.listProcessor);
+             processorList.add(this.parsableObjectProcessor);
              */
             //判断是否特殊处理
             if(packetField.processorClass()==Void.class){
@@ -106,9 +108,9 @@ public class ParserUtil {
                     } else if (Double.class.isAssignableFrom(fieldType) || Double.TYPE.isAssignableFrom(fieldType)) {
                         processorIndex=5;
                     } else if (String.class.isAssignableFrom(fieldType)) {
-                        processorIndex=10;
+                        processorIndex=12;
                     } else if (Date.class.isAssignableFrom(fieldType)) {
-                        processorIndex=11;
+                        processorIndex=13;
                     } else if (fieldType.isArray()) {
                         //数组类型
                         Class arrType = fieldType.getComponentType();
@@ -120,12 +122,16 @@ public class ParserUtil {
                             processorIndex=8;
                         } else if (Long.class.isAssignableFrom(arrType) || Long.TYPE.isAssignableFrom(arrType)) {
                             processorIndex=9;
+                        } else if (Float.class.isAssignableFrom(arrType) || Float.TYPE.isAssignableFrom(arrType)) {
+                            processorIndex=10;
+                        } else if (Double.class.isAssignableFrom(arrType) || Double.TYPE.isAssignableFrom(arrType)) {
+                            processorIndex=11;
                         } else {
                             throw BaseRuntimeException.getException("Class[" + clazz.getName() + "] Field[" + field.getName() + "] Array Type[" + arrType.getName() + "] Not Support");
                         }
                     } else if(ByteBuf.class.isAssignableFrom(fieldType)){
                         //ByteBuf类型
-                        processorIndex=12;
+                        processorIndex=14;
                     } else {
                         /**
                          * 带{@link com.bcd.parser.anno.Parsable}注解的实体类
@@ -134,12 +140,12 @@ public class ParserUtil {
                             throw BaseRuntimeException.getException("Class[" + clazz.getName() + "] Field[" + field.getName() + "] Bean Type[" + fieldType + "] Not Support,Must have annotation [com.bcd.parser.anno.Parsable]");
                         }
                         typeClazz = fieldType;
-                        processorIndex=14;
+                        processorIndex=16;
                     }
                 }else{
                     //实体类型集合
                     typeClazz = (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
-                    processorIndex=13;
+                    processorIndex=15;
                 }
             }else{
                 //特殊处理,自定义实体类型
