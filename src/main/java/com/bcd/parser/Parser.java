@@ -55,8 +55,6 @@ import java.util.*;
  * 遗留问题:
  * 1、如果当一个字段需要作为变量供其他表达式使用、且此时变量解析出来的值为无效或者异常、会导致解析出错;
  *    要解决这个问题需要设置字段自定义处理器{@link PacketField#processorClass()}
- * 2、{@link FieldProcessor#deProcess(Object, ByteBuf, FieldDeProcessContext)}反解析方法目前无法识别{@link PacketField#valExpr()}表达式
- *    完成自动逆解析
  *
  */
 @SuppressWarnings("unchecked")
