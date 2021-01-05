@@ -42,7 +42,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
                 int diff=BYTE_LENGTH-singleLen;
                 for(int i=0;i<res.length;i++){
                     temp.writeBytes(new byte[diff]);
-                    temp.writeBytes(data,BYTE_LENGTH);
+                    temp.writeBytes(data,singleLen);
                     res[i]=temp.readInt();
                     temp.clear();
                 }

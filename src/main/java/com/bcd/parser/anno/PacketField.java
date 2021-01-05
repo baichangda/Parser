@@ -14,11 +14,13 @@ import java.lang.annotation.*;
  * short[]
  * int[]
  * long[]
+ * float[]
+ * double[]
  * String
  * Date
  * ByteBuf
  * List
- * 自定义类型,TestBean
+ * {@link Parsable}注解标注的自定义类型
  *
  * 如果以上类型不满足解析需求,可以自行设置{@link #processorClass()}属性定义自定义解析器
  *
@@ -70,7 +72,7 @@ public @interface PacketField {
      */
     String listLenExpr() default "";
     /**
-     * 单个元素字节长度(用于字节数组转换成byte[]、short[]、int[]、long[]数组中单个元素对应字节数)
+     * 单个元素字节长度(用于字节数组转换成byte[]、short[]、int[]、long[]、float[]、double[]数组中单个元素对应字节数)
      * 例如:
      * 原始为 byte[8] 字段数据 转换成 int[],
      * 如果配比为 2: 则表示2个byte转换成一个int存入数组,因为一个int可以代表4个字节,所以int的高两位字节补全部补0,最后转换的长度为 int[4]
@@ -84,6 +86,9 @@ public @interface PacketField {
      * 公式中的任意变量都代表字段原始的值
      * 例如:
      * x*0.1-1000
+     *
+     * 注意:
+     * 表达式必须写成 y=ax+b的形式、其中a!=0 ; 是因为需要对此表达式反转通过y求x得到 x=(y-b)/a
      */
     String valExpr() default "";
 
