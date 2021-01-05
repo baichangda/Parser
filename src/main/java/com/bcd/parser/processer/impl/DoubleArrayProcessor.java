@@ -58,6 +58,7 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
             }
         }else{
             for(int i=0;i<res.length-1;i++){
+                //验证异常、无效值
                 if(checkInvalidOrExceptionVal(res[i],singleLen)){
                     finalRes[i]=RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i]);
                 }else{

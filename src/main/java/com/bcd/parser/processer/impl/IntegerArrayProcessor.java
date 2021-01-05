@@ -72,6 +72,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
         }else{
             newData=new int[data.length];
             for(int i=0;i<data.length;i++){
+                //验证异常、无效值
                 if(checkInvalidOrExceptionVal(data[i],singleLen)){
                     newData[i]=(int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i]);
                 }else{
