@@ -2,15 +2,10 @@ package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * 燃料电池数据
  */
-@Getter
-@Setter
 @Parsable
 public class VehicleFuelBatteryData {
     //燃料电池电压
@@ -62,4 +57,99 @@ public class VehicleFuelBatteryData {
     short dcStatus;
 
 
+    public int getVoltage() {
+        return voltage;
+    }
+
+    public void setVoltage(int voltage) {
+        this.voltage = voltage;
+    }
+
+    public int getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(int current) {
+        this.current = current;
+    }
+
+    public int getConsumptionRate() {
+        return consumptionRate;
+    }
+
+    public void setConsumptionRate(int consumptionRate) {
+        this.consumptionRate = consumptionRate;
+    }
+
+    public int getNum() {
+        return num;
+    }
+
+    public void setNum(int num) {
+        this.num = num;
+    }
+
+    public short[] getTemperatures() {
+        return temperatures;
+    }
+
+    public void setTemperatures(short[] temperatures) {
+        this.temperatures = temperatures;
+    }
+
+    public int getMaxTemperature() {
+        return maxTemperature;
+    }
+
+    public void setMaxTemperature(int maxTemperature) {
+        this.maxTemperature = maxTemperature;
+    }
+
+    public short getMaxTemperatureCode() {
+        return maxTemperatureCode;
+    }
+
+    public void setMaxTemperatureCode(short maxTemperatureCode) {
+        this.maxTemperatureCode = maxTemperatureCode;
+    }
+
+    public int getMaxConcentration() {
+        return maxConcentration;
+    }
+
+    public void setMaxConcentration(int maxConcentration) {
+        this.maxConcentration = maxConcentration;
+    }
+
+    public short getMaxConcentrationCode() {
+        return maxConcentrationCode;
+    }
+
+    public void setMaxConcentrationCode(short maxConcentrationCode) {
+        this.maxConcentrationCode = maxConcentrationCode;
+    }
+
+    public short getMaxPressure() {
+        return maxPressure;
+    }
+
+    public void setMaxPressure(short maxPressure) {
+        this.maxPressure = maxPressure;
+    }
+
+    public short getMaxPressureCode() {
+        return maxPressureCode;
+    }
+
+    public void setMaxPressureCode(short maxPressureCode) {
+        this.maxPressureCode = maxPressureCode;
+    }
+
+    public short getDcStatus() {
+        return dcStatus;
+    }
+
+    public void setDcStatus(short dcStatus) {
+        this.dcStatus = dcStatus;
+    }
 }

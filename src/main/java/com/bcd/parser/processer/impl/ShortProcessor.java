@@ -1,5 +1,6 @@
 package com.bcd.parser.processer.impl;
 
+import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
@@ -39,7 +40,11 @@ public class ShortProcessor extends FieldProcessor<Short> {
         if(valRpn==null){
             return res;
         }else{
-            return (short) RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+            if(checkInvalidOrExceptionVal(res,len)){
+                return res;
+            }else{
+                return (short)RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+            }
         }
     }
 
@@ -57,6 +62,20 @@ public class ShortProcessor extends FieldProcessor<Short> {
             for(int i=len;i>=1;i--){
                 int move=8*(i-1);
                 dest.writeByte((byte)(data>>>move));
+            }
+        }
+    }
+
+    public boolean checkInvalidOrExceptionVal(short val,int len){
+        switch (len) {
+            case 1: {
+                return val == 0xff || val == 0xfe;
+            }
+            case 2: {
+                return val == (short)0xffff || val == (short)0xfffe;
+            }
+            default: {
+                throw BaseRuntimeException.getException("param len[{0}] not support", len);
             }
         }
     }

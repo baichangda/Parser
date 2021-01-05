@@ -32,7 +32,11 @@ public class ByteProcessor extends FieldProcessor<Byte> {
         if(valRpn==null){
             return res;
         }else{
-            return (byte) RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+            if(checkInvalidOrExceptionVal(res)){
+                return res;
+            }else{
+                return (byte)RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+            }
         }
     }
 
@@ -47,5 +51,9 @@ public class ByteProcessor extends FieldProcessor<Byte> {
         byte[] content=new byte[len];
         content[len-BYTE_LENGTH]=data;
         dest.writeBytes(content);
+    }
+
+    public boolean checkInvalidOrExceptionVal(byte val){
+        return val != (byte) 0xff && val != (byte) 0xfe;
     }
 }

@@ -444,14 +444,6 @@ public abstract class Parser {
         }
     }
 
-    public boolean isEnableOffsetField() {
-        return enableOffsetField;
-    }
-
-    public void setEnableOffsetField(boolean enableOffsetField) {
-        this.enableOffsetField = enableOffsetField;
-    }
-
     public Map<Class, PacketInfo> getPacketInfoCache() {
         return packetInfoCache;
     }
@@ -464,6 +456,14 @@ public abstract class Parser {
         this.fieldProcessors = fieldProcessors;
     }
 
+    public boolean isEnableOffsetField() {
+        return enableOffsetField;
+    }
+
+    public void setEnableOffsetField(boolean enableOffsetField) {
+        this.enableOffsetField = enableOffsetField;
+    }
+
     public List<FieldProcessor> getBaseProcessorList() {
         return baseProcessorList;
     }
@@ -472,36 +472,52 @@ public abstract class Parser {
         this.baseProcessorList = baseProcessorList;
     }
 
-    public FieldProcessor getByteProcessor() {
+    public FieldProcessor<Byte> getByteProcessor() {
         return byteProcessor;
     }
 
-    public void setByteProcessor(FieldProcessor byteProcessor) {
+    public void setByteProcessor(FieldProcessor<Byte> byteProcessor) {
         this.byteProcessor = byteProcessor;
     }
 
-    public FieldProcessor getShortProcessor() {
+    public FieldProcessor<Short> getShortProcessor() {
         return shortProcessor;
     }
 
-    public void setShortProcessor(FieldProcessor shortProcessor) {
+    public void setShortProcessor(FieldProcessor<Short> shortProcessor) {
         this.shortProcessor = shortProcessor;
     }
 
-    public FieldProcessor getIntegerProcessor() {
+    public FieldProcessor<Integer> getIntegerProcessor() {
         return integerProcessor;
     }
 
-    public void setIntegerProcessor(FieldProcessor integerProcessor) {
+    public void setIntegerProcessor(FieldProcessor<Integer> integerProcessor) {
         this.integerProcessor = integerProcessor;
     }
 
-    public FieldProcessor getLongProcessor() {
+    public FieldProcessor<Long> getLongProcessor() {
         return longProcessor;
     }
 
-    public void setLongProcessor(FieldProcessor longProcessor) {
+    public void setLongProcessor(FieldProcessor<Long> longProcessor) {
         this.longProcessor = longProcessor;
+    }
+
+    public FieldProcessor<Float> getFloatProcessor() {
+        return floatProcessor;
+    }
+
+    public void setFloatProcessor(FieldProcessor<Float> floatProcessor) {
+        this.floatProcessor = floatProcessor;
+    }
+
+    public FieldProcessor<Double> getDoubleProcessor() {
+        return doubleProcessor;
+    }
+
+    public void setDoubleProcessor(FieldProcessor<Double> doubleProcessor) {
+        this.doubleProcessor = doubleProcessor;
     }
 
     public FieldProcessor<byte[]> getByteArrayProcessor() {
@@ -566,5 +582,13 @@ public abstract class Parser {
 
     public void setListProcessor(FieldProcessor<List> listProcessor) {
         this.listProcessor = listProcessor;
+    }
+
+    public FieldProcessor<Object> getParsableObjectProcessor() {
+        return parsableObjectProcessor;
+    }
+
+    public void setParsableObjectProcessor(FieldProcessor<Object> parsableObjectProcessor) {
+        this.parsableObjectProcessor = parsableObjectProcessor;
     }
 }

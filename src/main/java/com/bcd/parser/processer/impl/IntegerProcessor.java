@@ -1,5 +1,6 @@
 package com.bcd.parser.processer.impl;
 
+import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
@@ -39,7 +40,11 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
         if(valRpn==null){
             return res;
         }else{
-            return (int) RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+            if(checkInvalidOrExceptionVal(res,len)){
+                return res;
+            }else{
+                return (int) RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+            }
         }
     }
 
@@ -60,4 +65,25 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
             }
         }
     }
+
+    public boolean checkInvalidOrExceptionVal(int val,int len){
+        switch (len){
+            case 1:{
+                return val == 0xff || val == 0xfe;
+            }
+            case 2:{
+                return val == 0xffff || val == 0xfffe;
+            }
+            case 3:{
+                return val == 0xffffff || val == 0xfffffe;
+            }
+            case 4:{
+                return val == 0xffffffff || val == 0xfffffffe;
+            }
+            default:{
+                throw BaseRuntimeException.getException("param len[{0}] not support",len);
+            }
+        }
+    }
+
 }

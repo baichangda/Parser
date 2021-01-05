@@ -2,15 +2,10 @@ package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * 每个驱动电机数据格式
  */
-@Getter
-@Setter
 @Parsable
 public class MotorData {
     //驱动电机序号
@@ -45,4 +40,67 @@ public class MotorData {
     @PacketField(index = 8,len = 2)
     int current;
 
+    public short getNo() {
+        return no;
+    }
+
+    public void setNo(short no) {
+        this.no = no;
+    }
+
+    public short getStatus() {
+        return status;
+    }
+
+    public void setStatus(short status) {
+        this.status = status;
+    }
+
+    public int getControllerTemperature() {
+        return controllerTemperature;
+    }
+
+    public void setControllerTemperature(int controllerTemperature) {
+        this.controllerTemperature = controllerTemperature;
+    }
+
+    public int getRotateSpeed() {
+        return rotateSpeed;
+    }
+
+    public void setRotateSpeed(int rotateSpeed) {
+        this.rotateSpeed = rotateSpeed;
+    }
+
+    public int getRotateRectangle() {
+        return rotateRectangle;
+    }
+
+    public void setRotateRectangle(int rotateRectangle) {
+        this.rotateRectangle = rotateRectangle;
+    }
+
+    public short getTemperature() {
+        return temperature;
+    }
+
+    public void setTemperature(short temperature) {
+        this.temperature = temperature;
+    }
+
+    public int getInputVoltage() {
+        return inputVoltage;
+    }
+
+    public void setInputVoltage(int inputVoltage) {
+        this.inputVoltage = inputVoltage;
+    }
+
+    public int getCurrent() {
+        return current;
+    }
+
+    public void setCurrent(int current) {
+        this.current = current;
+    }
 }

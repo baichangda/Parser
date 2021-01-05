@@ -1,5 +1,6 @@
 package com.bcd.parser.processer.impl;
 
+import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
@@ -39,7 +40,11 @@ public class FloatProcessor extends FieldProcessor<Float> {
         if(valRpn==null){
             return (float)res;
         }else{
-            return (float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+            if(checkInvalidOrExceptionVal(res,len)){
+                return (float)res;
+            }else{
+                return (float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+            }
         }
     }
 
@@ -58,6 +63,26 @@ public class FloatProcessor extends FieldProcessor<Float> {
             for(int i=len;i>=1;i--){
                 int move=8*(i-1);
                 dest.writeByte((byte)(intData>>>move));
+            }
+        }
+    }
+
+    public boolean checkInvalidOrExceptionVal(int val,int len){
+        switch (len){
+            case 1:{
+                return val == 0xff || val == 0xfe;
+            }
+            case 2:{
+                return val == 0xffff || val == 0xfffe;
+            }
+            case 3:{
+                return val == 0xffffff || val == 0xfffffe;
+            }
+            case 4:{
+                return val == 0xffffffff || val == 0xfffffffe;
+            }
+            default:{
+                throw BaseRuntimeException.getException("param len[{0}] not support",len);
             }
         }
     }
