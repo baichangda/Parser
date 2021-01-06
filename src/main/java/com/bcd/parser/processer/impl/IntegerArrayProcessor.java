@@ -18,6 +18,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
 
     @Override
     public int[] process(ByteBuf data, FieldProcessContext processContext){
+        //读取原始值
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
         int len =processContext.getLen();
         int[] res=new int[len/singleLen];
@@ -52,6 +53,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
         Object[] valRpn=processContext.getFieldInfo().getValRpn();
         if(valRpn!=null){
             for(int i=0;i<res.length;i++){
+                //验证异常、无效值
                 if(checkInvalidOrExceptionVal(res[i],singleLen)){
                     res[i]=(int) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],0);
                 }
@@ -64,7 +66,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
     public void deProcess(int[] data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
-
+        //值表达式处理
         Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
         int[] newData;
         if(reverseValRpn==null){
@@ -80,7 +82,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
                 }
             }
         }
-
+        //写入原始值
         if(singleLen==BYTE_LENGTH){
             for (int num : newData) {
                 dest.writeInt(num);

@@ -37,10 +37,12 @@ public class DoubleProcessor extends FieldProcessor<Double> {
                 res=temp.readLong();
             }
         }
+        //值表达式处理
         Object[] valRpn=processContext.getFieldInfo().getValRpn();
         if(valRpn==null){
             return (double)res;
         }else{
+            //验证异常、无效值
             if(checkInvalidOrExceptionVal(res,len)){
                 return RpnUtil.calcRPN_char_double_singleVar(valRpn,res,processContext.getFieldInfo().getValExprPrecision());
             }else{
@@ -54,15 +56,18 @@ public class DoubleProcessor extends FieldProcessor<Double> {
         Objects.requireNonNull(data);
         Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
         long newData;
+        //值表达式处理
         if(reverseValRpn==null){
             newData=data.longValue();
         }else{
+            //验证异常、无效值
             if(checkInvalidOrExceptionVal(data.longValue(),processContext.getLen())){
                 newData = (long) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,0);
             }else {
                 newData=data.longValue();
             }
         }
+        //写入原始值
         int len=processContext.getLen();
         if(len==BYTE_LENGTH){
             dest.writeLong(newData);

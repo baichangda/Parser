@@ -20,6 +20,7 @@ public class FloatProcessor extends FieldProcessor<Float> {
     @Override
     public Float process(ByteBuf data, FieldProcessContext processContext) {
         int res;
+        //读取原始值
         int len=processContext.getLen();
         if(len==2){
             //优化处理 short->int
@@ -37,10 +38,12 @@ public class FloatProcessor extends FieldProcessor<Float> {
                 res=temp.readInt();
             }
         }
+        //值表达式处理
         Object[] valRpn=processContext.getFieldInfo().getValRpn();
         if(valRpn==null){
             return (float)res;
         }else{
+            //验证异常、无效值
             if(checkInvalidOrExceptionVal(res,len)){
                 return (float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res,processContext.getFieldInfo().getValExprPrecision());
             }else{
@@ -52,11 +55,13 @@ public class FloatProcessor extends FieldProcessor<Float> {
     @Override
     public void deProcess(Float data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
+        //值表达式处理
         Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
         int newData;
         if(reverseValRpn==null){
             newData=data.intValue();
         }else{
+            //验证异常、无效值
             if(checkInvalidOrExceptionVal(data.intValue(),processContext.getLen())){
                 newData = (int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,0);
             }else {

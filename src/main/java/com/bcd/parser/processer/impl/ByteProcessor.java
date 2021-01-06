@@ -18,6 +18,7 @@ public class ByteProcessor extends FieldProcessor<Byte> {
 
     @Override
     public Byte process(ByteBuf data, FieldProcessContext processContext) {
+        //读取原始值
         int len=processContext.getLen();
         byte res;
         if(len==BYTE_LENGTH){
@@ -28,10 +29,12 @@ public class ByteProcessor extends FieldProcessor<Byte> {
         }else{
             res=0;
         }
+        //值表达式处理
         Object[] valRpn=processContext.getFieldInfo().getValRpn();
         if(valRpn==null){
             return res;
         }else{
+            //验证异常、无效值
             if(checkInvalidOrExceptionVal(res)){
                 return (byte)RpnUtil.calcRPN_char_double_singleVar(valRpn,res,0);
             }else{

@@ -73,7 +73,7 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
     public void deProcess(double[] data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
-
+        //值表达式处理
         Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
         double[] newData;
         if(reverseValRpn==null){
@@ -81,6 +81,7 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
         }else{
             newData=new double[data.length];
             for(int i=0;i<data.length;i++){
+                //验证异常、无效值
                 if(checkInvalidOrExceptionVal((long)data[i],singleLen)){
                     newData[i]= RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i],0);
                 }else{
@@ -88,7 +89,7 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
                 }
             }
         }
-
+        //写入原始值
         if(singleLen==BYTE_LENGTH){
             for (double num : newData) {
                 dest.writeLong((long)num);
