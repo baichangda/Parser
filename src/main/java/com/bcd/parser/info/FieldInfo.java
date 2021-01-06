@@ -9,6 +9,8 @@ public class FieldInfo {
 
     public Field field;
 
+    public PacketInfo packetInfo;
+
     /**
      * #{@link PacketField} 属性
      */
@@ -234,5 +236,13 @@ public class FieldInfo {
 
     public void setValExprPrecision(int valExprPrecision) {
         this.valExprPrecision = valExprPrecision;
+    }
+
+    public PacketInfo getPacketInfo() {
+        return packetInfo;
+    }
+
+    public void setPacketInfo(PacketInfo packetInfo) {
+        this.packetInfo = packetInfo;
     }
 }

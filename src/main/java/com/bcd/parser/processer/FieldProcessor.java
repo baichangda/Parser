@@ -5,10 +5,14 @@ import com.bcd.parser.Parser;
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.exception.BaseRuntimeException;
 import io.netty.buffer.ByteBuf;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Field;
 
 public abstract class FieldProcessor<T> {
+    protected Logger logger= LoggerFactory.getLogger(this.getClass());
+
     protected Parser parser;
 
     public void setParser(Parser parser){

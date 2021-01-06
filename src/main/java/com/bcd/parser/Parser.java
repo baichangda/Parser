@@ -281,11 +281,21 @@ public abstract class Parser {
                 int endIndex=data.readerIndex();
                 byte[] arr=new byte[endIndex-startIndex];
                 data.getBytes(startIndex,arr);
-                logger.info("parse class[{}] field[{}] val[{}}] hex[{}]",
-                        packetInfo.getClazz().getSimpleName(),
-                        fieldInfo.getField().getName(),
-                        val,
-                        ByteBufUtil.hexDump(arr));
+                if(fieldInfo.getPacketField_valExpr().isEmpty()){
+                    logger.info("parse class[{}] field[{}] val[{}] hex[{}]",
+                            packetInfo.getClazz().getName(),
+                            fieldInfo.getField().getName(),
+                            val,
+                            ByteBufUtil.hexDump(arr));
+                }else {
+                    logger.info("parse class[{}] field[{}] valExpr[{}] valExprPrecision[{}] val[{}] hex[{}]",
+                            packetInfo.getClazz().getName(),
+                            fieldInfo.getField().getName(),
+                            fieldInfo.getPacketField_valExpr(),
+                            fieldInfo.getValExprPrecision(),
+                            val,
+                            ByteBufUtil.hexDump(arr));
+                }
             }else{
                 val=fieldProcessors[fieldInfo.getProcessorIndex()].process(data,processContext);
             }
@@ -395,11 +405,21 @@ public abstract class Parser {
                     int endIndex=res.writerIndex();
                     byte[] arr=new byte[endIndex-startIndex];
                     res.getBytes(startIndex,arr);
-                    logger.info("deParse class[{}] field[{}] val[{}}] hex[{}]",
-                            packetInfo.getClazz().getSimpleName(),
-                            fieldInfo.getField().getName(),
-                            data,
-                            ByteBufUtil.hexDump(arr));
+                    if(fieldInfo.getPacketField_valExpr().isEmpty()){
+                        logger.info("deParse class[{}] field[{}] val[{}] hex[{}]",
+                                packetInfo.getClazz().getName(),
+                                fieldInfo.getField().getName(),
+                                data,
+                                ByteBufUtil.hexDump(arr));
+                    }else {
+                        logger.info("deParse class[{}] field[{}] valExpr[{}] valExprPrecision[{}] val[{}] hex[{}]",
+                                packetInfo.getClazz().getName(),
+                                fieldInfo.getField().getName(),
+                                fieldInfo.getPacketField_valExpr(),
+                                fieldInfo.getValExprPrecision(),
+                                data,
+                                ByteBufUtil.hexDump(arr));
+                    }
                 }else{
                     fieldProcessors[processorIndex].deProcess(data,res,processContext);
                 }

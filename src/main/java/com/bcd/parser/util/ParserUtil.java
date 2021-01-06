@@ -201,6 +201,7 @@ public class ParserUtil {
             }
 
             FieldInfo fieldInfo=new FieldInfo();
+            fieldInfo.setPacketInfo(packetInfo);
             fieldInfo.setField(field);
             fieldInfo.setVar(isVar);
             fieldInfo.setClazz(typeClazz);
