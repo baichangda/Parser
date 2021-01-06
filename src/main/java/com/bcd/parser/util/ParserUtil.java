@@ -1,11 +1,9 @@
 package com.bcd.parser.util;
 
-import com.bcd.parser.anno.OffsetField;
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
 import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.info.FieldInfo;
-import com.bcd.parser.info.OffsetFieldInfo;
 import com.bcd.parser.info.PacketInfo;
 import com.bcd.parser.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
@@ -42,7 +40,7 @@ public class ParserUtil {
      * @param processors
      * @return
      */
-    public static PacketInfo toPacketInfo(Class clazz, boolean enableOffsetField, FieldProcessor[] processors){
+    public static PacketInfo toPacketInfo(Class clazz, FieldProcessor[] processors){
         String className=clazz.getName();
         PacketInfo packetInfo=new PacketInfo();
         packetInfo.setClazz(clazz);
@@ -210,6 +208,7 @@ public class ParserUtil {
             fieldInfo.setLenRpn(lenRpn);
             fieldInfo.setListLenRpn(listLenRpn);
             fieldInfo.setValRpn(valRpn);
+            fieldInfo.setValExprPrecision(packetField.valExprPrecision());
             fieldInfo.setReverseValRpn(reserveValRpn);
             fieldInfo.setPacketField_index(packetField.index());
             fieldInfo.setPacketField_len(packetField.len());
@@ -229,44 +228,6 @@ public class ParserUtil {
             packetInfo.setVarValArrOffset(minVarInt[0]);
         }
 
-        if(enableOffsetField) {
-            //解析offsetField注解字段
-            List<OffsetFieldInfo> offsetFieldInfoList = allFieldList.stream().filter(field -> field.getAnnotation(OffsetField.class) != null).map(field -> {
-                try {
-                    OffsetField offsetField = field.getAnnotation(OffsetField.class);
-                    OffsetFieldInfo offsetFieldInfo = new OffsetFieldInfo();
-                    offsetFieldInfo.setField(field);
-                    offsetFieldInfo.setSourceField(clazz.getDeclaredField(offsetField.sourceField()));
-                    offsetFieldInfo.setOffsetField_sourceField(offsetField.sourceField());
-                    offsetFieldInfo.setOffsetField_expr(offsetField.expr());
-                    offsetFieldInfo.setRpn(RpnUtil.doWithRpnList_char_double(RpnUtil.parseArithmeticToRPN(offsetField.expr())));
-                    offsetFieldInfo.getField().setAccessible(true);
-                    offsetFieldInfo.getSourceField().setAccessible(true);
-                    Class fieldType = field.getType();
-                    int numberType;
-                    if (Byte.class.isAssignableFrom(fieldType) || Byte.TYPE.isAssignableFrom(fieldType)) {
-                        numberType = 1;
-                    } else if (Short.class.isAssignableFrom(fieldType) || Short.TYPE.isAssignableFrom(fieldType)) {
-                        numberType = 2;
-                    } else if (Integer.class.isAssignableFrom(fieldType) || Integer.TYPE.isAssignableFrom(fieldType)) {
-                        numberType = 3;
-                    } else if (Long.class.isAssignableFrom(fieldType) || Long.TYPE.isAssignableFrom(fieldType)) {
-                        numberType = 4;
-                    } else if (Float.class.isAssignableFrom(fieldType) || Float.TYPE.isAssignableFrom(fieldType)) {
-                        numberType = 5;
-                    } else if (Double.class.isAssignableFrom(fieldType) || Double.TYPE.isAssignableFrom(fieldType)) {
-                        numberType = 6;
-                    } else {
-                        throw BaseRuntimeException.getException("class[" + className + "],field[" + field.getName() + "],fieldType[" + fieldType.getName() + "] not support");
-                    }
-                    offsetFieldInfo.setFieldType(numberType);
-                    return offsetFieldInfo;
-                } catch (NoSuchFieldException e) {
-                    throw BaseRuntimeException.getException(e);
-                }
-            }).collect(Collectors.toList());
-            packetInfo.setOffsetFieldInfos(offsetFieldInfoList.toArray(new OffsetFieldInfo[0]));
-        }
         return packetInfo;
     }
 

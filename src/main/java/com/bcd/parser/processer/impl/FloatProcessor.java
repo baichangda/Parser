@@ -42,7 +42,7 @@ public class FloatProcessor extends FieldProcessor<Float> {
             return (float)res;
         }else{
             if(checkInvalidOrExceptionVal(res,len)){
-                return (float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+                return (float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res,processContext.getFieldInfo().getValExprPrecision());
             }else{
                 return (float)res;
             }
@@ -57,8 +57,8 @@ public class FloatProcessor extends FieldProcessor<Float> {
         if(reverseValRpn==null){
             newData=data.intValue();
         }else{
-            if(checkInvalidOrExceptionVal(data.intValue(),processContext.getFieldInfo().getPacketField_singleLen())){
-                newData = (int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data);
+            if(checkInvalidOrExceptionVal(data.intValue(),processContext.getLen())){
+                newData = (int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,0);
             }else {
                 newData=data.intValue();
             }

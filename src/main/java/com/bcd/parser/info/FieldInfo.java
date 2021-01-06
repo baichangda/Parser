@@ -20,6 +20,7 @@ public class FieldInfo {
     public int packetField_singleLen;
     public Class packetField_parserClass;
     public String packetField_valExpr;
+    public int packetField_valExprPrecision;
 
     //packetField_var对应的int
     public int packetField_var_int;
@@ -77,6 +78,11 @@ public class FieldInfo {
      */
     public Object[] valRpn;
     public Object[] reverseValRpn;
+
+    /**
+     * 对应 {@link PacketField#valExprPrecision()}表达式
+     */
+    public int valExprPrecision;
 
     public Field getField() {
         return field;
@@ -212,5 +218,21 @@ public class FieldInfo {
 
     public void setReverseValRpn(Object[] reverseValRpn) {
         this.reverseValRpn = reverseValRpn;
+    }
+
+    public int getPacketField_valExprPrecision() {
+        return packetField_valExprPrecision;
+    }
+
+    public void setPacketField_valExprPrecision(int packetField_valExprPrecision) {
+        this.packetField_valExprPrecision = packetField_valExprPrecision;
+    }
+
+    public int getValExprPrecision() {
+        return valExprPrecision;
+    }
+
+    public void setValExprPrecision(int valExprPrecision) {
+        this.valExprPrecision = valExprPrecision;
     }
 }

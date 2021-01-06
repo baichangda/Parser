@@ -33,7 +33,7 @@ public class ByteProcessor extends FieldProcessor<Byte> {
             return res;
         }else{
             if(checkInvalidOrExceptionVal(res)){
-                return (byte)RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+                return (byte)RpnUtil.calcRPN_char_double_singleVar(valRpn,res,0);
             }else{
                 return res;
             }
@@ -51,7 +51,7 @@ public class ByteProcessor extends FieldProcessor<Byte> {
             if(checkInvalidOrExceptionVal(data)){
                 newData=data;
             }else {
-                newData = (byte) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data);
+                newData = (byte) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,0);
             }
         }
         int len=processContext.getLen();

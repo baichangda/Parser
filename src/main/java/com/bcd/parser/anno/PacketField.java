@@ -93,6 +93,12 @@ public @interface PacketField {
     String valExpr() default "";
 
     /**
+     * 值表达式精度、即经过表达式运算后、结果的小数点位数
+     * 默认2位
+     */
+    int valExprPrecision() default 0;
+
+    /**
      * 处理类
      * 用于处理特殊情况,class类型必须是{@link com.bcd.parser.processer.FieldProcessor}子类
      */

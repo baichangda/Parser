@@ -18,31 +18,6 @@ public class PerformanceUtil {
     static Logger logger= LoggerFactory.getLogger(PerformanceUtil.class);
 
     /**
-     * 测试单个线程
-     * @param data
-     * @param parser
-     * @param clazz
-     * @param num
-     * @param <T>
-     */
-    public static <T>void testSingleThreadPerformance(String data,Parser parser,Class<T> clazz,int num){
-        byte [] bytes= ByteBufUtil.decodeHexDump(data);
-        ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
-        byteBuf.markReaderIndex();
-        byteBuf.markWriterIndex();
-        long t1=System.currentTimeMillis();
-        for(int i=1;i<=num;i++) {
-            byteBuf.resetReaderIndex();
-            byteBuf.resetWriterIndex();
-            parser.parse(clazz,byteBuf);
-        }
-        long t2=System.currentTimeMillis();
-        long diff=t2-t1;
-        logger.info("num:{} , cost time:{}ms , speed:{}/s",num,diff,(int)(num/(diff/1000d)));
-    }
-
-
-    /**
      * 测试多线程
      * @param data
      * @param parser
@@ -51,7 +26,7 @@ public class PerformanceUtil {
      * @param num
      * @param <T>
      */
-    public static <T>void testMultiThreadPerformance(String data, Parser parser, Class<T> clazz, int threadNum, int num){
+    public static <T>void testMultiThreadPerformance(String data, Parser parser, Class<T> clazz, int threadNum, int num,boolean parse){
         logger.info("threadNum:{}",threadNum);
         AtomicInteger count=new AtomicInteger(0);
 
@@ -60,16 +35,20 @@ public class PerformanceUtil {
             pools[i] = Executors.newSingleThreadExecutor();
         }
         for (ExecutorService pool : pools) {
+
             pool.execute(() -> {
-                testParse(data, parser,clazz,num, count);
-//                testDeParse(data, parser,clazz,num, count);
+                if(parse){
+                    testParse(data, parser, clazz, num, count);
+                }else {
+                    testDeParse(data, parser,clazz,num, count);
+                }
             });
         }
 
         ScheduledExecutorService monitor=Executors.newSingleThreadScheduledExecutor();
         monitor.scheduleAtFixedRate(()->{
             int cur=count.getAndSet(0)/3;
-            logger.info("threadNum:{} , totalSpeed/s:{} , perThreadSpeed/s:{}",threadNum,cur,cur/threadNum);
+            logger.info("{} , threadNum:{} , totalSpeed/s:{} , perThreadSpeed/s:{}",parse?"parse":"deParse",threadNum,cur,cur/threadNum);
         },3,3,TimeUnit.SECONDS);
 
         try {
@@ -104,12 +83,10 @@ public class PerformanceUtil {
         ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
         T packet= parser.parse(clazz, byteBuf);
         ByteBuf res= Unpooled.buffer(bytes.length);
-        res.markReaderIndex();
-        res.markWriterIndex();
         for(int i=1;i<=num;i++) {
-            res.resetReaderIndex();
-            res.resetWriterIndex();
+            res.clear();
             parser.deParse(packet,res);
+//            System.out.println(data.toLowerCase());
 //            System.out.println(ByteBufUtil.hexDump(res));
             count.incrementAndGet();
         }

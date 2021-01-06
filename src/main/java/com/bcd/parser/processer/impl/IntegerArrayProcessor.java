@@ -51,9 +51,9 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
         //值表达式处理
         Object[] valRpn=processContext.getFieldInfo().getValRpn();
         if(valRpn!=null){
-            for(int i=0;i<res.length-1;i++){
+            for(int i=0;i<res.length;i++){
                 if(checkInvalidOrExceptionVal(res[i],singleLen)){
-                    res[i]=(int) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i]);
+                    res[i]=(int) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],0);
                 }
             }
         }
@@ -74,7 +74,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
             for(int i=0;i<data.length;i++){
                 //验证异常、无效值
                 if(checkInvalidOrExceptionVal(data[i],singleLen)){
-                    newData[i]=(int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i]);
+                    newData[i]=(int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i],0);
                 }else{
                     newData[i]=data[i];
                 }

@@ -53,14 +53,14 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
         Object[] valRpn=processContext.getFieldInfo().getValRpn();
         double[] finalRes=new double[res.length];
         if(valRpn==null){
-            for(int i=0;i<res.length-1;i++){
+            for(int i=0;i<res.length;i++){
                 finalRes[i]=res[i];
             }
         }else{
-            for(int i=0;i<res.length-1;i++){
+            for(int i=0;i<res.length;i++){
                 //验证异常、无效值
                 if(checkInvalidOrExceptionVal(res[i],singleLen)){
-                    finalRes[i]=RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i]);
+                    finalRes[i]=RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],processContext.getFieldInfo().getValExprPrecision());
                 }else{
                     finalRes[i]=res[i];
                 }
@@ -82,7 +82,7 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
             newData=new double[data.length];
             for(int i=0;i<data.length;i++){
                 if(checkInvalidOrExceptionVal((long)data[i],singleLen)){
-                    newData[i]= RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i]);
+                    newData[i]= RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i],0);
                 }else{
                     newData[i]=data[i];
                 }

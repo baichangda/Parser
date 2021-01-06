@@ -42,7 +42,7 @@ public class DoubleProcessor extends FieldProcessor<Double> {
             return (double)res;
         }else{
             if(checkInvalidOrExceptionVal(res,len)){
-                return RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+                return RpnUtil.calcRPN_char_double_singleVar(valRpn,res,processContext.getFieldInfo().getValExprPrecision());
             }else{
                 return (double)res;
             }
@@ -57,8 +57,8 @@ public class DoubleProcessor extends FieldProcessor<Double> {
         if(reverseValRpn==null){
             newData=data.longValue();
         }else{
-            if(checkInvalidOrExceptionVal(data.longValue(),processContext.getFieldInfo().getPacketField_singleLen())){
-                newData = (long) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data);
+            if(checkInvalidOrExceptionVal(data.longValue(),processContext.getLen())){
+                newData = (long) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,0);
             }else {
                 newData=data.longValue();
             }

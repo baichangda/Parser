@@ -41,7 +41,7 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
             return res;
         }else{
             if(checkInvalidOrExceptionVal(res,len)){
-                return (int) RpnUtil.calcRPN_char_double_singleVar(valRpn,res);
+                return (int) RpnUtil.calcRPN_char_double_singleVar(valRpn,res,0);
             }else{
                 return res;
             }
@@ -56,8 +56,8 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
         if(reverseValRpn==null){
             newData=data;
         }else{
-            if(checkInvalidOrExceptionVal(data,processContext.getFieldInfo().getPacketField_singleLen())){
-                newData = (int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data);
+            if(checkInvalidOrExceptionVal(data,processContext.getLen())){
+                newData = (int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,0);
             }else {
                 newData=data;
             }

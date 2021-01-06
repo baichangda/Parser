@@ -52,10 +52,10 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
         //值表达式处理
         Object[] valRpn=processContext.getFieldInfo().getValRpn();
         if(valRpn!=null){
-            for(int i=0;i<res.length-1;i++){
+            for(int i=0;i<res.length;i++){
                 //验证异常、无效值
                 if(checkInvalidOrExceptionVal(res[i],singleLen)){
-                    res[i]=(short) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i]);
+                    res[i]=(short) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],0);
                 }
             }
         }
@@ -75,7 +75,7 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
             newData=new short[data.length];
             for(int i=0;i<data.length;i++){
                 if(checkInvalidOrExceptionVal(data[i],singleLen)){
-                    newData[i]=(short) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i]);
+                    newData[i]=(short) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i],0);
                 }else{
                     newData[i]=data[i];
                 }

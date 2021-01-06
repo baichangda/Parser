@@ -102,9 +102,10 @@ public class RpnUtil {
      * 只有一个变量
      * @param rpn 逆波兰表达式集合,其中变量必须是char,常量必须是double
      * @param var 变量值
+     * @param precision 精度
      * @return
      */
-    public static double calcRPN_char_double_singleVar(Object[] rpn, double var){
+    public static double calcRPN_char_double_singleVar(Object[] rpn, double var,int precision){
         int stackIndex=-1;
         double[] stack=new double[2];
         for (Object o : rpn) {
@@ -143,7 +144,15 @@ public class RpnUtil {
                 }
             }
         }
-        return stack[0];
+        if(stack[0]>0){
+            double pow=Math.pow(10,precision);
+            return Math.round(stack[0]*pow)/pow;
+        }else if(stack[0]<0){
+            double pow=Math.pow(10,precision);
+            return -Math.round(-stack[0]*pow)/pow;
+        }else{
+            return stack[0];
+        }
     }
 
     /**
@@ -292,6 +301,5 @@ public class RpnUtil {
         System.out.println(Arrays.toString(reverseSimpleRPN(res1)));
         String[] res2=parseArithmeticToRPN("(y+1000)/0.01");
         System.out.println(Arrays.toString(res2));
-
     }
 }

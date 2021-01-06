@@ -53,14 +53,14 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
         Object[] valRpn=processContext.getFieldInfo().getValRpn();
         float[] finalRes=new float[res.length];
         if(valRpn==null){
-            for(int i=0;i<res.length-1;i++){
+            for(int i=0;i<res.length;i++){
                 finalRes[i]=res[i];
             }
         }else{
-            for(int i=0;i<res.length-1;i++){
+            for(int i=0;i<res.length;i++){
                 //验证异常、无效值
                 if(checkInvalidOrExceptionVal(res[i],singleLen)){
-                    finalRes[i]=(float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i]);
+                    finalRes[i]=(float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],processContext.getFieldInfo().getValExprPrecision());
                 }else{
                     finalRes[i]=res[i];
                 }
@@ -82,7 +82,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
             newData=new float[data.length];
             for(int i=0;i<data.length;i++){
                 if(checkInvalidOrExceptionVal((int)data[i],singleLen)){
-                    newData[i]=(float) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i]);
+                    newData[i]=(float) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i],0);
                 }else{
                     newData[i]=data[i];
                 }

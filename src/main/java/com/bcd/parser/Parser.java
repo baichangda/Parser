@@ -4,7 +4,6 @@ import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
 import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.info.FieldInfo;
-import com.bcd.parser.info.OffsetFieldInfo;
 import com.bcd.parser.info.PacketInfo;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
@@ -28,7 +27,7 @@ import java.util.*;
  * 主要功能如下:
  * 1、解析
  * 从{@link ByteBuf}中获取二进制数据、解析成{@link Parsable}的class对象实例
- * 解析规则参照{@link com.bcd.parser.anno.PacketField}、{@link com.bcd.parser.anno.OffsetField}
+ * 解析规则参照{@link com.bcd.parser.anno.PacketField}
  *
  * 2、反解析
  * 将{@link Parsable}的class对象实例反解析成为ByteBuf二进制数据流
@@ -46,7 +45,9 @@ import java.util.*;
  * 性能表现:
  * 以gb32960协议为例子
  * cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
- * 单线程、在cpu使用率90%+ 的情况下、解析速度约为 28-30w/s、多个线程成倍数增长
+ * 单线程、在cpu使用率90%+ 的情况下
+ * 解析速度约为 25-26w/s、多个线程成倍数增长
+ * 反解析速度约为 18-19w/s、多个线程成倍数增长
  * 具体查看{@link com.bcd.parser.impl.gb32960.Parser_gb32960#main(String[])}
  * 注意:
  * 因为是cpu密集型运算、所以性能达到计算机物理核心个数后已经达到上限、不能以逻辑核心为准、此时虽然整体cpu使用率没有满、但这只是使用率显示问题
@@ -64,19 +65,13 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public abstract class Parser {
 
-    final Logger logger= LoggerFactory.getLogger(this.getClass());
-
+    public final Logger logger= LoggerFactory.getLogger(this.getClass());
     public final Map<Class, PacketInfo> packetInfoCache =new HashMap<>();
 
     /**
      * 处理器数组
      */
     public FieldProcessor[] fieldProcessors;
-
-    /**
-     * 启用偏移字段值处理
-     */
-    protected boolean enableOffsetField=false;
 
     /**
      * 基础处理器,内置
@@ -99,6 +94,8 @@ public abstract class Parser {
     protected FieldProcessor<ByteBuf> byteBufProcessor=new ByteBufProcessor();
     protected FieldProcessor<List> listProcessor=new ListProcessor();
     protected FieldProcessor<Object> parsableObjectProcessor=new ParsableObjectProcessor();
+
+    protected boolean printStack=false;
 
     public void init(){
         //初始化处理器
@@ -202,7 +199,7 @@ public abstract class Parser {
     private void initPacketInfo(){
         List<Class> classes= getParsableClass();
         for (Class clazz : classes) {
-            packetInfoCache.put(clazz, ParserUtil.toPacketInfo(clazz,enableOffsetField,fieldProcessors));
+            packetInfoCache.put(clazz, ParserUtil.toPacketInfo(clazz,fieldProcessors));
         }
         if(logger.isInfoEnabled()){
             logger.info("init packetInfo succeed,follow list:\n{}", packetInfoCache.values().stream().map(e->e.getClazz().getName()).reduce((e1,e2)->e1+"\n"+e2).orElse(""));
@@ -277,58 +274,27 @@ public abstract class Parser {
             processContext.setLen(len);
             processContext.setFieldInfo(fieldInfo);
 
-            Object val=fieldProcessors[fieldInfo.getProcessorIndex()].process(data,processContext);
+            Object val;
+            if(printStack){
+                int startIndex=data.readerIndex();
+                val=fieldProcessors[fieldInfo.getProcessorIndex()].process(data,processContext);
+                int endIndex=data.readerIndex();
+                byte[] arr=new byte[endIndex-startIndex];
+                data.getBytes(startIndex,arr);
+                logger.info("parse class[{}] field[{}] val[{}}] hex[{}]",
+                        packetInfo.getClazz().getSimpleName(),
+                        fieldInfo.getField().getName(),
+                        val,
+                        ByteBufUtil.hexDump(arr));
+            }else{
+                val=fieldProcessors[fieldInfo.getProcessorIndex()].process(data,processContext);
+            }
             if(fieldInfo.isVar()){
                 vals[fieldInfo.getPacketField_var_int()-varValArrOffset]=((Number)val).intValue();
             }
             fieldInfo.getField().set(instance,val);
         }
     }
-
-    /**
-     * 解析{@link com.bcd.parser.anno.OffsetField}字段
-     * @param packetInfo 当前class对应的{@link PacketInfo}
-     * @param instance 当前class对象实例
-     * @throws IllegalAccessException
-     */
-    private void parseOffsetField(PacketInfo packetInfo,Object instance) throws IllegalAccessException {
-        //偏移量值计算
-        OffsetFieldInfo[] offsetFieldInfos = packetInfo.getOffsetFieldInfos();
-        if (offsetFieldInfos != null && offsetFieldInfos.length>0) {
-            for(int i=0,end=offsetFieldInfos.length;i<end;i++){
-                OffsetFieldInfo offsetFieldInfo=offsetFieldInfos[i];
-                Object sourceVal = offsetFieldInfo.getSourceField().get(instance);
-                double destVal = RpnUtil.calcRPN_char_double_singleVar(offsetFieldInfo.getRpn(),((Number) sourceVal).doubleValue());
-                switch (offsetFieldInfo.getFieldType()) {
-                    case 1: {
-                        offsetFieldInfo.getField().setByte(instance, (byte)destVal);
-                        break;
-                    }
-                    case 2: {
-                        offsetFieldInfo.getField().setShort(instance, (short)destVal);
-                        break;
-                    }
-                    case 3: {
-                        offsetFieldInfo.getField().setInt(instance, (int)destVal);
-                        break;
-                    }
-                    case 4: {
-                        offsetFieldInfo.getField().setLong(instance, (long)destVal);
-                        break;
-                    }
-                    case 5: {
-                        offsetFieldInfo.getField().setFloat(instance, (float)destVal);
-                        break;
-                    }
-                    case 6: {
-                        offsetFieldInfo.getField().setDouble(instance, destVal);
-                        break;
-                    }
-                }
-            }
-        }
-    }
-
 
     /**
      * 根据类型和缓冲数据生成对应对象
@@ -352,12 +318,6 @@ public abstract class Parser {
              * 解析{@link com.bcd.parser.anno.PacketField}字段
              */
             parsePacketField(packetInfo,data,instance,parentContext);
-            if(enableOffsetField) {
-                /**
-                 * 解析{@link com.bcd.parser.anno.OffsetField}字段
-                 */
-                parseOffsetField(packetInfo,instance);
-            }
             return instance;
         } catch (IllegalAccessException| InstantiationException e) {
             throw BaseRuntimeException.getException(e);
@@ -428,7 +388,22 @@ public abstract class Parser {
                 processContext.setFieldInfo(fieldInfo);
                 processContext.setLen(len);
                 processContext.setListLen(listLen);
-                fieldProcessors[processorIndex].deProcess(data,res,processContext);
+
+                if(printStack){
+                    int startIndex=res.writerIndex();
+                    fieldProcessors[processorIndex].deProcess(data,res,processContext);
+                    int endIndex=res.writerIndex();
+                    byte[] arr=new byte[endIndex-startIndex];
+                    res.getBytes(startIndex,arr);
+                    logger.info("deParse class[{}] field[{}] val[{}}] hex[{}]",
+                            packetInfo.getClazz().getSimpleName(),
+                            fieldInfo.getField().getName(),
+                            data,
+                            ByteBufUtil.hexDump(arr));
+                }else{
+                    fieldProcessors[processorIndex].deProcess(data,res,processContext);
+                }
+
                 if(fieldInfo.isVar()){
                     vals[fieldInfo.getPacketField_var()-varValArrOffset]=((Number)data).intValue();
                 }
@@ -467,14 +442,6 @@ public abstract class Parser {
 
     public void setFieldProcessors(FieldProcessor[] fieldProcessors) {
         this.fieldProcessors = fieldProcessors;
-    }
-
-    public boolean isEnableOffsetField() {
-        return enableOffsetField;
-    }
-
-    public void setEnableOffsetField(boolean enableOffsetField) {
-        this.enableOffsetField = enableOffsetField;
     }
 
     public List<FieldProcessor> getBaseProcessorList() {
@@ -603,5 +570,29 @@ public abstract class Parser {
 
     public void setParsableObjectProcessor(FieldProcessor<Object> parsableObjectProcessor) {
         this.parsableObjectProcessor = parsableObjectProcessor;
+    }
+
+    public FieldProcessor<float[]> getFloatArrayProcessor() {
+        return floatArrayProcessor;
+    }
+
+    public void setFloatArrayProcessor(FieldProcessor<float[]> floatArrayProcessor) {
+        this.floatArrayProcessor = floatArrayProcessor;
+    }
+
+    public FieldProcessor<double[]> getDoubleArrayProcessor() {
+        return doubleArrayProcessor;
+    }
+
+    public void setDoubleArrayProcessor(FieldProcessor<double[]> doubleArrayProcessor) {
+        this.doubleArrayProcessor = doubleArrayProcessor;
+    }
+
+    public boolean isPrintStack() {
+        return printStack;
+    }
+
+    public void setPrintStack(boolean printStack) {
+        this.printStack = printStack;
     }
 }

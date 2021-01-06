@@ -13,11 +13,11 @@ public class StorageVoltageData {
     short no;
 
     //可充电储能装置电压
-    @PacketField(index = 2,len = 2,valExpr = "x*0.1")
+    @PacketField(index = 2,len = 2,valExpr = "x*0.1",valExprPrecision = 1)
     float voltage;
 
     //可充电储能状态电流
-    @PacketField(index = 3,len = 2,valExpr = "x*0.1-1000")
+    @PacketField(index = 3,len = 2,valExpr = "x*0.1-1000",valExprPrecision = 1)
     float current;
 
     //单体电池总数
@@ -33,7 +33,7 @@ public class StorageVoltageData {
     short frameTotal;
 
     //单体电池电压
-    @PacketField(index = 7,singleLen = 2,lenExpr = "2*m",valExpr = "x*0.001")
+    @PacketField(index = 7,singleLen = 2,lenExpr = "2*m",valExpr = "x*0.001",valExprPrecision = 3)
     float[] singleVoltage;
 
     public short getNo() {
