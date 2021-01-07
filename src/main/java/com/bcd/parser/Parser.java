@@ -275,26 +275,33 @@ public abstract class Parser {
             processContext.setFieldInfo(fieldInfo);
 
             Object val;
-            if(printStack){
+            //过滤掉对象的日志
+            if(printStack
+//                    &&fieldInfo.getProcessorIndex()!=16
+            ){
                 int startIndex=data.readerIndex();
                 val=fieldProcessors[fieldInfo.getProcessorIndex()].process(data,processContext);
                 int endIndex=data.readerIndex();
                 byte[] arr=new byte[endIndex-startIndex];
                 data.getBytes(startIndex,arr);
                 if(fieldInfo.getPacketField_valExpr().isEmpty()){
-                    logger.info("parse class[{}] field[{}] val[{}] hex[{}]",
+                    logger.info("parse class[{}] field[{}] val[{}] hex[{}] parser[{}]",
                             packetInfo.getClazz().getName(),
                             fieldInfo.getField().getName(),
                             val,
-                            ByteBufUtil.hexDump(arr));
+                            ByteBufUtil.hexDump(arr),
+                            fieldProcessors[fieldInfo.getProcessorIndex()].getClass().getName());
                 }else {
-                    logger.info("parse class[{}] field[{}] valExpr[{}] valExprPrecision[{}] val[{}] hex[{}]",
+
+                    logger.info("parse class[{}] field[{}] valExpr[{}] valExprPrecision[{}] val[{}] hex[{}] parser[{}]",
                             packetInfo.getClazz().getName(),
                             fieldInfo.getField().getName(),
                             fieldInfo.getPacketField_valExpr(),
+
                             fieldInfo.getValExprPrecision(),
                             val,
-                            ByteBufUtil.hexDump(arr));
+                            ByteBufUtil.hexDump(arr),
+                            fieldProcessors[fieldInfo.getProcessorIndex()].getClass().getName());
                 }
             }else{
                 val=fieldProcessors[fieldInfo.getProcessorIndex()].process(data,processContext);
@@ -399,26 +406,32 @@ public abstract class Parser {
                 processContext.setLen(len);
                 processContext.setListLen(listLen);
 
-                if(printStack){
-                    int startIndex=res.writerIndex();
-                    fieldProcessors[processorIndex].deProcess(data,res,processContext);
-                    int endIndex=res.writerIndex();
-                    byte[] arr=new byte[endIndex-startIndex];
-                    res.getBytes(startIndex,arr);
-                    if(fieldInfo.getPacketField_valExpr().isEmpty()){
-                        logger.info("deParse class[{}] field[{}] val[{}] hex[{}]",
+                if(printStack
+//                        &&fieldInfo.getProcessorIndex()!=16
+                ){
+                    int startIndex = res.writerIndex();
+                    fieldProcessors[processorIndex].deProcess(data, res, processContext);
+                    int endIndex = res.writerIndex();
+                    byte[] arr = new byte[endIndex - startIndex];
+                    res.getBytes(startIndex, arr);
+                    if (fieldInfo.getPacketField_valExpr().isEmpty()) {
+                        logger.info("deParse class[{}] field[{}] val[{}] hex[{}] parser[{}]",
                                 packetInfo.getClazz().getName(),
                                 fieldInfo.getField().getName(),
                                 data,
-                                ByteBufUtil.hexDump(arr));
-                    }else {
-                        logger.info("deParse class[{}] field[{}] valExpr[{}] valExprPrecision[{}] val[{}] hex[{}]",
+                                ByteBufUtil.hexDump(arr),
+                                fieldProcessors[processorIndex].getClass().getName());
+                    } else {
+                        String reverseValExpr=RpnUtil.parseRPNToArithmetic(fieldInfo.getReverseValRpn());
+                        logger.info("deParse class[{}] field[{}] valExpr[{}] reverseValExpr[{}] valExprPrecision[{}] val[{}] hex[{}] parser[{}]",
                                 packetInfo.getClazz().getName(),
                                 fieldInfo.getField().getName(),
                                 fieldInfo.getPacketField_valExpr(),
+                                reverseValExpr,
                                 fieldInfo.getValExprPrecision(),
                                 data,
-                                ByteBufUtil.hexDump(arr));
+                                ByteBufUtil.hexDump(arr),
+                                fieldProcessors[processorIndex].getClass().getName());
                     }
                 }else{
                     fieldProcessors[processorIndex].deProcess(data,res,processContext);

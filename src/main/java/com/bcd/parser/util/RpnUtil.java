@@ -1,5 +1,6 @@
 package com.bcd.parser.util;
 
+import checkers.oigj.quals.O;
 import com.bcd.parser.exception.BaseRuntimeException;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class RpnUtil {
      */
     public static int calcRPN_char_int(Object[] rpn, int[] vals,int offset){
         int stackIndex=-1;
-        int[] stack=new int[2];
+        int[] stack=new int[rpn.length];
         for (Object s : rpn) {
             if(s instanceof Integer){
                 stack[++stackIndex]=(int)s;
@@ -99,6 +100,7 @@ public class RpnUtil {
 
     /**
      * 计算逆波兰表达式
+     * 支持公式为 y=ax+b
      * 只有一个变量
      * @param rpn 逆波兰表达式集合,其中变量必须是char,常量必须是double
      * @param var 变量值
@@ -173,7 +175,7 @@ public class RpnUtil {
                     temp.delete(0, temp.length());
                 }
                 if(stackIndex>=0){
-                    while(stack[stackIndex]!='('&&get(stack[stackIndex])>=get(arr[i])){
+                    while(stack[stackIndex]!='('&&getSymbolPriority(stack[stackIndex])>=getSymbolPriority(arr[i])){
                         output.add(String.valueOf(stack[stackIndex--]));
                         if(stackIndex==-1){
                             break;
@@ -216,7 +218,7 @@ public class RpnUtil {
      * @param c
      * @return
      */
-    private static int get(char c){
+    private static int getSymbolPriority(char c){
         switch (c){
             case '+':{
                 return 1;
@@ -233,6 +235,45 @@ public class RpnUtil {
             default:{
                 throw BaseRuntimeException.getException("symbol["+c+"] not support");
             }
+        }
+    }
+
+    public static String parseRPNToArithmetic(Object[] rpn){
+        if(rpn.length==1) {
+            return rpn[0].toString();
+        }else {
+            String[] stack = new String[rpn.length];
+            int[] symbolPriority=new int[rpn.length];
+            int index = -1;
+            for (Object o : rpn) {
+                String s = o.toString();
+                if (s.equals("+") ||
+                        s.equals("-") ||
+                        s.equals("*") ||
+                        s.equals("/")) {
+                    int index2 = index--;
+                    int index1 = index--;
+                    String s1 = stack[index1];
+                    String s2 = stack[index2];
+                    int p1 = symbolPriority[index1];
+                    int p2 = symbolPriority[index2];
+                    int curSymbolPriority = getSymbolPriority(s.charAt(0));
+                    if (p1 != -1 && p1 < curSymbolPriority) {
+                        s1 = "(" + s1 + ")";
+                    }
+                    if (p2 != -1 && p2 < curSymbolPriority) {
+                        s2 = "(" + s2 + ")";
+                    }
+                    int curIndex = ++index;
+                    stack[curIndex] = s1 + s + s2;
+                    symbolPriority[curIndex] = curSymbolPriority;
+                } else {
+                    int curIndex = ++index;
+                    stack[curIndex] = s;
+                    symbolPriority[curIndex] = -1;
+                }
+            }
+            return stack[0];
         }
     }
 
