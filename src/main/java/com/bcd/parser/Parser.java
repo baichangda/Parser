@@ -92,7 +92,8 @@ public abstract class Parser {
     protected FieldProcessor<String> stringProcessor=new StringProcessor();
     protected FieldProcessor<Date> dateProcessor=new DateProcessor();
     protected FieldProcessor<ByteBuf> byteBufProcessor=new ByteBufProcessor();
-    protected FieldProcessor<List> listProcessor=new ListProcessor();
+    protected FieldProcessor<List> parsableObjectListProcessor =new ParsableObjectListProcessor();
+    protected FieldProcessor<Object> parsableObjectArrayProcessor =new ParsableObjectArrayProcessor();
     protected FieldProcessor<Object> parsableObjectProcessor=new ParsableObjectProcessor();
 
     protected boolean printStack=false;
@@ -144,7 +145,8 @@ public abstract class Parser {
         processorList.add(this.stringProcessor);
         processorList.add(this.dateProcessor);
         processorList.add(this.byteBufProcessor);
-        processorList.add(this.listProcessor);
+        processorList.add(this.parsableObjectListProcessor);
+        processorList.add(this.parsableObjectArrayProcessor);
         processorList.add(this.parsableObjectProcessor);
         return processorList;
     }
@@ -592,12 +594,12 @@ public abstract class Parser {
         this.byteBufProcessor = byteBufProcessor;
     }
 
-    public FieldProcessor<List> getListProcessor() {
-        return listProcessor;
+    public FieldProcessor<List> getParsableObjectListProcessor() {
+        return parsableObjectListProcessor;
     }
 
-    public void setListProcessor(FieldProcessor<List> listProcessor) {
-        this.listProcessor = listProcessor;
+    public void setParsableObjectListProcessor(FieldProcessor<List> parsableObjectListProcessor) {
+        this.parsableObjectListProcessor = parsableObjectListProcessor;
     }
 
     public FieldProcessor<Object> getParsableObjectProcessor() {

@@ -17,7 +17,7 @@ public class VehicleMotorData {
 
     //驱动电机总成信息列表
     @PacketField(index = 2,listLenExpr = "a")
-    List<MotorData> content=new ArrayList<>();
+    MotorData[] content;
 
     public short getNum() {
         return num;
@@ -27,11 +27,11 @@ public class VehicleMotorData {
         this.num = num;
     }
 
-    public List<MotorData> getContent() {
+    public MotorData[] getContent() {
         return content;
     }
 
-    public void setContent(List<MotorData> content) {
+    public void setContent(MotorData[] content) {
         this.content = content;
     }
 }

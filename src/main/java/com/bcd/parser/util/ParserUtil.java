@@ -85,7 +85,8 @@ public class ParserUtil {
              processorList.add(this.stringProcessor);
              processorList.add(this.dateProcessor);
              processorList.add(this.byteBufProcessor);
-             processorList.add(this.listProcessor);
+             processorList.add(this.parsableObjectListProcessor);
+             processorList.add(this.parsableObjectArrayProcessor);
              processorList.add(this.parsableObjectProcessor);
              */
             //判断是否特殊处理
@@ -123,7 +124,7 @@ public class ParserUtil {
                             processorIndex=10;
                         } else if (Double.class.isAssignableFrom(arrType) || Double.TYPE.isAssignableFrom(arrType)) {
                             processorIndex=11;
-                        } else {
+                        } else{
                             throw BaseRuntimeException.getException("Class[" + clazz.getName() + "] Field[" + field.getName() + "] Array Type[" + arrType.getName() + "] Not Support");
                         }
                     } else if(ByteBuf.class.isAssignableFrom(fieldType)){
@@ -137,16 +138,29 @@ public class ParserUtil {
                             throw BaseRuntimeException.getException("Class[" + clazz.getName() + "] Field[" + field.getName() + "] Bean Type[" + fieldType + "] Not Support,Must have annotation [com.bcd.parser.anno.Parsable]");
                         }
                         typeClazz = fieldType;
-                        processorIndex=16;
+                        processorIndex=17;
                     }
                 }else{
-                    //实体类型集合
-                    typeClazz = (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
-                    processorIndex=15;
+                    if(fieldType.isArray()){
+                        typeClazz = fieldType.getComponentType();
+                        //检查数组对象类型是否支持解析
+                        if(typeClazz.getAnnotation(Parsable.class)!=null){
+                            processorIndex=16;
+                        }else {
+                            throw BaseRuntimeException.getException("Class[" + clazz.getName() + "] Field[" + field.getName() + "] Array Type[" + typeClazz.getName() + "] Not Support");
+                        }
+                    }else {
+                        //实体类型集合
+                        typeClazz = (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+                        if(typeClazz.getAnnotation(Parsable.class)!=null){
+                            processorIndex = 15;
+                        }else {
+                            throw BaseRuntimeException.getException("Class[" + clazz.getName() + "] Field[" + field.getName() + "] List Type[" + typeClazz.getName() + "] Not Support");
+                        }
+                    }
                 }
             }else{
                 //特殊处理,自定义实体类型
-                typeClazz=fieldType;
                 processorIndex=findProcessorIndexByFieldProcessorClass(packetField.processorClass(),processors);
             }
 

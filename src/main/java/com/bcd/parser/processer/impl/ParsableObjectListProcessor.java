@@ -12,7 +12,7 @@ import java.util.List;
  * 解析{@link List}类型字段
  */
 @SuppressWarnings("unchecked")
-public class ListProcessor extends FieldProcessor<List> {
+public class ParsableObjectListProcessor extends FieldProcessor<List> {
 
     @Override
     public List process(ByteBuf data, FieldProcessContext processContext) {

@@ -17,7 +17,7 @@ public class VehicleStorageTemperatureData {
 
     //可充电储能子系统温度信息列表
     @PacketField(index = 2,listLenExpr = "a")
-    List<StorageTemperatureData> content=new ArrayList<>();
+    List<StorageTemperatureData> content;
 
 
     public short getNum() {

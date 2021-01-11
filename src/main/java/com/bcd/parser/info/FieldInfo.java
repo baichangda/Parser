@@ -44,10 +44,11 @@ public class FieldInfo {
      * 12、String
      * 13、Date
      * 14、ByteBuf
-     * 15、List
-     * 16、@Parsable标注实体类对象
+     * 15、List<{@link com.bcd.parser.anno.Parsable}>
+     * 16、Array[<{@link com.bcd.parser.anno.Parsable}>]
+     * 17、@Parsable标注实体类对象
      *
-     * >=17、自定义处理器
+     * >=18、自定义处理器
      *
      */
     public int processorIndex;
@@ -60,8 +61,9 @@ public class FieldInfo {
     public boolean isVar;
 
     /**
-     * processorIndex=13时候代表集合泛型
-     * processorIndex>=14代表实体类型
+     * processorIndex=15时候代表集合泛型
+     * processorIndex=16时候代表数组元素类型
+     * processorIndex=17代表实体类型
      */
     public Class clazz;
 

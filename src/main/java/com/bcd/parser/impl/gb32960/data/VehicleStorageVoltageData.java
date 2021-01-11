@@ -17,7 +17,7 @@ public class VehicleStorageVoltageData {
 
     //可充电储能子系统电压信息集合
     @PacketField(index = 2,listLenExpr = "a")
-    List<StorageVoltageData> content=new ArrayList<>();
+    List<StorageVoltageData> content;
 
 
     public short getNum() {
