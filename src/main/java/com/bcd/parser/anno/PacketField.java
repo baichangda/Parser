@@ -94,9 +94,9 @@ public @interface PacketField {
 
     /**
      * 值表达式精度、即经过表达式运算后、结果的小数点位数
-     * 默认2位
+     * 默认0位
      */
-    int valExprPrecision() default 0;
+    int valPrecision() default 0;
 
     /**
      * 处理类

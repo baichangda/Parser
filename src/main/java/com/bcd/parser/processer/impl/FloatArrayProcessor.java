@@ -60,7 +60,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
             for(int i=0;i<res.length;i++){
                 //验证异常、无效值
                 if(checkInvalidOrExceptionVal(res[i],singleLen)){
-                    finalRes[i]=(float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],processContext.getFieldInfo().getValExprPrecision());
+                    finalRes[i]=(float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],processContext.getFieldInfo().getValPrecision());
                 }else{
                     finalRes[i]=res[i];
                 }

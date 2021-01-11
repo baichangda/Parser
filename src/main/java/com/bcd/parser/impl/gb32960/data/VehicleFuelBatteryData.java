@@ -9,15 +9,15 @@ import com.bcd.parser.anno.Parsable;
 @Parsable
 public class VehicleFuelBatteryData {
     //燃料电池电压
-    @PacketField(index = 1,len = 2,valExpr = "x*0.1",valExprPrecision = 1)
+    @PacketField(index = 1,len = 2,valExpr = "x*0.1", valPrecision = 1)
     float voltage;
 
     //燃料电池电流
-    @PacketField(index = 2,len = 2,valExpr = "x*0.1",valExprPrecision = 1)
+    @PacketField(index = 2,len = 2,valExpr = "x*0.1", valPrecision = 1)
     float current;
 
     //燃料消耗率
-    @PacketField(index = 3,len = 2,valExpr = "x*0.01",valExprPrecision = 2)
+    @PacketField(index = 3,len = 2,valExpr = "x*0.01", valPrecision = 2)
     float consumptionRate;
 
     //燃料电池温度探针总数
@@ -29,7 +29,7 @@ public class VehicleFuelBatteryData {
     short[] temperatures;
 
     //氢系统中最高温度
-    @PacketField(index = 6,len = 2,valExpr = "x*0.1-40",valExprPrecision = 1)
+    @PacketField(index = 6,len = 2,valExpr = "x*0.1-40", valPrecision = 1)
     float maxTemperature;
 
     //氢系统中最高温度探针代号
@@ -45,7 +45,7 @@ public class VehicleFuelBatteryData {
     short maxConcentrationCode;
 
     //氢气最高压力
-    @PacketField(index = 10,len = 2,valExpr = "x*0.1",valExprPrecision = 1)
+    @PacketField(index = 10,len = 2,valExpr = "x*0.1", valPrecision = 1)
     float maxPressure;
 
     //氢气最高压力传感器代号

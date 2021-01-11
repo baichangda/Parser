@@ -208,7 +208,7 @@ public class ParserUtil {
             fieldInfo.setLenRpn(lenRpn);
             fieldInfo.setListLenRpn(listLenRpn);
             fieldInfo.setValRpn(valRpn);
-            fieldInfo.setValExprPrecision(packetField.valExprPrecision());
+            fieldInfo.setValPrecision(packetField.valPrecision());
             fieldInfo.setReverseValRpn(reserveValRpn);
             fieldInfo.setPacketField_index(packetField.index());
             fieldInfo.setPacketField_len(packetField.len());

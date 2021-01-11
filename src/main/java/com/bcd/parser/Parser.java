@@ -298,7 +298,7 @@ public abstract class Parser {
                             fieldInfo.getField().getName(),
                             fieldInfo.getPacketField_valExpr(),
 
-                            fieldInfo.getValExprPrecision(),
+                            fieldInfo.getValPrecision(),
                             val,
                             ByteBufUtil.hexDump(arr),
                             fieldProcessors[fieldInfo.getProcessorIndex()].getClass().getName());
@@ -428,7 +428,7 @@ public abstract class Parser {
                                 fieldInfo.getField().getName(),
                                 fieldInfo.getPacketField_valExpr(),
                                 reverseValExpr,
-                                fieldInfo.getValExprPrecision(),
+                                fieldInfo.getValPrecision(),
                                 data,
                                 ByteBufUtil.hexDump(arr),
                                 fieldProcessors[processorIndex].getClass().getName());

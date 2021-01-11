@@ -17,7 +17,7 @@ public class VehicleEngineData {
     int speed;
 
     //燃料消耗率
-    @PacketField(index = 3,len = 2,valExpr = "x*0.01",valExprPrecision = 2)
+    @PacketField(index = 3,len = 2,valExpr = "x*0.01", valPrecision = 2)
     float rate;
 
     public short getStatus() {

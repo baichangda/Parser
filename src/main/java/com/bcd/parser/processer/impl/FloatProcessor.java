@@ -45,7 +45,7 @@ public class FloatProcessor extends FieldProcessor<Float> {
         }else{
             //验证异常、无效值
             if(checkInvalidOrExceptionVal(res,len)){
-                return (float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res,processContext.getFieldInfo().getValExprPrecision());
+                return (float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res,processContext.getFieldInfo().getValPrecision());
             }else{
                 return (float)res;
             }

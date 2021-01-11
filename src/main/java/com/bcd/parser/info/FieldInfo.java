@@ -82,9 +82,9 @@ public class FieldInfo {
     public Object[] reverseValRpn;
 
     /**
-     * 对应 {@link PacketField#valExprPrecision()}表达式
+     * 对应 {@link PacketField#valPrecision()}表达式
      */
-    public int valExprPrecision;
+    public int valPrecision;
 
     public Field getField() {
         return field;
@@ -230,12 +230,12 @@ public class FieldInfo {
         this.packetField_valExprPrecision = packetField_valExprPrecision;
     }
 
-    public int getValExprPrecision() {
-        return valExprPrecision;
+    public int getValPrecision() {
+        return valPrecision;
     }
 
-    public void setValExprPrecision(int valExprPrecision) {
-        this.valExprPrecision = valExprPrecision;
+    public void setValPrecision(int valPrecision) {
+        this.valPrecision = valPrecision;
     }
 
     public PacketInfo getPacketInfo() {

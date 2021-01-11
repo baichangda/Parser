@@ -44,7 +44,7 @@ public class DoubleProcessor extends FieldProcessor<Double> {
         }else{
             //验证异常、无效值
             if(checkInvalidOrExceptionVal(res,len)){
-                return RpnUtil.calcRPN_char_double_singleVar(valRpn,res,processContext.getFieldInfo().getValExprPrecision());
+                return RpnUtil.calcRPN_char_double_singleVar(valRpn,res,processContext.getFieldInfo().getValPrecision());
             }else{
                 return (double)res;
             }
