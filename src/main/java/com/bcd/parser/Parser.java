@@ -47,7 +47,7 @@ import java.util.*;
  * cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
  * 单线程、在cpu使用率90%+ 的情况下
  * 解析速度约为 30-32w/s、多个线程成倍数增长
- * 反解析速度约为 27-28w/s、多个线程成倍数增长
+ * 反解析速度约为 26-28w/s、多个线程成倍数增长
  * 具体查看{@link com.bcd.parser.impl.gb32960.Parser_gb32960#main(String[])}
  * 注意:
  * 因为是cpu密集型运算、所以性能达到计算机物理核心个数后已经达到上限、不能以逻辑核心为准、此时虽然整体cpu使用率没有满、但这只是使用率显示问题
@@ -345,9 +345,10 @@ public abstract class Parser {
      * 将对象转换为byteBuf
      * @param t 不能为null
      * @param res 结果接收容器
+     * @return 对应参数res、如果res==null、则new一个返回
      */
-    public final void deParse(Object t, ByteBuf res){
-        deParse(t, res,null);
+    public final ByteBuf deParse(Object t, ByteBuf res){
+        return deParse(t, res,null);
     }
 
     /**
@@ -355,24 +356,25 @@ public abstract class Parser {
      * @param t 不能为null
      * @param res 结果接收容器
      * @param parentContext 反解析环境
+     * @return 对应参数res、如果res==null、则new一个返回
      */
-    public final void deParse(Object t, ByteBuf res, FieldDeProcessContext parentContext){
+    public final ByteBuf deParse(Object t, ByteBuf res, FieldDeProcessContext parentContext){
+        if(res==null){
+            res= Unpooled.buffer();
+        }
+        Class clazz= t.getClass();
+        PacketInfo packetInfo=packetInfoCache.get(clazz);
+        //进行解析
+        int [] vals=null;
+        int varValArrLen=packetInfo.getVarValArrLen();
+        int varValArrOffset=packetInfo.getVarValArrOffset();
+        if(varValArrLen!=0){
+            vals=new int[varValArrLen];
+        }
+        FieldDeProcessContext processContext=new FieldDeProcessContext();
+        processContext.setInstance(t);
+        processContext.setParentContext(parentContext);
         try{
-            if(res==null){
-                res= Unpooled.buffer();
-            }
-            Class clazz= t.getClass();
-            PacketInfo packetInfo=packetInfoCache.get(clazz);
-            //进行解析
-            int [] vals=null;
-            int varValArrLen=packetInfo.getVarValArrLen();
-            int varValArrOffset=packetInfo.getVarValArrOffset();
-            if(varValArrLen!=0){
-                vals=new int[varValArrLen];
-            }
-            FieldDeProcessContext processContext=new FieldDeProcessContext();
-            processContext.setInstance(t);
-            processContext.setParentContext(parentContext);
             for (FieldInfo fieldInfo : packetInfo.getFieldInfos()) {
                 int processorIndex=fieldInfo.getProcessorIndex();
                 Object data=fieldInfo.getField().get(t);
@@ -444,6 +446,7 @@ public abstract class Parser {
         } catch (IllegalAccessException e) {
             throw BaseRuntimeException.getException(e);
         }
+        return res;
     }
 
     public final <T>String toHex(T t){
