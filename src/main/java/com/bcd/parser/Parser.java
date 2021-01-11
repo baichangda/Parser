@@ -626,6 +626,14 @@ public abstract class Parser {
         this.doubleArrayProcessor = doubleArrayProcessor;
     }
 
+    public FieldProcessor<Object> getParsableObjectArrayProcessor() {
+        return parsableObjectArrayProcessor;
+    }
+
+    public void setParsableObjectArrayProcessor(FieldProcessor<Object> parsableObjectArrayProcessor) {
+        this.parsableObjectArrayProcessor = parsableObjectArrayProcessor;
+    }
+
     public boolean isPrintStack() {
         return printStack;
     }
