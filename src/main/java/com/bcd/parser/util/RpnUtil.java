@@ -104,7 +104,7 @@ public class RpnUtil {
      * 只有一个变量
      * @param rpn 逆波兰表达式集合,其中变量必须是char,常量必须是double
      * @param var 变量值
-     * @param precision 精度
+     * @param precision 小数精度
      * @return
      */
     public static double calcRPN_char_double_singleVar(Object[] rpn, double var,int precision){
@@ -146,14 +146,22 @@ public class RpnUtil {
                 }
             }
         }
-        if(stack[0]>0){
-            double pow=Math.pow(10,precision);
-            return Math.round(stack[0]*pow)/pow;
-        }else if(stack[0]<0){
-            double pow=Math.pow(10,precision);
-            return -Math.round(-stack[0]*pow)/pow;
-        }else{
-            return stack[0];
+        if (stack[0] > 0) {
+            if(precision==0){
+                return Math.round(stack[0]);
+            }else {
+                double pow = Math.pow(10, precision);
+                return Math.round(stack[0] * pow) / pow;
+            }
+        } else if (stack[0] < 0) {
+            if(precision==0){
+                return -Math.round(-stack[0]);
+            }else {
+                double pow = Math.pow(10, precision);
+                return -Math.round(-stack[0] * pow) / pow;
+            }
+        } else {
+            return 0;
         }
     }
 
