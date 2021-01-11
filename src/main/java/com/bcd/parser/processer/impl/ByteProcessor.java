@@ -58,9 +58,13 @@ public class ByteProcessor extends FieldProcessor<Byte> {
             }
         }
         int len=processContext.getLen();
-        byte[] content=new byte[len];
-        content[len-BYTE_LENGTH]=newData;
-        dest.writeBytes(content);
+        if(len==BYTE_LENGTH){
+            dest.writeByte(data);
+        }else {
+            byte[] content = new byte[len];
+            content[len - BYTE_LENGTH] = newData;
+            dest.writeBytes(content);
+        }
     }
 
     public boolean checkInvalidOrExceptionVal(byte val){

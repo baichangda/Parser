@@ -83,20 +83,25 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
             }
         }
         //写入原始值
-        if(singleLen==BYTE_LENGTH){
+        //优化处理
+        if(singleLen==2){
+            for (long num : newData) {
+                dest.writeShort((short)num);
+            }
+        }else if (singleLen == BYTE_LENGTH) {
             for (int num : newData) {
                 dest.writeInt(num);
             }
-        }else if(singleLen>BYTE_LENGTH){
+        } else if (singleLen > BYTE_LENGTH) {
             for (int num : newData) {
-                dest.writeBytes(new byte[singleLen-BYTE_LENGTH]);
+                dest.writeBytes(new byte[singleLen - BYTE_LENGTH]);
                 dest.writeInt(num);
             }
-        }else{
+        } else {
             for (int num : newData) {
-                for(int i=singleLen;i>=1;i--){
-                    int move=8*(i-1);
-                    dest.writeByte((byte)(num>>>move));
+                for (int i = singleLen; i >= 1; i--) {
+                    int move = 8 * (i - 1);
+                    dest.writeByte((byte) (num >>> move));
                 }
             }
         }

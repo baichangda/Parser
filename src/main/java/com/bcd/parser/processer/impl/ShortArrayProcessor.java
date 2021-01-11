@@ -82,23 +82,22 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
             }
         }
 
-        if(singleLen==BYTE_LENGTH){
+        //优化处理
+        if(singleLen==1){
+            for (short num : newData) {
+                dest.writeByte((byte)num);
+            }
+        }else if (singleLen == BYTE_LENGTH) {
             for (short num : newData) {
                 dest.writeShort(num);
             }
-        }else if(singleLen>BYTE_LENGTH){
+        } else{
             for (short num : newData) {
-                dest.writeBytes(new byte[singleLen-BYTE_LENGTH]);
+                dest.writeBytes(new byte[singleLen - BYTE_LENGTH]);
                 dest.writeShort(num);
-            }
-        }else{
-            for (short num : newData) {
-                for(int i=singleLen;i>=1;i--){
-                    int move=8*(i-1);
-                    dest.writeByte((byte)(num>>>move));
-                }
             }
         }
+
     }
 
     public boolean checkInvalidOrExceptionVal(short val,int len){

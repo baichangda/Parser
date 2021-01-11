@@ -63,17 +63,21 @@ public class LongProcessor extends FieldProcessor<Long> {
             }
         }
         int len=processContext.getLen();
-        if(len==BYTE_LENGTH){
+        //优化处理
+        if(len==4){
+            dest.writeInt((int)newData);
+        }else if (len == BYTE_LENGTH) {
             dest.writeLong(newData);
-        }else if(len>BYTE_LENGTH){
-            dest.writeBytes(new byte[len-BYTE_LENGTH]);
+        } else if (len > BYTE_LENGTH) {
+            dest.writeBytes(new byte[len - BYTE_LENGTH]);
             dest.writeLong(newData);
-        }else{
-            for(int i=len;i>=1;i--){
-                int move=8*(i-1);
-                dest.writeByte((byte)(newData>>>move));
+        } else {
+            for (int i = len; i >= 1; i--) {
+                int move = 8 * (i - 1);
+                dest.writeByte((byte) (newData >>> move));
             }
         }
+
     }
 
     public boolean checkInvalidOrExceptionVal(long val,int len){

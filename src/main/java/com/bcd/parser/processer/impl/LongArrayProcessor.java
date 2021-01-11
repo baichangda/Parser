@@ -81,23 +81,29 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
             }
         }
 
-        if(singleLen==BYTE_LENGTH){
+        //优化处理
+        if(singleLen==4){
+            for (long num : newData) {
+                dest.writeInt((int)num);
+            }
+        }else if (singleLen == BYTE_LENGTH) {
             for (long num : newData) {
                 dest.writeLong(num);
             }
-        }else if(singleLen>BYTE_LENGTH){
+        } else if (singleLen > BYTE_LENGTH) {
             for (long num : newData) {
-                dest.writeBytes(new byte[singleLen-BYTE_LENGTH]);
+                dest.writeBytes(new byte[singleLen - BYTE_LENGTH]);
                 dest.writeLong(num);
             }
-        }else{
+        } else {
             for (long num : newData) {
-                for(int i=singleLen;i>=1;i--){
-                    int move=8*(i-1);
-                    dest.writeByte((byte)(num>>>move));
+                for (int i = singleLen; i >= 1; i--) {
+                    int move = 8 * (i - 1);
+                    dest.writeByte((byte) (num >>> move));
                 }
             }
         }
+
     }
 
     public boolean checkInvalidOrExceptionVal(long val,int len){

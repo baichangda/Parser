@@ -90,20 +90,25 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
             }
         }
         //写入原始值
-        if(singleLen==BYTE_LENGTH){
+        //优化处理
+        if(singleLen==4){
             for (double num : newData) {
-                dest.writeLong((long)num);
+                dest.writeInt((int)num);
             }
-        }else if(singleLen>BYTE_LENGTH){
+        }else if (singleLen == BYTE_LENGTH) {
             for (double num : newData) {
-                dest.writeBytes(new byte[singleLen-BYTE_LENGTH]);
-                dest.writeLong((long)num);
+                dest.writeLong((long) num);
             }
-        }else{
+        } else if (singleLen > BYTE_LENGTH) {
             for (double num : newData) {
-                for(int i=singleLen;i>=1;i--){
-                    int move=8*(i-1);
-                    dest.writeByte((byte)((long)num>>>move));
+                dest.writeBytes(new byte[singleLen - BYTE_LENGTH]);
+                dest.writeLong((long) num);
+            }
+        } else {
+            for (double num : newData) {
+                for (int i = singleLen; i >= 1; i--) {
+                    int move = 8 * (i - 1);
+                    dest.writeByte((byte) ((long) num >>> move));
                 }
             }
         }

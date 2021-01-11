@@ -91,20 +91,25 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
         }
 
         //写入原始值
-        if(singleLen==BYTE_LENGTH){
+        //优化处理
+        if(singleLen==2){
             for (float num : newData) {
-                dest.writeInt((int)num);
+                dest.writeShort((short)num);
             }
-        }else if(singleLen>BYTE_LENGTH){
+        }else if (singleLen == BYTE_LENGTH) {
             for (float num : newData) {
-                dest.writeBytes(new byte[singleLen-BYTE_LENGTH]);
-                dest.writeInt((int)num);
+                dest.writeInt((int) num);
             }
-        }else{
+        } else if (singleLen > BYTE_LENGTH) {
             for (float num : newData) {
-                for(int i=singleLen;i>=1;i--){
-                    int move=8*(i-1);
-                    dest.writeByte((byte)((int)num>>>move));
+                dest.writeBytes(new byte[singleLen - BYTE_LENGTH]);
+                dest.writeInt((int) num);
+            }
+        } else {
+            for (float num : newData) {
+                for (int i = singleLen; i >= 1; i--) {
+                    int move = 8 * (i - 1);
+                    dest.writeByte((byte) ((int) num >>> move));
                 }
             }
         }

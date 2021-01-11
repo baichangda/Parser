@@ -69,7 +69,7 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
         //写入原始值
         if(singleLen==BYTE_LENGTH){
             dest.writeBytes(newData);
-        }else if(singleLen>BYTE_LENGTH){
+        }else{
             for (byte num : newData) {
                 dest.writeBytes(new byte[singleLen-BYTE_LENGTH]);
                 dest.writeByte(num);

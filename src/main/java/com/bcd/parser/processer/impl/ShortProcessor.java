@@ -63,17 +63,16 @@ public class ShortProcessor extends FieldProcessor<Short> {
             }
         }
         int len=processContext.getLen();
-        if(len==BYTE_LENGTH){
-            dest.writeShort(newData);
-        }else if(len>BYTE_LENGTH){
-            dest.writeBytes(new byte[len-BYTE_LENGTH]);
+        //优化处理
+        if(len==1){
+            dest.writeByte((byte)newData);
+        }else if(len==BYTE_LENGTH){
             dest.writeShort(newData);
         }else{
-            for(int i=len;i>=1;i--){
-                int move=8*(i-1);
-                dest.writeByte((byte)(newData>>>move));
-            }
+            dest.writeBytes(new byte[len-BYTE_LENGTH]);
+            dest.writeShort(newData);
         }
+
     }
 
     public boolean checkInvalidOrExceptionVal(short val,int len){
