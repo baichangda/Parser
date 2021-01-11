@@ -19,7 +19,8 @@ import java.lang.annotation.*;
  * String
  * Date
  * ByteBuf
- * List
+ * List<{@link Parsable}>
+ * Array[{@link Parsable}]
  * {@link Parsable}注解标注的自定义类型
  *
  * 如果以上类型不满足解析需求,可以自行设置{@link #processorClass()}属性定义自定义解析器
