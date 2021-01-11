@@ -46,7 +46,7 @@ import java.util.*;
  * 以gb32960协议为例子
  * cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
  * 单线程、在cpu使用率90%+ 的情况下
- * 解析速度约为 30-31w/s、多个线程成倍数增长
+ * 解析速度约为 30-32w/s、多个线程成倍数增长
  * 反解析速度约为 21-22w/s、多个线程成倍数增长
  * 具体查看{@link com.bcd.parser.impl.gb32960.Parser_gb32960#main(String[])}
  * 注意:

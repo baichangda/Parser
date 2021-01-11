@@ -36,7 +36,7 @@ public class ByteProcessor extends FieldProcessor<Byte> {
         }else{
             //验证异常、无效值
             if(checkInvalidOrExceptionVal(res)){
-                return (byte)RpnUtil.calcRPN_char_double_singleVar(valRpn,res,0);
+                return (byte)RpnUtil.calcRPN_char_double_singleVar(valRpn,res,-1);
             }else{
                 return res;
             }

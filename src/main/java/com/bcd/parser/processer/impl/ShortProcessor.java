@@ -41,7 +41,7 @@ public class ShortProcessor extends FieldProcessor<Short> {
             return res;
         }else{
             if(checkInvalidOrExceptionVal(res,len)){
-                return (short)RpnUtil.calcRPN_char_double_singleVar(valRpn,res,0);
+                return (short)RpnUtil.calcRPN_char_double_singleVar(valRpn,res,-1);
             }else{
                 return res;
             }
@@ -57,7 +57,7 @@ public class ShortProcessor extends FieldProcessor<Short> {
             newData=data;
         }else{
             if(checkInvalidOrExceptionVal(data,processContext.getLen())){
-                newData = (short) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,0);
+                newData = (short) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,-1);
             }else {
                 newData=data;
             }

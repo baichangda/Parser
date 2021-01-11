@@ -39,7 +39,7 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
             for(int i=0;i<res.length;i++){
                 //验证异常、无效值
                 if(checkInvalidOrExceptionVal(res[i])){
-                    res[i]=(byte) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],0);
+                    res[i]=(byte) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],-1);
                 }
             }
         }
@@ -60,7 +60,7 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
             for(int i=0;i<data.length;i++){
                 //验证异常、无效值
                 if(checkInvalidOrExceptionVal(data[i])){
-                    newData[i]=(byte) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i],0);
+                    newData[i]=(byte) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i],-1);
                 }else{
                     newData[i]=data[i];
                 }

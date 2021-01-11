@@ -8,6 +8,9 @@ import java.util.List;
 
 public class RpnUtil {
 
+    /**
+     * Math.pow缓存、避免每次都要计算
+     */
     final static double [] pows=new double[100];
     static {
         for(int i=0;i<100;i++){
@@ -111,7 +114,7 @@ public class RpnUtil {
      * 只有一个变量
      * @param rpn 逆波兰表达式集合,其中变量必须是char,常量必须是double
      * @param var 变量值
-     * @param precision 小数精度
+     * @param precision 小数精度、如果<0代表不需要格式化精度
      * @return
      */
     public static double calcRPN_char_double_singleVar(Object[] rpn, double var,int precision){
@@ -153,22 +156,26 @@ public class RpnUtil {
                 }
             }
         }
-        if (stack[0] > 0) {
-            if(precision==0){
-                return Math.round(stack[0]);
-            }else {
-                double pow = pows[precision];
-                return Math.round(stack[0] * pow) / pow;
+        if(precision<0){
+            return stack[0];
+        }else {
+            if (stack[0] > 0) {
+                if (precision == 0) {
+                    return Math.round(stack[0]);
+                } else {
+                    double pow = pows[precision];
+                    return Math.round(stack[0] * pow) / pow;
+                }
+            } else if (stack[0] < 0) {
+                if (precision == 0) {
+                    return -Math.round(-stack[0]);
+                } else {
+                    double pow = pows[precision];
+                    return -Math.round(-stack[0] * pow) / pow;
+                }
+            } else {
+                return 0;
             }
-        } else if (stack[0] < 0) {
-            if(precision==0){
-                return -Math.round(-stack[0]);
-            }else {
-                double pow = pows[precision];
-                return -Math.round(-stack[0] * pow) / pow;
-            }
-        } else {
-            return 0;
         }
     }
 
