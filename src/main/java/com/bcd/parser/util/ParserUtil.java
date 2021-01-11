@@ -36,7 +36,6 @@ public class ParserUtil {
     /**
      * 解析类转换成包信息
      * @param clazz
-     * @param enableOffsetField
      * @param processors
      * @return
      */
