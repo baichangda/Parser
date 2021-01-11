@@ -40,7 +40,6 @@ public class ParserUtil {
      * @return
      */
     public static PacketInfo toPacketInfo(Class clazz, FieldProcessor[] processors){
-        String className=clazz.getName();
         PacketInfo packetInfo=new PacketInfo();
         packetInfo.setClazz(clazz);
         List<Field> allFieldList= FieldUtil.getAllFieldsList(clazz);
@@ -247,7 +246,7 @@ public class ParserUtil {
 
     public static int findProcessorIndexByFieldProcessorClass(Class clazz,FieldProcessor[] processors){
         for (int i=0;i<processors.length;i++) {
-            if(clazz==processors[i].getClass()){
+            if(clazz.isAssignableFrom(processors[i].getClass())){
                 return i;
             }
         }
