@@ -1,6 +1,5 @@
 package com.bcd.parser.util;
 
-import checkers.oigj.quals.O;
 import com.bcd.parser.exception.BaseRuntimeException;
 
 import java.util.ArrayList;
@@ -8,6 +7,14 @@ import java.util.Arrays;
 import java.util.List;
 
 public class RpnUtil {
+
+    final static double [] pows=new double[100];
+    static {
+        for(int i=0;i<100;i++){
+            pows[i]=Math.pow(10,i);
+        }
+    }
+
     /**
      * 处理rpn表达式集合
      * 字符串变量 --> char
@@ -150,14 +157,14 @@ public class RpnUtil {
             if(precision==0){
                 return Math.round(stack[0]);
             }else {
-                double pow = Math.pow(10, precision);
+                double pow = pows[precision];
                 return Math.round(stack[0] * pow) / pow;
             }
         } else if (stack[0] < 0) {
             if(precision==0){
                 return -Math.round(-stack[0]);
             }else {
-                double pow = Math.pow(10, precision);
+                double pow = pows[precision];
                 return -Math.round(-stack[0] * pow) / pow;
             }
         } else {
