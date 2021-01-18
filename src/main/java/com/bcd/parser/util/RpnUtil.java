@@ -158,21 +158,21 @@ public class RpnUtil {
         }
         if(precision<0){
             return stack[0];
-        }else {
+        }else if(precision==0){
             if (stack[0] > 0) {
-                if (precision == 0) {
-                    return Math.round(stack[0]);
-                } else {
-                    final double pow = pows[precision];
-                    return Math.round(stack[0] * pow) / pow;
-                }
+                return Math.round(stack[0]);
             } else if (stack[0] < 0) {
-                if (precision == 0) {
-                    return -Math.round(-stack[0]);
-                } else {
-                    double pow = pows[precision];
-                    return -Math.round(-stack[0] * pow) / pow;
-                }
+                return -Math.round(-stack[0]);
+            } else {
+                return 0;
+            }
+        }else{
+            if (stack[0] > 0) {
+                final double pow = pows[precision];
+                return Math.round(stack[0] * pow) / pow;
+            } else if (stack[0] < 0) {
+                double pow = pows[precision];
+                return -Math.round(-stack[0] * pow) / pow;
             } else {
                 return 0;
             }
