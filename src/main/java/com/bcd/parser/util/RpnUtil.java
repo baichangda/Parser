@@ -67,7 +67,7 @@ public class RpnUtil {
      */
     public static int calcRPN_char_int(Object[] rpn, int[] vals,int offset){
         int stackIndex=-1;
-        int[] stack=new int[rpn.length];
+        final int[] stack=new int[rpn.length];
         for (Object s : rpn) {
             if(s instanceof Integer){
                 stack[++stackIndex]=(int)s;
@@ -119,7 +119,7 @@ public class RpnUtil {
      */
     public static double calcRPN_char_double_singleVar(Object[] rpn, double var,int precision){
         int stackIndex=-1;
-        double[] stack=new double[2];
+        final double[] stack=new double[2];
         for (Object o : rpn) {
             if(o instanceof Double){
                 stack[++stackIndex] = (double)o;
@@ -163,7 +163,7 @@ public class RpnUtil {
                 if (precision == 0) {
                     return Math.round(stack[0]);
                 } else {
-                    double pow = pows[precision];
+                    final double pow = pows[precision];
                     return Math.round(stack[0] * pow) / pow;
                 }
             } else if (stack[0] < 0) {
