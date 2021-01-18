@@ -7,25 +7,25 @@ import java.lang.reflect.Field;
 
 public class FieldInfo {
 
-    public Field field;
+    private Field field;
 
-    public PacketInfo packetInfo;
+    private PacketInfo packetInfo;
 
     /**
      * #{@link PacketField} 属性
      */
-    public int packetField_index;
-    public int packetField_len;
-    public char packetField_var;
-    public String packetField_lenExpr;
-    public String packetField_listLenExpr;
-    public int packetField_singleLen;
-    public Class packetField_parserClass;
-    public String packetField_valExpr;
-    public int packetField_valExprPrecision;
+    private int packetField_index;
+    private int packetField_len;
+    private char packetField_var;
+    private String packetField_lenExpr;
+    private String packetField_listLenExpr;
+    private int packetField_singleLen;
+    private Class packetField_parserClass;
+    private String packetField_valExpr;
+    private int packetField_valExprPrecision;
 
     //packetField_var对应的int
-    public int packetField_var_int;
+    private int packetField_var_int;
 
     /**
      * {@link Parser#fieldProcessors} 索引
@@ -51,42 +51,42 @@ public class FieldInfo {
      * >=18、自定义处理器
      *
      */
-    public int processorIndex;
+    private int processorIndex;
 
     /**
      * {@link PacketField#var()} 属性不为空
      * 只有当
      * {@link FieldInfo#processorIndex} 为数字类型(0、1、2、3)时候,才可能是true
      */
-    public boolean isVar;
+    private boolean isVar;
 
     /**
      * processorIndex=15时候代表集合泛型
      * processorIndex=16时候代表数组元素类型
      * processorIndex=17代表实体类型
      */
-    public Class clazz;
+    private Class clazz;
 
     /**
      * 对应 {@link PacketField#lenExpr()}表达式
      */
-    public Object[] lenRpn;
+    private Object[] lenRpn;
 
     /**
      * 对应 {@link PacketField#listLenExpr()}表达式
      */
-    public Object[] listLenRpn;
+    private Object[] listLenRpn;
 
     /**
      * 对应 {@link PacketField#valExpr()}表达式
      */
-    public Object[] valRpn;
-    public Object[] reverseValRpn;
+    private Object[] valRpn;
+    private Object[] reverseValRpn;
 
     /**
      * 对应 {@link PacketField#valPrecision()}表达式
      */
-    public int valPrecision;
+    private int valPrecision;
 
     public Field getField() {
         return field;
