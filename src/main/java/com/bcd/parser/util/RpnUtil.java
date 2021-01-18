@@ -242,16 +242,12 @@ public class RpnUtil {
      */
     private static int getSymbolPriority(char c){
         switch (c){
-            case '+':{
+            case '+':
+            case '-': {
                 return 1;
             }
-            case '-':{
-                return 1;
-            }
-            case '*':{
-                return 2;
-            }
-            case '/':{
+            case '*':
+            case '/': {
                 return 2;
             }
             default:{
