@@ -232,7 +232,7 @@ public abstract class Parser {
      * @param parentContext 当前解析所属环境
      * @throws IllegalAccessException
      */
-    private void parsePacketField(PacketInfo packetInfo, ByteBuf data,Object instance,FieldProcessContext parentContext) throws IllegalAccessException {
+    private final void parsePacketField(PacketInfo packetInfo, ByteBuf data,Object instance,FieldProcessContext parentContext) throws IllegalAccessException {
         //进行解析
         int varValArrLen=packetInfo.getVarValArrLen();
         int varValArrOffset=packetInfo.getVarValArrOffset();
@@ -262,9 +262,10 @@ public abstract class Parser {
                     len = RpnUtil.calcRPN_char_int(lenRpn, vals,varValArrOffset);
                 }
             }
+            processContext.setLen(len);
 
-            int listLen;
             if(listLenRpn!=null){
+                int listLen;
                 if(listLenRpn.length==1){
                     listLen=vals[(char)listLenRpn[0]-varValArrOffset];
                 }else {
@@ -273,13 +274,12 @@ public abstract class Parser {
                 processContext.setListLen(listLen);
             }
 
-            processContext.setLen(len);
             processContext.setFieldInfo(fieldInfo);
 
             Object val;
             //过滤掉对象的日志
             if(printStack
-//                    &&fieldInfo.getProcessorIndex()!=16
+//                    &&fieldInfo.getProcessorIndex()!=17
             ){
                 int startIndex=data.readerIndex();
                 val=fieldProcessors[fieldInfo.getProcessorIndex()].process(data,processContext);
@@ -411,7 +411,7 @@ public abstract class Parser {
                 processContext.setListLen(listLen);
 
                 if(printStack
-//                        &&fieldInfo.getProcessorIndex()!=16
+//                        &&fieldInfo.getProcessorIndex()!=17
                 ){
                     int startIndex = res.writerIndex();
                     fieldProcessors[processorIndex].deProcess(data, res, processContext);
