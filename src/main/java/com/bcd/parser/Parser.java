@@ -232,7 +232,7 @@ public abstract class Parser {
      * @param parentContext 当前解析所属环境
      * @throws IllegalAccessException
      */
-    private final void parsePacketField(PacketInfo packetInfo, ByteBuf data,Object instance,FieldProcessContext parentContext) throws IllegalAccessException {
+    private void parsePacketField(PacketInfo packetInfo, ByteBuf data, Object instance, FieldProcessContext parentContext) throws IllegalAccessException {
         //进行解析
         int varValArrLen=packetInfo.getVarValArrLen();
         int varValArrOffset=packetInfo.getVarValArrOffset();
