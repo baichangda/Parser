@@ -31,14 +31,15 @@ public class BaseRuntimeException extends RuntimeException {
     /**
      * 将异常信息转换为格式化
      * val表达式从{0}开始
-     * @param message
+     * @param message 注意其中特殊字符为'、如果要显示特殊字符使用''
      * @param params
      * @return
      */
     public static BaseRuntimeException getException(String message, Object ... params){
         return new BaseRuntimeException(MessageFormat.format(
                 //转义特殊字符'为''
-                message.replaceAll("'","''")
+//                message.replaceAll("'","''")
+                message
                 //去除null
                 ,Arrays.stream(params).map(e->e==null?"":e.toString()).toArray())
         );
@@ -58,6 +59,6 @@ public class BaseRuntimeException extends RuntimeException {
     }
 
     public static void main(String[] args) {
-        throw BaseRuntimeException.getException("[{0}]-[{1}]",null,100000);
+        throw BaseRuntimeException.getException("[''{0}]-[{1}]",null,100000);
     }
 }
