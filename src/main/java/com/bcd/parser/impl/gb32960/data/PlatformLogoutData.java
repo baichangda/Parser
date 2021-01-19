@@ -6,7 +6,7 @@ import com.bcd.parser.anno.Parsable;
 import java.util.Date;
 
 @Parsable
-public class PlatformLogoutData extends PacketData{
+public class PlatformLogoutData implements PacketData{
     //登出时间
     @PacketField(index = 1,len = 6)
     Date collectTime;

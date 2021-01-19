@@ -14,7 +14,7 @@ apply plugin: 'idea'
 apply plugin: 'maven-publish'
 
 group 'com.bcd'
-version '2.0-SNAPSHOT'
+version '6.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 

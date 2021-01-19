@@ -6,7 +6,7 @@ import com.bcd.parser.anno.Parsable;
 import java.util.Date;
 
 @Parsable
-public class VehicleLogoutData extends PacketData{
+public class VehicleLogoutData implements PacketData{
     //登出时间
     @PacketField(index = 1,len = 6)
     Date collectTime;
@@ -15,12 +15,10 @@ public class VehicleLogoutData extends PacketData{
     @PacketField(index = 2,len = 2)
     int sn;
 
-    @Override
     public Date getCollectTime() {
         return collectTime;
     }
 
-    @Override
     public void setCollectTime(Date collectTime) {
         this.collectTime = collectTime;
     }

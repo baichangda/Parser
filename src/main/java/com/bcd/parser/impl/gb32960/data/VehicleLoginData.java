@@ -6,7 +6,7 @@ import com.bcd.parser.anno.Parsable;
 import java.util.Date;
 
 @Parsable
-public class VehicleLoginData extends PacketData{
+public class VehicleLoginData implements PacketData{
     //数据采集时间
     @PacketField(index = 1,len = 6)
     Date collectTime;

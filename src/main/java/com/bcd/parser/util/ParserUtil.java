@@ -11,6 +11,7 @@ import io.netty.buffer.ByteBuf;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -42,7 +43,7 @@ public class ParserUtil {
     public static PacketInfo toPacketInfo(Class clazz, FieldProcessor[] processors){
         PacketInfo packetInfo=new PacketInfo();
         packetInfo.setClazz(clazz);
-        List<Field> allFieldList= FieldUtil.getAllFieldsList(clazz);
+        Field[] declaredFields= clazz.getDeclaredFields();
         //求出最小var char int和最大var char int
         int[] maxVarInt=new int[1];
         int[] minVarInt=new int[1];
@@ -51,7 +52,7 @@ public class ParserUtil {
          * 2、将字段按照{@link PacketField#index()}正序
          * 3、将每个字段类型解析成FieldInfo
          */
-        List<FieldInfo> fieldInfoList=allFieldList.stream().filter(field -> field.getAnnotation(PacketField.class)!=null).sorted((f1, f2)->{
+        List<FieldInfo> fieldInfoList= Arrays.stream(declaredFields).filter(field -> field.getAnnotation(PacketField.class)!=null).sorted((f1, f2)->{
             int i1=f1.getAnnotation(PacketField.class).index();
             int i2=f2.getAnnotation(PacketField.class).index();
             if(i1<i2){
@@ -131,7 +132,7 @@ public class ParserUtil {
                         processorIndex=14;
                     } else {
                         /**
-                         * 带{@link com.bcd.parser.anno.Parsable}注解的实体类
+                         * 带{@link Parsable}注解的实体类
                          */
                         if(fieldType.getAnnotation(Parsable.class)==null){
                             throw BaseRuntimeException.getException("Class[" + clazz.getName() + "] Field[" + field.getName() + "] Bean Type[" + fieldType + "] Not Support,Must have annotation [com.bcd.parser.anno.Parsable]");

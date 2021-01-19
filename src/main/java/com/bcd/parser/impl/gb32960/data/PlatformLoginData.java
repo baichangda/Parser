@@ -6,7 +6,7 @@ import com.bcd.parser.anno.Parsable;
 import java.util.Date;
 
 @Parsable
-public class PlatformLoginData extends PacketData {
+public class PlatformLoginData implements PacketData {
     //平台登入时间
     @PacketField(index = 1,len = 6)
     Date collectTime;
@@ -27,12 +27,10 @@ public class PlatformLoginData extends PacketData {
     @PacketField(index = 5,len = 1)
     short encode;
 
-    @Override
     public Date getCollectTime() {
         return collectTime;
     }
 
-    @Override
     public void setCollectTime(Date collectTime) {
         this.collectTime = collectTime;
     }

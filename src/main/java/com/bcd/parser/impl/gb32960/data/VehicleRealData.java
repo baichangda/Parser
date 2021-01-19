@@ -8,7 +8,7 @@ import com.bcd.parser.impl.gb32960.processer.VehicleCommonDataFieldProcessor;
 import java.util.Date;
 
 @Parsable
-public class VehicleRealData extends PacketData{
+public class VehicleRealData implements PacketData{
     //数据采集时间
     @PacketField(index = 1,len = 6)
     Date collectTime;
