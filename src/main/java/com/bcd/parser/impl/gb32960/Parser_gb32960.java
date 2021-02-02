@@ -50,7 +50,7 @@ public class Parser_gb32960 extends Parser{
         logger.info("param threadNum[{}]",threadNum);
         PerformanceUtil.testMultiThreadPerformance(data,parser,Packet.class,threadNum,100000000,true);
 //        testMultiThreadPerformance(data,1,100000000);
-//        PerformanceUtil.testDeParse(dacta,parser,Packet.class,1,new LongAdder());
+//        PerformanceUtil.testDeParse(data,parser,Packet.class,1,new LongAdder());
 //        PerformanceUtil.testParse(data,parser,Packet.class,1,new LongAdder());
     }
 
