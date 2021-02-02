@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.LongAdder;
 
 public class Parser_gb32960 extends Parser{
 
@@ -42,15 +43,15 @@ public class Parser_gb32960 extends Parser{
 
         String data="232303FE4C534A4132343033304853313932393639010135" +
                 "1403190F0507010203010000000469B00EE5271055020F1FFF000002010103424E1E4E2045FFFF2710050006BE437001CF306A060160FFFF0101FFFF0118FF01010E070000000000000000000801010EE527100060000160FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF09010100180EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFED";
-        int threadNum=1;
+        int threadNum=10;
         if(args.length>=1){
             threadNum=Integer.parseInt(args[0]);
         }
         logger.info("param threadNum[{}]",threadNum);
         PerformanceUtil.testMultiThreadPerformance(data,parser,Packet.class,threadNum,100000000,true);
 //        testMultiThreadPerformance(data,1,100000000);
-//        PerformanceUtil.testDeParse(data,parser,Packet.class,1,new AtomicInteger());
-//        PerformanceUtil.testParse(data,parser,Packet.class,1,new AtomicInteger());
+//        PerformanceUtil.testDeParse(data,parser,Packet.class,1,new LongAdder());
+//        PerformanceUtil.testParse(data,parser,Packet.class,1,new LongAdder());
     }
 
     private static void parseToPacket(String data,int num,AtomicInteger count){
