@@ -29,29 +29,24 @@ public class PerformanceUtil {
      */
     public static <T>void testMultiThreadPerformance(String data, Parser parser, Class<T> clazz, int threadNum, int num,boolean parse){
         logger.info("threadNum:{}",threadNum);
-        long [] count=new long[threadNum];
+        LongAdder count=new LongAdder();
         ExecutorService[]pools=new ExecutorService[threadNum];
         for(int i=0;i<pools.length;i++){
             pools[i] = Executors.newSingleThreadExecutor();
         }
         for (int i = 0; i < pools.length; i++) {
-            final int index=i;
-            pools[index].execute(() -> {
+            pools[i].execute(() -> {
                 if(parse){
-                    testParse(data, parser, clazz, num, count,index);
+                    testParse(data, parser, clazz, num, count);
                 }else {
-                    testDeParse(data, parser,clazz,num, count,index);
+                    testDeParse(data, parser,clazz,num, count);
                 }
             });
         }
 
         ScheduledExecutorService monitor=Executors.newSingleThreadScheduledExecutor();
         monitor.scheduleAtFixedRate(()->{
-            long sum=0;
-            for (int i = 0; i < count.length; i++) {
-                sum+=count[i];
-                count[i]=0L;
-            }
+            long sum=count.sumThenReset()/3;
             logger.info("{} , threadNum:{} , totalSpeed/s:{} , perThreadSpeed/s:{}",parse?"parse":"deParse",threadNum,sum,sum/threadNum);
         },3,3,TimeUnit.SECONDS);
 
@@ -69,7 +64,7 @@ public class PerformanceUtil {
         }
     }
 
-    public static <T>void testParse(String data, Parser parser,Class<T> clazz, int num, long [] count,int index){
+    public static <T>void testParse(String data, Parser parser,Class<T> clazz, int num, LongAdder count){
         byte [] bytes= ByteBufUtil.decodeHexDump(data);
         ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
         byteBuf.markReaderIndex();
@@ -78,11 +73,11 @@ public class PerformanceUtil {
             byteBuf.resetReaderIndex();
             byteBuf.resetWriterIndex();
             T t= parser.parse(clazz,byteBuf);
-            count[index]++;
+            count.increment();
         }
     }
 
-    public static <T>void testDeParse(String data, Parser parser,Class<T> clazz, int num, long[] count,int index){
+    public static <T>void testDeParse(String data, Parser parser,Class<T> clazz, int num, LongAdder count){
         byte [] bytes= ByteBufUtil.decodeHexDump(data);
         ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
         T packet= parser.parse(clazz, byteBuf);
@@ -92,7 +87,7 @@ public class PerformanceUtil {
             parser.deParse(packet,res);
 //            System.out.println(data.toLowerCase());
 //            System.out.println(ByteBufUtil.hexDump(res));
-            count[index]++;
+            count.increment();
         }
     }
 }
