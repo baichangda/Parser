@@ -43,9 +43,8 @@ task sourceJar(type: Jar) {
 //---------------------------------
 // 在gradle运行时环境下执行main函数
 //---------------------------------
-task gb32960_performance(type: JavaExec, dependsOn: 'jar') {
-    description 'gb32960性能测试'
-    classpath = sourceSets.main.runtimeClasspath
+task gb32960_performance(type: JavaExec,description:'gb32960性能测试') {
+    classpath sourceSets.main.runtimeClasspath
     main = 'com.bcd.parser.impl.gb32960.Parser_gb32960'
 }
 
