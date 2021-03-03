@@ -18,6 +18,7 @@ public class FieldInfo {
     private int packetField_len;
     private char packetField_var;
     private String packetField_lenExpr;
+    private boolean packetField_skip;
     private String packetField_listLenExpr;
     private int packetField_singleLen;
     private Class packetField_parserClass;
@@ -246,5 +247,13 @@ public class FieldInfo {
 
     public void setPacketInfo(PacketInfo packetInfo) {
         this.packetInfo = packetInfo;
+    }
+
+    public boolean isPacketField_skip() {
+        return packetField_skip;
+    }
+
+    public void setPacketField_skip(boolean packetField_skip) {
+        this.packetField_skip = packetField_skip;
     }
 }

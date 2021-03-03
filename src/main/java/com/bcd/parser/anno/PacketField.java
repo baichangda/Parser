@@ -1,11 +1,14 @@
 package com.bcd.parser.anno;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * 解析字段注解,被标注的字段将会参与解析,并将解析后的值设置到字段中
  * 支持的字段类型如下:
- *
+ * <p>
  * byte/Byte
  * short/Short
  * int/Integer
@@ -22,9 +25,8 @@ import java.lang.annotation.*;
  * List<{@link Parsable}>
  * Array[{@link Parsable}]
  * {@link Parsable}注解标注的自定义类型
- *
+ * <p>
  * 如果以上类型不满足解析需求,可以自行设置{@link #processorClass()}属性定义自定义解析器
- *
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -64,6 +66,17 @@ public @interface PacketField {
     String lenExpr() default "";
 
     /**
+     * 是否跳过当前字段的解析
+     * 必须满足如下条件才能跳过
+     * 1、{@link #var()}必须未设置
+     * 2、{@link #len()} 或者 {@link #lenExpr()} 必须设置了一个
+     *
+     * 原理为解析到当前字段时候会得到当前字段所占字节长度、然后{@link io.netty.buffer.ByteBuf#skipBytes(int)}跳过
+     *
+     */
+    boolean skip() default false;
+
+    /**
      * {@link Parsable}对象集合/数组长度表达式
      * 用于对象集合字段不定长度的解析,配合var参数使用,代表的是当前集合元素的个数
      * 适用于 List<TestBean> 字段类型
@@ -72,6 +85,7 @@ public @interface PacketField {
      * m*n
      */
     String listLenExpr() default "";
+
     /**
      * 单个元素字节长度(用于字节数组转换成byte[]、short[]、int[]、long[]、float[]、double[]数组中单个元素对应字节数)
      * 例如:
@@ -87,7 +101,7 @@ public @interface PacketField {
      * 公式中的任意变量都代表字段原始的值
      * 例如:
      * x*0.1-1000
-     *
+     * <p>
      * 注意:
      * 表达式必须写成 y=ax+b的形式、其中a!=0 ; 是因为需要对此表达式反转通过y求x得到 x=(y-b)/a
      */
