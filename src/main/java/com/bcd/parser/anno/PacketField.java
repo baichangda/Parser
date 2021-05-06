@@ -41,7 +41,7 @@ public @interface PacketField {
     /**
      * 字段所占字节长度
      * 常量数值
-     * 例如: 1,2,3
+     * 例如: 1,2,4,8
      */
     int len() default 0;
 
@@ -72,6 +72,8 @@ public @interface PacketField {
      * 2、{@link #len()} 或者 {@link #lenExpr()} 必须设置了一个
      *
      * 原理为解析到当前字段时候会得到当前字段所占字节长度、然后{@link io.netty.buffer.ByteBuf#skipBytes(int)}跳过
+     *
+     * 需要注意的是在deParse时候、会忽略此属性
      *
      */
     boolean skip() default false;
