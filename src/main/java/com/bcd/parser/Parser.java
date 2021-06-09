@@ -63,7 +63,6 @@ import java.util.*;
  */
 @SuppressWarnings("unchecked")
 public abstract class Parser {
-
     public final Logger logger = LoggerFactory.getLogger(this.getClass());
     public final Map<Class, PacketInfo> packetInfoCache = new HashMap<>();
 
@@ -322,9 +321,10 @@ public abstract class Parser {
             if (fieldInfo.isVar()) {
                 vals[fieldInfo.getPacketField_var_int() - varValArrOffset] = ((Number) val).intValue();
             }
-            fieldInfo.getField().set(instance, val);
+            ParserUtil.setValueUnsafe(instance,val,fieldInfo.getUnsafeOffset(),fieldInfo.getUnsafeType());
         }
     }
+
 
     /**
      * 根据类型和缓冲数据生成对应对象
@@ -390,77 +390,73 @@ public abstract class Parser {
         FieldDeProcessContext processContext = new FieldDeProcessContext();
         processContext.setInstance(t);
         processContext.setParentContext(parentContext);
-        try {
-            for (FieldInfo fieldInfo : packetInfo.getFieldInfos()) {
-                int processorIndex = fieldInfo.getProcessorIndex();
-                Object data = fieldInfo.getField().get(t);
-                /**
-                 * 代表 {@link PacketField#lenExpr()}
-                 */
-                Object[] lenRpn = fieldInfo.getLenRpn();
-                /**
-                 * 代表 {@link PacketField#listLenExpr()}
-                 */
-                Object[] lisLlenRpn = fieldInfo.getListLenRpn();
-                int len;
-                int listLen = 0;
-                if (lenRpn == null) {
-                    len = fieldInfo.getPacketField_len();
+        for (FieldInfo fieldInfo : packetInfo.getFieldInfos()) {
+            int processorIndex = fieldInfo.getProcessorIndex();
+            Object data =ParserUtil.getValueUnsafe(t,fieldInfo.getUnsafeOffset(),fieldInfo.getUnsafeType());
+            /**
+             * 代表 {@link PacketField#lenExpr()}
+             */
+            Object[] lenRpn = fieldInfo.getLenRpn();
+            /**
+             * 代表 {@link PacketField#listLenExpr()}
+             */
+            Object[] lisLlenRpn = fieldInfo.getListLenRpn();
+            int len;
+            int listLen = 0;
+            if (lenRpn == null) {
+                len = fieldInfo.getPacketField_len();
+            } else {
+                if (lenRpn.length == 1) {
+                    len = vals[(char) lenRpn[0] - varValArrOffset];
                 } else {
-                    if (lenRpn.length == 1) {
-                        len = vals[(char) lenRpn[0] - varValArrOffset];
-                    } else {
-                        len = RpnUtil.calcRPN_char_int(lenRpn, vals, varValArrOffset);
-                    }
-                }
-                if (lisLlenRpn != null) {
-                    if (lisLlenRpn.length == 1) {
-                        listLen = vals[(char) lisLlenRpn[0] - varValArrOffset];
-                    } else {
-                        listLen = RpnUtil.calcRPN_char_int(lisLlenRpn, vals, varValArrOffset);
-                    }
-                }
-                processContext.setFieldInfo(fieldInfo);
-                processContext.setLen(len);
-                processContext.setListLen(listLen);
-
-                if (printStack
-//                        &&fieldInfo.getProcessorIndex()!=17
-                ) {
-                    int startIndex = res.writerIndex();
-                    fieldProcessors[processorIndex].deProcess(data, res, processContext);
-                    int endIndex = res.writerIndex();
-                    byte[] arr = new byte[endIndex - startIndex];
-                    res.getBytes(startIndex, arr);
-                    if (fieldInfo.getPacketField_valExpr().isEmpty()) {
-                        logger.info("deParse class[{}] field[{}] hex[{}] val[{}] parser[{}]",
-                                packetInfo.getClazz().getName(),
-                                fieldInfo.getField().getName(),
-                                ByteBufUtil.hexDump(arr),
-                                data,
-                                fieldProcessors[processorIndex].getClass().getName());
-                    } else {
-                        String reverseValExpr = RpnUtil.parseRPNToArithmetic(fieldInfo.getReverseValRpn());
-                        logger.info("deParse class[{}] field[{}] hex[{}] val[{}] valExpr[{}] reverseValExpr[{}] valExprPrecision[{}] parser[{}]",
-                                packetInfo.getClazz().getName(),
-                                fieldInfo.getField().getName(),
-                                ByteBufUtil.hexDump(arr),
-                                data,
-                                fieldInfo.getPacketField_valExpr(),
-                                reverseValExpr,
-                                fieldInfo.getValPrecision(),
-                                fieldProcessors[processorIndex].getClass().getName());
-                    }
-                } else {
-                    fieldProcessors[processorIndex].deProcess(data, res, processContext);
-                }
-
-                if (fieldInfo.isVar()) {
-                    vals[fieldInfo.getPacketField_var() - varValArrOffset] = ((Number) data).intValue();
+                    len = RpnUtil.calcRPN_char_int(lenRpn, vals, varValArrOffset);
                 }
             }
-        } catch (IllegalAccessException e) {
-            throw BaseRuntimeException.getException(e);
+            if (lisLlenRpn != null) {
+                if (lisLlenRpn.length == 1) {
+                    listLen = vals[(char) lisLlenRpn[0] - varValArrOffset];
+                } else {
+                    listLen = RpnUtil.calcRPN_char_int(lisLlenRpn, vals, varValArrOffset);
+                }
+            }
+            processContext.setFieldInfo(fieldInfo);
+            processContext.setLen(len);
+            processContext.setListLen(listLen);
+
+            if (printStack
+//                        &&fieldInfo.getProcessorIndex()!=17
+            ) {
+                int startIndex = res.writerIndex();
+                fieldProcessors[processorIndex].deProcess(data, res, processContext);
+                int endIndex = res.writerIndex();
+                byte[] arr = new byte[endIndex - startIndex];
+                res.getBytes(startIndex, arr);
+                if (fieldInfo.getPacketField_valExpr().isEmpty()) {
+                    logger.info("deParse class[{}] field[{}] hex[{}] val[{}] parser[{}]",
+                            packetInfo.getClazz().getName(),
+                            fieldInfo.getField().getName(),
+                            ByteBufUtil.hexDump(arr),
+                            data,
+                            fieldProcessors[processorIndex].getClass().getName());
+                } else {
+                    String reverseValExpr = RpnUtil.parseRPNToArithmetic(fieldInfo.getReverseValRpn());
+                    logger.info("deParse class[{}] field[{}] hex[{}] val[{}] valExpr[{}] reverseValExpr[{}] valExprPrecision[{}] parser[{}]",
+                            packetInfo.getClazz().getName(),
+                            fieldInfo.getField().getName(),
+                            ByteBufUtil.hexDump(arr),
+                            data,
+                            fieldInfo.getPacketField_valExpr(),
+                            reverseValExpr,
+                            fieldInfo.getValPrecision(),
+                            fieldProcessors[processorIndex].getClass().getName());
+                }
+            } else {
+                fieldProcessors[processorIndex].deProcess(data, res, processContext);
+            }
+
+            if (fieldInfo.isVar()) {
+                vals[fieldInfo.getPacketField_var() - varValArrOffset] = ((Number) data).intValue();
+            }
         }
         return res;
     }

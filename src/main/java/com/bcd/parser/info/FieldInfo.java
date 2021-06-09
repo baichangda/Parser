@@ -89,6 +89,24 @@ public class FieldInfo {
      */
     private int valPrecision;
 
+    /**
+     * {@link sun.misc.Unsafe#objectFieldOffset(Field)} 得出的偏移量
+     */
+    private long unsafeOffset;
+
+    /**
+     *  字段基础类型、如果不属于java基础类型、则为0
+     *  1:byte
+     *  2:short
+     *  3:int
+     *  4:long
+     *  5:float
+     *  6:double
+     *  7:char
+     *  8:boolean
+     */
+    private int unsafeType;
+
     public Field getField() {
         return field;
     }
@@ -255,5 +273,21 @@ public class FieldInfo {
 
     public void setPacketField_skip(boolean packetField_skip) {
         this.packetField_skip = packetField_skip;
+    }
+
+    public long getUnsafeOffset() {
+        return unsafeOffset;
+    }
+
+    public void setUnsafeOffset(long unsafeOffset) {
+        this.unsafeOffset = unsafeOffset;
+    }
+
+    public int getUnsafeType() {
+        return unsafeType;
+    }
+
+    public void setUnsafeType(int unsafeType) {
+        this.unsafeType = unsafeType;
     }
 }

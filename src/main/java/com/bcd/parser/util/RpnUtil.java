@@ -11,9 +11,9 @@ public class RpnUtil {
     /**
      * Math.pow缓存、避免每次都要计算
      */
-    final static double [] pows=new double[100];
+    final static double [] pows=new double[10];
     static {
-        for(int i=0;i<100;i++){
+        for(int i=0;i<pows.length;i++){
             pows[i]=Math.pow(10,i);
         }
     }
@@ -164,7 +164,7 @@ public class RpnUtil {
             } else if (stack[0] < 0) {
                 return -Math.round(-stack[0]);
             } else {
-                return 0;
+                return 0d;
             }
         }else{
             if (stack[0] > 0) {
@@ -174,7 +174,7 @@ public class RpnUtil {
                 double pow = pows[precision];
                 return -Math.round(-stack[0] * pow) / pow;
             } else {
-                return 0;
+                return 0d;
             }
         }
     }

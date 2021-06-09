@@ -7,6 +7,7 @@ import com.bcd.parser.info.FieldInfo;
 import com.bcd.parser.info.PacketInfo;
 import com.bcd.parser.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
+import sun.misc.Unsafe;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -19,64 +20,177 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unchecked")
 public class ParserUtil {
 
+    public final static Unsafe unsafe = getUnsafe();
+
+    public static int toUnsafeType(Field field){
+        Class<?> fieldType = field.getType();
+        if (fieldType==byte.class){
+            return 1;
+        }else if(fieldType==short.class){
+            return 2;
+        }else if(fieldType==int.class){
+            return 3;
+        }else if(fieldType==long.class){
+            return 4;
+        }else if(fieldType==float.class){
+            return 5;
+        }else if(fieldType==double.class){
+            return 6;
+        }else if(fieldType==char.class){
+            return 7;
+        }else if(fieldType==boolean.class){
+            return 8;
+        }else{
+            return 0;
+        }
+    }
+
+    /**
+     * unsafe方法获取值
+     * @param instance
+     * @param offset
+     * @param type
+     * @return
+     */
+    public static Object getValueUnsafe(Object instance, long offset, int type){
+        switch (type) {
+            case 1: {
+                return unsafe.getByte(instance, offset);
+            }
+            case 2: {
+                return unsafe.getShort(instance, offset);
+            }
+            case 3: {
+                return unsafe.getInt(instance, offset);
+            }
+            case 4: {
+                return unsafe.getLong(instance, offset);
+            }
+            case 5: {
+                return unsafe.getFloat(instance, offset);
+            }
+            case 6: {
+                return unsafe.getDouble(instance, offset);
+            }
+            case 7: {
+                return unsafe.getChar(instance, offset);
+            }
+            case 8: {
+                return unsafe.getBoolean(instance, offset);
+            }
+            default: {
+                return unsafe.getObject(instance, offset);
+            }
+        }
+    }
+
+    /**
+     * unsafe设置值、替代反射
+     * @param instance
+     * @param val
+     * @param offset
+     * @param type
+     */
+    public static void setValueUnsafe(Object instance, Object val, long offset, int type) {
+        switch (type) {
+            case 1: {
+                unsafe.putByte(instance, offset, (byte) val);
+                break;
+            }
+            case 2: {
+                unsafe.putShort(instance, offset, (short) val);
+                break;
+            }
+            case 3: {
+                unsafe.putInt(instance, offset, (int) val);
+                break;
+            }
+            case 4: {
+                unsafe.putLong(instance, offset, (long) val);
+                break;
+            }
+            case 5: {
+                unsafe.putFloat(instance, offset, (float) val);
+                break;
+            }
+            case 6: {
+                unsafe.putDouble(instance, offset, (double) val);
+                break;
+            }
+            case 7: {
+                unsafe.putChar(instance, offset, (char) val);
+                break;
+            }
+            case 8: {
+                unsafe.putBoolean(instance, offset, (boolean) val);
+                break;
+            }
+            default: {
+                unsafe.putObject(instance, offset, val);
+            }
+        }
+
+    }
+
     /**
      * 通过扫描包中所有class方式获取所有带{@link Parsable}注解的类
+     *
      * @param packageNames
      * @return
      */
-    public static List<Class> getParsableClassByScanPackage(String ... packageNames){
+    public static List<Class> getParsableClassByScanPackage(String... packageNames) {
         try {
-            return ClassUtil.getClassesWithAnno(Parsable.class,packageNames);
-        } catch (IOException |ClassNotFoundException e) {
+            return ClassUtil.getClassesWithAnno(Parsable.class, packageNames);
+        } catch (IOException | ClassNotFoundException e) {
             throw BaseRuntimeException.getException(e);
         }
     }
 
 
-
     /**
      * 解析类转换成包信息
+     *
      * @param clazz
      * @param processors
      * @return
      */
-    public static PacketInfo toPacketInfo(Class clazz, FieldProcessor[] processors){
-        PacketInfo packetInfo=new PacketInfo();
+    public static PacketInfo toPacketInfo(Class clazz, FieldProcessor[] processors) {
+        PacketInfo packetInfo = new PacketInfo();
         packetInfo.setClazz(clazz);
-        Field[] declaredFields= clazz.getDeclaredFields();
+        Field[] declaredFields = clazz.getDeclaredFields();
         //求出最小var char int和最大var char int
-        int[] maxVarInt=new int[1];
-        int[] minVarInt=new int[1];
+        int[] maxVarInt = new int[1];
+        int[] minVarInt = new int[1];
         /**
          * 1、过滤所有带{@link PacketField}的字段
          * 2、将字段按照{@link PacketField#index()}正序
          * 3、将每个字段类型解析成FieldInfo
          */
-        List<FieldInfo> fieldInfoList= Arrays.stream(declaredFields).filter(field -> field.getAnnotation(PacketField.class)!=null).sorted((f1, f2)->{
-            int i1=f1.getAnnotation(PacketField.class).index();
-            int i2=f2.getAnnotation(PacketField.class).index();
-            if(i1<i2){
+        List<FieldInfo> fieldInfoList = Arrays.stream(declaredFields).filter(field -> field.getAnnotation(PacketField.class) != null).sorted((f1, f2) -> {
+            int i1 = f1.getAnnotation(PacketField.class).index();
+            int i2 = f2.getAnnotation(PacketField.class).index();
+            if (i1 < i2) {
                 return -1;
-            }else if(i1>i2){
+            } else if (i1 > i2) {
                 return 1;
-            }else{
+            } else {
                 return 0;
             }
-        }).map(field->{
+        }).map(field -> {
             field.setAccessible(true);
-            PacketField packetField= field.getAnnotation(PacketField.class);
+            PacketField packetField = field.getAnnotation(PacketField.class);
 
             /**
              * 检查{@link PacketField#skip()}条件
              */
-            if(packetField.skip()&&
-                    (packetField.var()!='0'|| (packetField.len()==0&&packetField.lenExpr().equals("")))){
+            if (packetField.skip() &&
+                    (packetField.var() != '0' || (packetField.len() == 0 && packetField.lenExpr().equals("")))) {
                 throw BaseRuntimeException.getException("Class[" + clazz.getName() + "] Field[" + field.getName() + "] PacketField#skip Not Support");
             }
 
-            Class fieldType=field.getType();
-            Class typeClazz=null;
-            boolean isVar=false;
+            Class fieldType = field.getType();
+            Class typeClazz = null;
+            boolean isVar = false;
             int processorIndex;
             /**
              processorList.add(this.byteProcessor);
@@ -99,130 +213,130 @@ public class ParserUtil {
              processorList.add(this.parsableObjectProcessor);
              */
             //判断是否特殊处理
-            if(packetField.processorClass()==Void.class){
+            if (packetField.processorClass() == Void.class) {
                 //判断是否是List<Bean>(Bean代表自定义实体类型,不包括Byte、Short、Integer、Long)
-                if(packetField.listLenExpr().isEmpty()) {
+                if (packetField.listLenExpr().isEmpty()) {
                     if (Byte.class.isAssignableFrom(fieldType) || Byte.TYPE.isAssignableFrom(fieldType)) {
-                        processorIndex=0;
+                        processorIndex = 0;
                     } else if (Short.class.isAssignableFrom(fieldType) || Short.TYPE.isAssignableFrom(fieldType)) {
-                        processorIndex=1;
+                        processorIndex = 1;
                     } else if (Integer.class.isAssignableFrom(fieldType) || Integer.TYPE.isAssignableFrom(fieldType)) {
-                        processorIndex=2;
+                        processorIndex = 2;
                     } else if (Long.class.isAssignableFrom(fieldType) || Long.TYPE.isAssignableFrom(fieldType)) {
-                        processorIndex=3;
+                        processorIndex = 3;
                     } else if (Float.class.isAssignableFrom(fieldType) || Float.TYPE.isAssignableFrom(fieldType)) {
-                        processorIndex=4;
+                        processorIndex = 4;
                     } else if (Double.class.isAssignableFrom(fieldType) || Double.TYPE.isAssignableFrom(fieldType)) {
-                        processorIndex=5;
+                        processorIndex = 5;
                     } else if (String.class.isAssignableFrom(fieldType)) {
-                        processorIndex=12;
+                        processorIndex = 12;
                     } else if (Date.class.isAssignableFrom(fieldType)) {
-                        processorIndex=13;
+                        processorIndex = 13;
                     } else if (fieldType.isArray()) {
                         //数组类型
                         Class arrType = fieldType.getComponentType();
                         if (Byte.class.isAssignableFrom(arrType) || Byte.TYPE.isAssignableFrom(arrType)) {
-                            processorIndex=6;
+                            processorIndex = 6;
                         } else if (Short.class.isAssignableFrom(arrType) || Short.TYPE.isAssignableFrom(arrType)) {
-                            processorIndex=7;
+                            processorIndex = 7;
                         } else if (Integer.class.isAssignableFrom(arrType) || Integer.TYPE.isAssignableFrom(arrType)) {
-                            processorIndex=8;
+                            processorIndex = 8;
                         } else if (Long.class.isAssignableFrom(arrType) || Long.TYPE.isAssignableFrom(arrType)) {
-                            processorIndex=9;
+                            processorIndex = 9;
                         } else if (Float.class.isAssignableFrom(arrType) || Float.TYPE.isAssignableFrom(arrType)) {
-                            processorIndex=10;
+                            processorIndex = 10;
                         } else if (Double.class.isAssignableFrom(arrType) || Double.TYPE.isAssignableFrom(arrType)) {
-                            processorIndex=11;
-                        } else{
+                            processorIndex = 11;
+                        } else {
                             throw BaseRuntimeException.getException("Class[" + clazz.getName() + "] Field[" + field.getName() + "] Array Type[" + arrType.getName() + "] Not Support");
                         }
-                    } else if(ByteBuf.class.isAssignableFrom(fieldType)){
+                    } else if (ByteBuf.class.isAssignableFrom(fieldType)) {
                         //ByteBuf类型
-                        processorIndex=14;
+                        processorIndex = 14;
                     } else {
                         /**
                          * 带{@link Parsable}注解的实体类
                          */
-                        if(fieldType.getAnnotation(Parsable.class)==null){
+                        if (fieldType.getAnnotation(Parsable.class) == null) {
                             throw BaseRuntimeException.getException("Class[" + clazz.getName() + "] Field[" + field.getName() + "] Bean Type[" + fieldType + "] Not Support,Must have annotation [com.bcd.parser.anno.Parsable]");
                         }
                         typeClazz = fieldType;
-                        processorIndex=17;
+                        processorIndex = 17;
                     }
-                }else{
-                    if(fieldType.isArray()){
+                } else {
+                    if (fieldType.isArray()) {
                         typeClazz = fieldType.getComponentType();
                         //检查数组对象类型是否支持解析
-                        if(typeClazz.getAnnotation(Parsable.class)!=null){
-                            processorIndex=16;
-                        }else {
+                        if (typeClazz.getAnnotation(Parsable.class) != null) {
+                            processorIndex = 16;
+                        } else {
                             throw BaseRuntimeException.getException("Class[" + clazz.getName() + "] Field[" + field.getName() + "] Array Type[" + typeClazz.getName() + "] Not Support");
                         }
-                    }else {
+                    } else {
                         //实体类型集合
                         typeClazz = (Class) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
-                        if(typeClazz.getAnnotation(Parsable.class)!=null){
+                        if (typeClazz.getAnnotation(Parsable.class) != null) {
                             processorIndex = 15;
-                        }else {
+                        } else {
                             throw BaseRuntimeException.getException("Class[" + clazz.getName() + "] Field[" + field.getName() + "] List Type[" + typeClazz.getName() + "] Not Support");
                         }
                     }
                 }
-            }else{
+            } else {
                 //特殊处理,自定义实体类型
-                processorIndex=findProcessorIndexByFieldProcessorClass(packetField.processorClass(),processors);
+                processorIndex = findProcessorIndexByFieldProcessorClass(packetField.processorClass(), processors);
             }
 
             //转换逆波兰表达式
-            Object[] lenRpn=null;
-            Object[] listLenRpn=null;
-            Object[] valRpn=null;
-            Object[] reserveValRpn=null;
-            if(!packetField.lenExpr().isEmpty()){
-                lenRpn= RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.lenExpr()));
+            Object[] lenRpn = null;
+            Object[] listLenRpn = null;
+            Object[] valRpn = null;
+            Object[] reserveValRpn = null;
+            if (!packetField.lenExpr().isEmpty()) {
+                lenRpn = RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.lenExpr()));
             }
-            if(!packetField.listLenExpr().isEmpty()){
-                listLenRpn= RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.listLenExpr()));
+            if (!packetField.listLenExpr().isEmpty()) {
+                listLenRpn = RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.listLenExpr()));
             }
-            if(!packetField.valExpr().isEmpty()){
-                String[] curValRpn=RpnUtil.parseArithmeticToRPN(packetField.valExpr());
-                String[] curReserveValRpn=RpnUtil.reverseSimpleRPN(curValRpn);
-                valRpn= RpnUtil.doWithRpnList_char_double(curValRpn);
-                reserveValRpn= RpnUtil.doWithRpnList_char_double(curReserveValRpn);
+            if (!packetField.valExpr().isEmpty()) {
+                String[] curValRpn = RpnUtil.parseArithmeticToRPN(packetField.valExpr());
+                String[] curReserveValRpn = RpnUtil.reverseSimpleRPN(curValRpn);
+                valRpn = RpnUtil.doWithRpnList_char_double(curValRpn);
+                reserveValRpn = RpnUtil.doWithRpnList_char_double(curReserveValRpn);
             }
 
             //判断是否变量
-            if(packetField.var()!='0'){
-                isVar=true;
+            if (packetField.var() != '0') {
+                isVar = true;
             }
 
             //求maxVarInt、minVarInt
-            if(lenRpn!=null) {
+            if (lenRpn != null) {
                 for (Object o : lenRpn) {
                     if (o instanceof Character) {
-                        if (maxVarInt[0]==0||(char) o > maxVarInt[0]) {
-                            maxVarInt[0]=(char) o;
+                        if (maxVarInt[0] == 0 || (char) o > maxVarInt[0]) {
+                            maxVarInt[0] = (char) o;
                         }
-                        if( minVarInt[0]==0||(char) o < minVarInt[0]){
-                            minVarInt[0]=(char) o;
+                        if (minVarInt[0] == 0 || (char) o < minVarInt[0]) {
+                            minVarInt[0] = (char) o;
                         }
                     }
                 }
             }
-            if(listLenRpn!=null) {
+            if (listLenRpn != null) {
                 for (Object o : listLenRpn) {
                     if (o instanceof Character) {
-                        if (maxVarInt[0]==0||(char) o > maxVarInt[0]) {
-                            maxVarInt[0]=(char) o;
+                        if (maxVarInt[0] == 0 || (char) o > maxVarInt[0]) {
+                            maxVarInt[0] = (char) o;
                         }
-                        if( minVarInt[0]==0||(char) o < minVarInt[0]){
-                            minVarInt[0]=(char) o;
+                        if (minVarInt[0] == 0 || (char) o < minVarInt[0]) {
+                            minVarInt[0] = (char) o;
                         }
                     }
                 }
             }
 
-            FieldInfo fieldInfo=new FieldInfo();
+            FieldInfo fieldInfo = new FieldInfo();
             fieldInfo.setPacketInfo(packetInfo);
             fieldInfo.setField(field);
             fieldInfo.setVar(isVar);
@@ -243,24 +357,36 @@ public class ParserUtil {
             fieldInfo.setPacketField_var_int(packetField.var());
             fieldInfo.setPacketField_parserClass(packetField.processorClass());
             fieldInfo.setPacketField_valExpr(packetField.valExpr());
+            fieldInfo.setUnsafeOffset(unsafe.objectFieldOffset(field));
+            fieldInfo.setUnsafeType(toUnsafeType(field));
             return fieldInfo;
         }).collect(Collectors.toList());
         packetInfo.setFieldInfos(fieldInfoList.toArray(new FieldInfo[0]));
 
-        if(maxVarInt[0]!=0){
-            packetInfo.setVarValArrLen(maxVarInt[0]-minVarInt[0]+1);
+        if (maxVarInt[0] != 0) {
+            packetInfo.setVarValArrLen(maxVarInt[0] - minVarInt[0] + 1);
             packetInfo.setVarValArrOffset(minVarInt[0]);
         }
 
         return packetInfo;
     }
 
-    public static int findProcessorIndexByFieldProcessorClass(Class clazz,FieldProcessor[] processors){
-        for (int i=0;i<processors.length;i++) {
-            if(clazz.isAssignableFrom(processors[i].getClass())){
+    public static int findProcessorIndexByFieldProcessorClass(Class clazz, FieldProcessor[] processors) {
+        for (int i = 0; i < processors.length; i++) {
+            if (clazz.isAssignableFrom(processors[i].getClass())) {
                 return i;
             }
         }
-        throw BaseRuntimeException.getException("class["+clazz.getName()+"] FieldProcessor not exist");
+        throw BaseRuntimeException.getException("class[" + clazz.getName() + "] FieldProcessor not exist");
+    }
+
+    public static Unsafe getUnsafe() {
+        try {
+            Field field = Unsafe.class.getDeclaredField("theUnsafe");
+            field.setAccessible(true);
+            return (Unsafe) field.get(null);
+        } catch (NoSuchFieldException | SecurityException | IllegalAccessException e) {
+            throw BaseRuntimeException.getException(e);
+        }
     }
 }

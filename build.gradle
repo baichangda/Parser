@@ -1,8 +1,8 @@
 buildscript {
     ext {
-        nettyVersion = '4.1.56.Final'
-        slf4jVersion = '1.7.30'
-        log4j2Version = '2.14.1'
+        nettyVersion = '4.+'
+        slf4jVersion = '1.7.+'
+        log4j2Version = '+'
         mavenRepoUrl = 'https://maven.aliyun.com/repository/central'
         publishRepoUrl = 'http://repository.incarcloud.com/content/repositories/snapshots/'
 
@@ -26,7 +26,7 @@ dependencies {
     //集成netty
     compile group: 'io.netty', name: 'netty-all', version: "${nettyVersion}"
     implementation group: 'org.slf4j', name: 'slf4j-api', version: "${slf4jVersion}"
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${log4j2Version}"
+        implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${log4j2Version}"
 }
 
 //生成jar时打包源码
