@@ -7,7 +7,6 @@ import com.bcd.parser.info.FieldInfo;
 import com.bcd.parser.info.PacketInfo;
 import com.bcd.parser.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
-import sun.misc.Unsafe;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -20,117 +19,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unchecked")
 public class ParserUtil {
 
-    public final static Unsafe unsafe = getUnsafe();
 
-    public static int toUnsafeType(Field field){
-        Class<?> fieldType = field.getType();
-        if (fieldType==byte.class){
-            return 1;
-        }else if(fieldType==short.class){
-            return 2;
-        }else if(fieldType==int.class){
-            return 3;
-        }else if(fieldType==long.class){
-            return 4;
-        }else if(fieldType==float.class){
-            return 5;
-        }else if(fieldType==double.class){
-            return 6;
-        }else if(fieldType==char.class){
-            return 7;
-        }else if(fieldType==boolean.class){
-            return 8;
-        }else{
-            return 0;
-        }
-    }
-
-    /**
-     * unsafe方法获取值
-     * @param instance
-     * @param offset
-     * @param type
-     * @return
-     */
-    public static Object getValueUnsafe(Object instance, long offset, int type){
-        switch (type) {
-            case 1: {
-                return unsafe.getByte(instance, offset);
-            }
-            case 2: {
-                return unsafe.getShort(instance, offset);
-            }
-            case 3: {
-                return unsafe.getInt(instance, offset);
-            }
-            case 4: {
-                return unsafe.getLong(instance, offset);
-            }
-            case 5: {
-                return unsafe.getFloat(instance, offset);
-            }
-            case 6: {
-                return unsafe.getDouble(instance, offset);
-            }
-            case 7: {
-                return unsafe.getChar(instance, offset);
-            }
-            case 8: {
-                return unsafe.getBoolean(instance, offset);
-            }
-            default: {
-                return unsafe.getObject(instance, offset);
-            }
-        }
-    }
-
-    /**
-     * unsafe设置值、替代反射
-     * @param instance
-     * @param val
-     * @param offset
-     * @param type
-     */
-    public static void setValueUnsafe(Object instance, Object val, long offset, int type) {
-        switch (type) {
-            case 1: {
-                unsafe.putByte(instance, offset, (byte) val);
-                break;
-            }
-            case 2: {
-                unsafe.putShort(instance, offset, (short) val);
-                break;
-            }
-            case 3: {
-                unsafe.putInt(instance, offset, (int) val);
-                break;
-            }
-            case 4: {
-                unsafe.putLong(instance, offset, (long) val);
-                break;
-            }
-            case 5: {
-                unsafe.putFloat(instance, offset, (float) val);
-                break;
-            }
-            case 6: {
-                unsafe.putDouble(instance, offset, (double) val);
-                break;
-            }
-            case 7: {
-                unsafe.putChar(instance, offset, (char) val);
-                break;
-            }
-            case 8: {
-                unsafe.putBoolean(instance, offset, (boolean) val);
-                break;
-            }
-            default: {
-                unsafe.putObject(instance, offset, val);
-            }
-        }
-
-    }
 
     /**
      * 通过扫描包中所有class方式获取所有带{@link Parsable}注解的类
@@ -357,8 +246,8 @@ public class ParserUtil {
             fieldInfo.setPacketField_var_int(packetField.var());
             fieldInfo.setPacketField_parserClass(packetField.processorClass());
             fieldInfo.setPacketField_valExpr(packetField.valExpr());
-            fieldInfo.setUnsafeOffset(unsafe.objectFieldOffset(field));
-            fieldInfo.setUnsafeType(toUnsafeType(field));
+            fieldInfo.setUnsafeOffset(UnsafeUtil.fieldOffset(field));
+            fieldInfo.setUnsafeType(UnsafeUtil.fieldType(field));
             return fieldInfo;
         }).collect(Collectors.toList());
         packetInfo.setFieldInfos(fieldInfoList.toArray(new FieldInfo[0]));
@@ -380,13 +269,4 @@ public class ParserUtil {
         throw BaseRuntimeException.getException("class[" + clazz.getName() + "] FieldProcessor not exist");
     }
 
-    public static Unsafe getUnsafe() {
-        try {
-            Field field = Unsafe.class.getDeclaredField("theUnsafe");
-            field.setAccessible(true);
-            return (Unsafe) field.get(null);
-        } catch (NoSuchFieldException | SecurityException | IllegalAccessException e) {
-            throw BaseRuntimeException.getException(e);
-        }
-    }
 }

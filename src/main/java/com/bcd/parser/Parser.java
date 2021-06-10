@@ -12,6 +12,7 @@ import com.bcd.parser.processer.impl.*;
 import com.bcd.parser.util.ClassUtil;
 import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
+import com.bcd.parser.util.UnsafeUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
@@ -321,7 +322,7 @@ public abstract class Parser {
             if (fieldInfo.isVar()) {
                 vals[fieldInfo.getPacketField_var_int() - varValArrOffset] = ((Number) val).intValue();
             }
-            ParserUtil.setValueUnsafe(instance,val,fieldInfo.getUnsafeOffset(),fieldInfo.getUnsafeType());
+            UnsafeUtil.setValue(instance,val,fieldInfo.getUnsafeOffset(),fieldInfo.getUnsafeType());
         }
     }
 
@@ -392,7 +393,7 @@ public abstract class Parser {
         processContext.setParentContext(parentContext);
         for (FieldInfo fieldInfo : packetInfo.getFieldInfos()) {
             int processorIndex = fieldInfo.getProcessorIndex();
-            Object data =ParserUtil.getValueUnsafe(t,fieldInfo.getUnsafeOffset(),fieldInfo.getUnsafeType());
+            Object data = UnsafeUtil.getValue(t,fieldInfo.getUnsafeOffset(),fieldInfo.getUnsafeType());
             /**
              * 代表 {@link PacketField#lenExpr()}
              */
