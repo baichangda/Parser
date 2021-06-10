@@ -74,27 +74,23 @@ public class RpnUtil {
             }else {
                 switch ((char)s) {
                     case '+': {
-                        int num2 = stack[stackIndex--];
-                        int num1 = stack[stackIndex--];
-                        stack[++stackIndex] = num1 + num2;
+                        stack[stackIndex-1]=stack[stackIndex-1]+stack[stackIndex];
+                        stackIndex--;
                         break;
                     }
                     case '-': {
-                        int num2 = stack[stackIndex--];
-                        int num1 = stack[stackIndex--];
-                        stack[++stackIndex] = num1 - num2;
+                        stack[stackIndex-1]=stack[stackIndex-1]-stack[stackIndex];
+                        stackIndex--;
                         break;
                     }
                     case '*': {
-                        int num2 = stack[stackIndex--];
-                        int num1 = stack[stackIndex--];
-                        stack[++stackIndex] = num1 * num2;
+                        stack[stackIndex-1]=stack[stackIndex-1]*stack[stackIndex];
+                        stackIndex--;
                         break;
                     }
                     case '/': {
-                        int num2 = stack[stackIndex--];
-                        int num1 = stack[stackIndex--];
-                        stack[++stackIndex] = num1 / num2;
+                        stack[stackIndex-1]=stack[stackIndex-1]/stack[stackIndex];
+                        stackIndex--;
                         break;
                     }
                     default: {
@@ -126,27 +122,23 @@ public class RpnUtil {
             }else {
                 switch ((char)o) {
                     case '+': {
-                        double num2 = stack[stackIndex--];
-                        double num1 = stack[stackIndex--];
-                        stack[++stackIndex] = num1 + num2;
+                        stack[stackIndex-1]=stack[stackIndex-1]+stack[stackIndex];
+                        stackIndex--;
                         break;
                     }
                     case '-': {
-                        double num2 = stack[stackIndex--];
-                        double num1 = stack[stackIndex--];
-                        stack[++stackIndex] = num1 - num2;
+                        stack[stackIndex-1]=stack[stackIndex-1]-stack[stackIndex];
+                        stackIndex--;
                         break;
                     }
                     case '*': {
-                        double num2 = stack[stackIndex--];
-                        double num1 = stack[stackIndex--];
-                        stack[++stackIndex] = num1 * num2;
+                        stack[stackIndex-1]=stack[stackIndex-1]*stack[stackIndex];
+                        stackIndex--;
                         break;
                     }
                     case '/': {
-                        double num2 = stack[stackIndex--];
-                        double num1 = stack[stackIndex--];
-                        stack[++stackIndex] = num1 / num2;
+                        stack[stackIndex-1]=stack[stackIndex-1]/stack[stackIndex];
+                        stackIndex--;
                         break;
                     }
                     default: {
