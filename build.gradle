@@ -11,6 +11,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'idea'
+apply plugin: 'java-library'
 apply plugin: 'maven-publish'
 
 group 'com.bcd'
@@ -24,9 +25,10 @@ repositories {
 
 dependencies {
     //集成netty
-    compile group: 'io.netty', name: 'netty-all', version: "${nettyVersion}"
+    api group: 'io.netty', name: 'netty-all', version: "${nettyVersion}"
+
     implementation group: 'org.slf4j', name: 'slf4j-api', version: "${slf4jVersion}"
-        implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${log4j2Version}"
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${log4j2Version}"
 }
 
 //生成jar时打包源码
