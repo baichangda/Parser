@@ -1,6 +1,5 @@
 package com.bcd.parser.processer.impl;
 
-import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
@@ -51,12 +50,12 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
             }
         }
         //值表达式处理
-        Object[] valRpn=processContext.getFieldInfo().getValRpn();
-        if(valRpn!=null){
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        if(valExpr!=null){
             for(int i=0;i<res.length;i++){
                 //验证异常、无效值
                 if(ParserUtil.checkInvalidOrExceptionVal_int(res[i],singleLen)){
-                    res[i]=(int) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],-1);
+                    res[i]=(int) RpnUtil.calc(valExpr,res[i],-1);
                 }
             }
         }
@@ -68,16 +67,16 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
         Objects.requireNonNull(data);
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
         //值表达式处理
-        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
         int[] newData;
-        if(reverseValRpn==null){
+        if(valExpr==null){
             newData=data;
         }else{
             newData=new int[data.length];
             for(int i=0;i<data.length;i++){
                 //验证异常、无效值
                 if(ParserUtil.checkInvalidOrExceptionVal_int(data[i],singleLen)){
-                    newData[i]=(int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i],-1);
+                    newData[i]=(int) RpnUtil.deCalc(valExpr,data[i],0);
                 }else{
                     newData[i]=data[i];
                 }

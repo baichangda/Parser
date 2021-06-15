@@ -1,6 +1,5 @@
 package com.bcd.parser.processer.impl;
 
-import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
@@ -40,13 +39,13 @@ public class FloatProcessor extends FieldProcessor<Float> {
             }
         }
         //值表达式处理
-        Object[] valRpn=processContext.getFieldInfo().getValRpn();
-        if(valRpn==null){
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        if(valExpr==null){
             return (float)res;
         }else{
             //验证异常、无效值
             if(ParserUtil.checkInvalidOrExceptionVal_int(res,len)){
-                return (float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res,processContext.getFieldInfo().getValPrecision());
+                return (float) RpnUtil.calc(valExpr,res,processContext.getFieldInfo().getValPrecision());
             }else{
                 return (float)res;
             }
@@ -57,14 +56,14 @@ public class FloatProcessor extends FieldProcessor<Float> {
     public void deProcess(Float data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
         //值表达式处理
-        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
         int newData;
-        if(reverseValRpn==null){
+        if(valExpr==null){
             newData=data.intValue();
         }else{
             //验证异常、无效值
             if(ParserUtil.checkInvalidOrExceptionVal_int(data.intValue(),processContext.getLen())){
-                newData = (int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,0);
+                newData = (int) RpnUtil.deCalc(valExpr,data,0);
             }else {
                 newData=data.intValue();
             }

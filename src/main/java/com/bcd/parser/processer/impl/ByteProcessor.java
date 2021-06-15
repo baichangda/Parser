@@ -1,7 +1,6 @@
 package com.bcd.parser.processer.impl;
 
 
-import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
@@ -31,13 +30,13 @@ public class ByteProcessor extends FieldProcessor<Byte> {
             res=0;
         }
         //值表达式处理
-        Object[] valRpn=processContext.getFieldInfo().getValRpn();
-        if(valRpn==null){
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        if(valExpr==null){
             return res;
         }else{
             //验证异常、无效值
             if(ParserUtil.checkInvalidOrExceptionVal_byte(res)){
-                return (byte)RpnUtil.calcRPN_char_double_singleVar(valRpn,res,-1);
+                return (byte)RpnUtil.calc(valExpr,res,-1);
             }else{
                 return res;
             }
@@ -47,15 +46,15 @@ public class ByteProcessor extends FieldProcessor<Byte> {
     @Override
     public void deProcess(Byte data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
-        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
         byte newData;
-        if(reverseValRpn==null){
+        if(valExpr==null){
             newData=data;
         }else{
             if(ParserUtil.checkInvalidOrExceptionVal_byte(data)){
                 newData=data;
             }else {
-                newData = (byte) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,0);
+                newData = (byte) RpnUtil.deCalc(valExpr,data,0);
             }
         }
         int len=processContext.getLen();

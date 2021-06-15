@@ -35,12 +35,12 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
             throw BaseRuntimeException.getException("packetField_singleLen can not less than 1");
         }
         //值表达式处理
-        Object[] valRpn=processContext.getFieldInfo().getValRpn();
-        if(valRpn!=null){
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        if(valExpr!=null){
             for(int i=0;i<res.length;i++){
                 //验证异常、无效值
                 if(ParserUtil.checkInvalidOrExceptionVal_byte(res[i])){
-                    res[i]=(byte) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],-1);
+                    res[i]=(byte) RpnUtil.calc(valExpr,res[i],-1);
                 }
             }
         }
@@ -52,16 +52,16 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
         Objects.requireNonNull(data);
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
         //值表达式处理
-        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
         byte[] newData;
-        if(reverseValRpn==null){
+        if(valExpr==null){
             newData=data;
         }else{
             newData=new byte[data.length];
             for(int i=0;i<data.length;i++){
                 //验证异常、无效值
                 if(ParserUtil.checkInvalidOrExceptionVal_byte(data[i])){
-                    newData[i]=(byte) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i],-1);
+                    newData[i]=(byte) RpnUtil.deCalc(valExpr,data[i],-1);
                 }else{
                     newData[i]=data[i];
                 }

@@ -32,7 +32,7 @@ import java.util.*;
  * <p>
  * 2、反解析
  * 将{@link Parsable}的class对象实例反解析成为ByteBuf二进制数据流
- * 反解析规则参照{@link com.bcd.parser.anno.PacketField}、注意反解析不支持{@link PacketField#valExpr()}
+ * 反解析规则参照{@link com.bcd.parser.anno.PacketField}}
  * <p>
  * {@link FieldProcessor}说明:
  * {@link FieldProcessor}是针对每个字段类型定义的处理器、所有需要解析的字段类型必须要有对应的处理器
@@ -47,8 +47,8 @@ import java.util.*;
  * 以gb32960协议为例子
  * cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
  * 单线程、在cpu使用率90%+ 的情况下
- * 解析速度约为 41-43w/s、多个线程成倍数增长
- * 反解析速度约为 36-38w/s、多个线程成倍数增长
+ * 解析速度约为 44-46w/s、多个线程成倍数增长
+ * 反解析速度约为 38-40w/s、多个线程成倍数增长
  * 具体查看{@link com.bcd.parser.impl.gb32960.Parser_gb32960#main(String[])}
  * 注意:
  * 因为是cpu密集型运算、所以性能达到计算机物理核心个数后已经达到上限、不能以逻辑核心为准、此时虽然整体cpu使用率没有满、但这只是使用率显示问题
@@ -439,14 +439,12 @@ public abstract class Parser {
                             data,
                             fieldProcessors[processorIndex].getClass().getName());
                 } else {
-                    String reverseValExpr = RpnUtil.parseRPNToArithmetic(fieldInfo.getReverseValRpn());
-                    logger.info("deParse class[{}] field[{}] hex[{}] val[{}] valExpr[{}] reverseValExpr[{}] valExprPrecision[{}] parser[{}]",
+                    logger.info("deParse class[{}] field[{}] hex[{}] val[{}] valExpr[{}] valExprPrecision[{}] parser[{}]",
                             packetInfo.getClazz().getName(),
                             fieldInfo.getField().getName(),
                             ByteBufUtil.hexDump(arr),
                             data,
                             fieldInfo.getPacketField_valExpr(),
-                            reverseValExpr,
                             fieldInfo.getValPrecision(),
                             fieldProcessors[processorIndex].getClass().getName());
                 }

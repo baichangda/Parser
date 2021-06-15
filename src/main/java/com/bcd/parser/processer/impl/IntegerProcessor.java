@@ -1,6 +1,5 @@
 package com.bcd.parser.processer.impl;
 
-import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
@@ -37,12 +36,12 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
                 res=temp.readInt();
             }
         }
-        Object[] valRpn=processContext.getFieldInfo().getValRpn();
-        if(valRpn==null){
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        if(valExpr==null){
             return res;
         }else{
             if(ParserUtil.checkInvalidOrExceptionVal_int(res,len)){
-                return (int) RpnUtil.calcRPN_char_double_singleVar(valRpn,res,-1);
+                return (int) RpnUtil.calc(valExpr,res,-1);
             }else{
                 return res;
             }
@@ -52,13 +51,13 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
     @Override
     public void deProcess(Integer data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
-        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
         int newData;
-        if(reverseValRpn==null){
+        if(valExpr==null){
             newData=data;
         }else{
             if(ParserUtil.checkInvalidOrExceptionVal_int(data,processContext.getLen())){
-                newData = (int) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,-1);
+                newData = (int) RpnUtil.deCalc(valExpr,data,0);
             }else {
                 newData=data;
             }

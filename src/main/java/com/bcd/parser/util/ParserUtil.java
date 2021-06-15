@@ -19,17 +19,17 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unchecked")
 public class ParserUtil {
 
-    public static boolean checkInvalidOrExceptionVal_byte(byte val){
+    public static boolean checkInvalidOrExceptionVal_byte(byte val) {
         return val != (byte) 0xff && val != (byte) 0xfe;
     }
 
-    public static boolean checkInvalidOrExceptionVal_short(short val,int len){
+    public static boolean checkInvalidOrExceptionVal_short(short val, int len) {
         switch (len) {
             case 1: {
                 return val != 0xff && val != 0xfe;
             }
             case 2: {
-                return val != (short)0xffff && val != (short)0xfffe;
+                return val != (short) 0xffff && val != (short) 0xfffe;
             }
             default: {
                 throw BaseRuntimeException.getException("param len[{0}] not support", len);
@@ -37,7 +37,7 @@ public class ParserUtil {
         }
     }
 
-    public static boolean checkInvalidOrExceptionVal_int(int val,int len){
+    public static boolean checkInvalidOrExceptionVal_int(int val, int len) {
         switch (len) {
             case 1: {
                 return val != 0xff && val != 0xfe;
@@ -57,7 +57,7 @@ public class ParserUtil {
         }
     }
 
-    public static boolean checkInvalidOrExceptionVal_long(long val,int len){
+    public static boolean checkInvalidOrExceptionVal_long(long val, int len) {
         switch (len) {
             case 1: {
                 return val != 0xff && val != 0xfe;
@@ -248,8 +248,7 @@ public class ParserUtil {
             //转换逆波兰表达式
             Object[] lenRpn = null;
             Object[] listLenRpn = null;
-            Object[] valRpn = null;
-            Object[] reserveValRpn = null;
+            double[] valExpr = null;
             if (!packetField.lenExpr().isEmpty()) {
                 lenRpn = RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.lenExpr()));
             }
@@ -257,10 +256,11 @@ public class ParserUtil {
                 listLenRpn = RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.listLenExpr()));
             }
             if (!packetField.valExpr().isEmpty()) {
-                String[] curValRpn = RpnUtil.parseArithmeticToRPN(packetField.valExpr());
-                String[] curReserveValRpn = RpnUtil.reverseSimpleRPN(curValRpn);
-                valRpn = RpnUtil.doWithRpnList_char_double(curValRpn);
-                reserveValRpn = RpnUtil.doWithRpnList_char_double(curReserveValRpn);
+                try {
+                    valExpr = RpnUtil.parseSimpleExpr(packetField.valExpr());
+                } catch (Exception ex) {
+                    throw BaseRuntimeException.getException("class[{}] field[{}] valExpr[{}] ot support", clazz.getName(), field.getName(), packetField.valExpr());
+                }
             }
 
             //判断是否变量
@@ -302,9 +302,8 @@ public class ParserUtil {
             fieldInfo.setProcessorIndex(processorIndex);
             fieldInfo.setLenRpn(lenRpn);
             fieldInfo.setListLenRpn(listLenRpn);
-            fieldInfo.setValRpn(valRpn);
+            fieldInfo.setValExpr(valExpr);
             fieldInfo.setValPrecision(packetField.valPrecision());
-            fieldInfo.setReverseValRpn(reserveValRpn);
             fieldInfo.setPacketField_index(packetField.index());
             fieldInfo.setPacketField_len(packetField.len());
             fieldInfo.setPacketField_lenExpr(packetField.lenExpr());
@@ -329,27 +328,27 @@ public class ParserUtil {
         //预先将var和表达式中的偏移量算出来、在解析时候不用重复计算
         for (FieldInfo fieldInfo : packetInfo.getFieldInfos()) {
             int varValArrOffset = fieldInfo.getPacketInfo().getVarValArrOffset();
-            if(fieldInfo.isVar()){
-                fieldInfo.setPacketField_var_int(fieldInfo.getPacketField_var_int()-varValArrOffset);
+            if (fieldInfo.isVar()) {
+                fieldInfo.setPacketField_var_int(fieldInfo.getPacketField_var_int() - varValArrOffset);
             }
             Object[] lenRpn = fieldInfo.getLenRpn();
-            if(lenRpn!=null){
+            if (lenRpn != null) {
                 for (int i = 0; i < lenRpn.length; i++) {
-                    if(lenRpn[i] instanceof Character){
-                        char curChar= (char)lenRpn[i];
-                        if(curChar!='+'&&curChar!='-'&&curChar!='*'&&curChar!='/'){
-                            lenRpn[i]=(char)(curChar-varValArrOffset);
+                    if (lenRpn[i] instanceof Character) {
+                        char curChar = (char) lenRpn[i];
+                        if (curChar != '+' && curChar != '-' && curChar != '*' && curChar != '/') {
+                            lenRpn[i] = (char) (curChar - varValArrOffset);
                         }
                     }
                 }
             }
             Object[] listLenRpn = fieldInfo.getListLenRpn();
-            if(listLenRpn!=null){
+            if (listLenRpn != null) {
                 for (int i = 0; i < listLenRpn.length; i++) {
-                    if(listLenRpn[i] instanceof Character){
-                        char curChar= (char)listLenRpn[i];
-                        if(curChar!='+'&&curChar!='-'&&curChar!='*'&&curChar!='/'){
-                            listLenRpn[i]=(char)(curChar-varValArrOffset);
+                    if (listLenRpn[i] instanceof Character) {
+                        char curChar = (char) listLenRpn[i];
+                        if (curChar != '+' && curChar != '-' && curChar != '*' && curChar != '/') {
+                            listLenRpn[i] = (char) (curChar - varValArrOffset);
                         }
                     }
                 }

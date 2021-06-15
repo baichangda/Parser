@@ -9,31 +9,31 @@ import com.bcd.parser.anno.Parsable;
 @Parsable
 public class StorageVoltageData {
     //可充电储能子系统号
-    @PacketField(index = 1,len = 1)
+    @PacketField(index = 1, len = 1)
     short no;
 
     //可充电储能装置电压
-    @PacketField(index = 2,len = 2,valExpr = "x*0.1", valPrecision = 1)
+    @PacketField(index = 2, len = 2, valExpr = "0.1*x", valPrecision = 1)
     float voltage;
 
     //可充电储能状态电流
-    @PacketField(index = 3,len = 2,valExpr = "x*0.1-1000", valPrecision = 1)
+    @PacketField(index = 3, len = 2, valExpr = "0.1*x-1000", valPrecision = 1)
     float current;
 
     //单体电池总数
-    @PacketField(index = 4,len = 2)
+    @PacketField(index = 4, len = 2)
     int total;
 
     //本帧起始电池序号
-    @PacketField(index = 5,len = 2)
+    @PacketField(index = 5, len = 2)
     int frameNo;
 
     //本帧单体电池总数
-    @PacketField(index = 6,len = 1,var = 'm')
+    @PacketField(index = 6, len = 1, var = 'm')
     short frameTotal;
 
     //单体电池电压
-    @PacketField(index = 7,singleLen = 2,lenExpr = "2*m",valExpr = "x*0.001", valPrecision = 3)
+    @PacketField(index = 7, singleLen = 2, lenExpr = "2*m", valExpr = "0.001*x", valPrecision = 3)
     float[] singleVoltage;
 
     public short getNo() {

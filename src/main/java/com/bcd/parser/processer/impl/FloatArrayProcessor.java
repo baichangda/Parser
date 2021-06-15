@@ -1,6 +1,5 @@
 package com.bcd.parser.processer.impl;
 
-import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
@@ -51,9 +50,9 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
             }
         }
         //值表达式处理
-        Object[] valRpn=processContext.getFieldInfo().getValRpn();
         float[] finalRes=new float[res.length];
-        if(valRpn==null){
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        if(valExpr==null){
             for(int i=0;i<res.length;i++){
                 finalRes[i]=res[i];
             }
@@ -61,7 +60,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
             for(int i=0;i<res.length;i++){
                 //验证异常、无效值
                 if(ParserUtil.checkInvalidOrExceptionVal_int(res[i],singleLen)){
-                    finalRes[i]=(float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],processContext.getFieldInfo().getValPrecision());
+                    finalRes[i]=(float) RpnUtil.calc(valExpr,res[i],processContext.getFieldInfo().getValPrecision());
                 }else{
                     finalRes[i]=res[i];
                 }
@@ -75,16 +74,16 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
         Objects.requireNonNull(data);
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
         //值表达式处理
-        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
         float[] newData;
-        if(reverseValRpn==null){
+        if(valExpr==null){
             newData=data;
         }else{
             newData=new float[data.length];
             for(int i=0;i<data.length;i++){
                 //验证异常、无效值
                 if(ParserUtil.checkInvalidOrExceptionVal_int((int)data[i],singleLen)){
-                    newData[i]=(float) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i],0);
+                    newData[i]=(float) RpnUtil.deCalc(valExpr,data[i],0);
                 }else{
                     newData[i]=data[i];
                 }

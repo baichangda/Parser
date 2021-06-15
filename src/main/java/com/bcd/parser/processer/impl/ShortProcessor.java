@@ -1,6 +1,5 @@
 package com.bcd.parser.processer.impl;
 
-import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
@@ -37,12 +36,12 @@ public class ShortProcessor extends FieldProcessor<Short> {
                 res=temp.readShort();
             }
         }
-        Object[] valRpn=processContext.getFieldInfo().getValRpn();
-        if(valRpn==null){
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        if(valExpr==null){
             return res;
         }else{
             if(ParserUtil.checkInvalidOrExceptionVal_short(res,len)){
-                return (short)RpnUtil.calcRPN_char_double_singleVar(valRpn,res,-1);
+                return (short)RpnUtil.calc(valExpr,res,-1);
             }else{
                 return res;
             }
@@ -52,13 +51,13 @@ public class ShortProcessor extends FieldProcessor<Short> {
     @Override
     public void deProcess(Short data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
-        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
         short newData;
-        if(reverseValRpn==null){
+        if(valExpr==null){
             newData=data;
         }else{
             if(ParserUtil.checkInvalidOrExceptionVal_short(data,processContext.getLen())){
-                newData = (short) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,-1);
+                newData = (short) RpnUtil.deCalc(valExpr,data,0);
             }else {
                 newData=data;
             }

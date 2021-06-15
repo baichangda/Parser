@@ -1,6 +1,5 @@
 package com.bcd.parser.processer.impl;
 
-import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
@@ -39,13 +38,13 @@ public class DoubleProcessor extends FieldProcessor<Double> {
             }
         }
         //值表达式处理
-        Object[] valRpn=processContext.getFieldInfo().getValRpn();
-        if(valRpn==null){
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        if(valExpr==null){
             return (double)res;
         }else{
             //验证异常、无效值
             if(ParserUtil.checkInvalidOrExceptionVal_long(res,len)){
-                return RpnUtil.calcRPN_char_double_singleVar(valRpn,res,processContext.getFieldInfo().getValPrecision());
+                return RpnUtil.calc(valExpr,res,processContext.getFieldInfo().getValPrecision());
             }else{
                 return (double)res;
             }
@@ -55,15 +54,15 @@ public class DoubleProcessor extends FieldProcessor<Double> {
     @Override
     public void deProcess(Double data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
-        Object[] reverseValRpn= processContext.getFieldInfo().getReverseValRpn();
+        double[] valExpr = processContext.getFieldInfo().getValExpr();
         long newData;
         //值表达式处理
-        if(reverseValRpn==null){
+        if(valExpr==null){
             newData=data.longValue();
         }else{
             //验证异常、无效值
             if(ParserUtil.checkInvalidOrExceptionVal_long(data.longValue(),processContext.getLen())){
-                newData = (long) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,0);
+                newData = (long) RpnUtil.deCalc(valExpr,data,0);
             }else {
                 newData=data.longValue();
             }

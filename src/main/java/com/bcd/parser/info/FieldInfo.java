@@ -2,6 +2,7 @@ package com.bcd.parser.info;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.Parser;
+import com.bcd.parser.util.RpnUtil;
 
 import java.lang.reflect.Field;
 
@@ -84,9 +85,9 @@ public class FieldInfo {
 
     /**
      * 对应 {@link PacketField#valExpr()}表达式
+     * [a,b]
      */
-    private Object[] valRpn;
-    private Object[] reverseValRpn;
+    private double[] valExpr;
 
     /**
      * 对应 {@link PacketField#valPrecision()}表达式
@@ -223,12 +224,12 @@ public class FieldInfo {
         this.packetField_valExpr = packetField_valExpr;
     }
 
-    public Object[] getValRpn() {
-        return valRpn;
+    public double[] getValExpr() {
+        return valExpr;
     }
 
-    public void setValRpn(Object[] valRpn) {
-        this.valRpn = valRpn;
+    public void setValExpr(double[] valExpr) {
+        this.valExpr = valExpr;
     }
 
     public int getPacketField_var_int() {
@@ -237,14 +238,6 @@ public class FieldInfo {
 
     public void setPacketField_var_int(int packetField_var_int) {
         this.packetField_var_int = packetField_var_int;
-    }
-
-    public Object[] getReverseValRpn() {
-        return reverseValRpn;
-    }
-
-    public void setReverseValRpn(Object[] reverseValRpn) {
-        this.reverseValRpn = reverseValRpn;
     }
 
     public int getPacketField_valPrecision() {

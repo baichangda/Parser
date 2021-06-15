@@ -21,19 +21,19 @@ public class VehicleBaseData {
     short runMode;
 
     //车速
-    @PacketField(index = 4,len=2,valExpr = "x*0.1", valPrecision = 1)
+    @PacketField(index = 4,len=2,valExpr = "0.1*x", valPrecision = 1)
     float vehicleSpeed;
 
     //累计里程
-    @PacketField(index = 5,len=4,valExpr = "x*0.1", valPrecision = 1)
+    @PacketField(index = 5,len=4,valExpr = "0.1*x", valPrecision = 1)
     double totalMileage;
 
     //总电压
-    @PacketField(index = 6,len=2,valExpr = "x*0.1", valPrecision = 1)
+    @PacketField(index = 6,len=2,valExpr = "0.1*x", valPrecision = 1)
     float totalVoltage;
 
     //总电流
-    @PacketField(index = 7,len=2,valExpr = "x*0.1-1000", valPrecision = 1)
+    @PacketField(index = 7,len=2,valExpr = "0.1*x-1000", valPrecision = 1)
     float totalCurrent;
 
     //soc

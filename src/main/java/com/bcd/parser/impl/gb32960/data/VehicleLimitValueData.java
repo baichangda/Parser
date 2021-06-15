@@ -17,7 +17,7 @@ public class VehicleLimitValueData {
     short maxVoltageCode;
 
     //电池单体电压最高值
-    @PacketField(index = 3,len = 2,valExpr = "x*0.001", valPrecision = 3)
+    @PacketField(index = 3,len = 2,valExpr = "0.001*x", valPrecision = 3)
     float maxVoltage;
 
     //最低电压电池子系统号
@@ -29,7 +29,7 @@ public class VehicleLimitValueData {
     short minVoltageCode;
 
     //电池单体电压最低值
-    @PacketField(index = 6,len = 2,valExpr = "x*0.001", valPrecision = 3)
+    @PacketField(index = 6,len = 2,valExpr = "0.001*x", valPrecision = 3)
     float minVoltage;
 
     //最高温度子系统号
