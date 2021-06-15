@@ -115,6 +115,12 @@ public class ParserUtil {
     public static PacketInfo toPacketInfo(Class clazz, FieldProcessor[] processors) {
         PacketInfo packetInfo = new PacketInfo();
         packetInfo.setClazz(clazz);
+        try {
+            packetInfo.setConstructor(clazz.getConstructor());
+            packetInfo.getConstructor().setAccessible(true);
+        } catch (NoSuchMethodException e) {
+            throw BaseRuntimeException.getException(e);
+        }
         Field[] declaredFields = clazz.getDeclaredFields();
         //求出最小var char int和最大var char int
         int[] maxVarInt = new int[1];

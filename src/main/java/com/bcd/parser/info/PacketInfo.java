@@ -4,9 +4,15 @@ package com.bcd.parser.info;
 
 import com.bcd.parser.anno.PacketField;
 
+import java.lang.reflect.Constructor;
+
 public class PacketInfo {
     //对应的class
     private Class clazz;
+
+    //对应无参构造方法
+    private Constructor constructor;
+
     //解析的字段信息集合
     private FieldInfo[] fieldInfos;
 
@@ -21,6 +27,14 @@ public class PacketInfo {
     public int varValArrOffset=0;
 
     public PacketInfo() {
+    }
+
+    public Constructor getConstructor() {
+        return constructor;
+    }
+
+    public void setConstructor(Constructor constructor) {
+        this.constructor = constructor;
     }
 
     public Class getClazz() {

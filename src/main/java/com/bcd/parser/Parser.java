@@ -20,6 +20,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 
@@ -47,7 +48,7 @@ import java.util.*;
  * 以gb32960协议为例子
  * cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
  * 单线程、在cpu使用率90%+ 的情况下
- * 解析速度约为 44-46w/s、多个线程成倍数增长
+ * 解析速度约为 45-47w/s、多个线程成倍数增长
  * 反解析速度约为 38-40w/s、多个线程成倍数增长
  * 具体查看{@link com.bcd.parser.impl.gb32960.Parser_gb32960#main(String[])}
  * 注意:
@@ -235,7 +236,7 @@ public abstract class Parser {
      * @param parentContext 当前解析所属环境
      * @throws IllegalAccessException
      */
-    private void parsePacketField(PacketInfo packetInfo, ByteBuf data, Object instance, FieldProcessContext parentContext) throws IllegalAccessException {
+    private void parsePacketField(PacketInfo packetInfo, ByteBuf data, Object instance, FieldProcessContext parentContext) {
         //进行解析
         int varValArrLen = packetInfo.getVarValArrLen();
         int[] vals = varValArrLen == 0 ? null : new int[varValArrLen];
@@ -266,7 +267,7 @@ public abstract class Parser {
              * 检查是否跳过解析
              * {@link PacketField#skip()}
              */
-            if(fieldInfo.isPacketField_skip()){
+            if (fieldInfo.isPacketField_skip()) {
                 data.skipBytes(len);
                 continue;
             }
@@ -321,7 +322,7 @@ public abstract class Parser {
             if (fieldInfo.isVar()) {
                 vals[fieldInfo.getPacketField_var_int()] = ((Number) val).intValue();
             }
-            UnsafeUtil.setValue(instance,val,fieldInfo.getUnsafeOffset(),fieldInfo.getUnsafeType());
+            UnsafeUtil.setValue(instance, val, fieldInfo.getUnsafeOffset(), fieldInfo.getUnsafeType());
         }
     }
 
@@ -344,13 +345,14 @@ public abstract class Parser {
         }
         try {
             //构造实例
-            T instance = clazz.newInstance();
+            T instance = (T) packetInfo.getConstructor().newInstance();
             /**
              * 解析{@link com.bcd.parser.anno.PacketField}字段
              */
             parsePacketField(packetInfo, data, instance, parentContext);
             return instance;
-        } catch (IllegalAccessException | InstantiationException e) {
+        } catch (InstantiationException | IllegalAccessException |
+                IllegalArgumentException | InvocationTargetException e) {
             throw BaseRuntimeException.getException(e);
         }
     }
@@ -383,7 +385,6 @@ public abstract class Parser {
         //进行解析
         int[] vals = null;
         int varValArrLen = packetInfo.getVarValArrLen();
-        int varValArrOffset = packetInfo.getVarValArrOffset();
         if (varValArrLen != 0) {
             vals = new int[varValArrLen];
         }
@@ -392,7 +393,7 @@ public abstract class Parser {
         processContext.setParentContext(parentContext);
         for (FieldInfo fieldInfo : packetInfo.getFieldInfos()) {
             int processorIndex = fieldInfo.getProcessorIndex();
-            Object data = UnsafeUtil.getValue(t,fieldInfo.getUnsafeOffset(),fieldInfo.getUnsafeType());
+            Object data = UnsafeUtil.getValue(t, fieldInfo.getUnsafeOffset(), fieldInfo.getUnsafeType());
             /**
              * 代表 {@link PacketField#lenExpr()}
              */
