@@ -25,7 +25,7 @@ repositories {
 
 dependencies {
     //集成netty
-    api group: 'io.netty', name: 'netty-all', version: "${nettyVersion}"
+    api group: 'io.netty', name: 'netty-buffer', version: "${nettyVersion}"
 
     implementation group: 'org.slf4j', name: 'slf4j-api', version: "${slf4jVersion}"
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${log4j2Version}"

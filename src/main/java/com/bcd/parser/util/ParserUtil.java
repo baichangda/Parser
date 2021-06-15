@@ -326,6 +326,36 @@ public class ParserUtil {
             packetInfo.setVarValArrOffset(minVarInt[0]);
         }
 
+        //预先将var和表达式中的偏移量算出来、在解析时候不用重复计算
+        for (FieldInfo fieldInfo : packetInfo.getFieldInfos()) {
+            int varValArrOffset = fieldInfo.getPacketInfo().getVarValArrOffset();
+            if(fieldInfo.isVar()){
+                fieldInfo.setPacketField_var_int(fieldInfo.getPacketField_var_int()-varValArrOffset);
+            }
+            Object[] lenRpn = fieldInfo.getLenRpn();
+            if(lenRpn!=null){
+                for (int i = 0; i < lenRpn.length; i++) {
+                    if(lenRpn[i] instanceof Character){
+                        char curChar= (char)lenRpn[i];
+                        if(curChar!='+'&&curChar!='-'&&curChar!='*'&&curChar!='/'){
+                            lenRpn[i]=(char)(curChar-varValArrOffset);
+                        }
+                    }
+                }
+            }
+            Object[] listLenRpn = fieldInfo.getListLenRpn();
+            if(listLenRpn!=null){
+                for (int i = 0; i < listLenRpn.length; i++) {
+                    if(listLenRpn[i] instanceof Character){
+                        char curChar= (char)listLenRpn[i];
+                        if(curChar!='+'&&curChar!='-'&&curChar!='*'&&curChar!='/'){
+                            listLenRpn[i]=(char)(curChar-varValArrOffset);
+                        }
+                    }
+                }
+            }
+        }
+
         return packetInfo;
     }
 

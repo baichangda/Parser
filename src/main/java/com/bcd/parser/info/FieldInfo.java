@@ -25,7 +25,9 @@ public class FieldInfo {
     private String packetField_valExpr;
     private int packetField_valPrecision;
 
-    //packetField_var对应的int
+    /**
+     * packetField_var对应的int、已经减去了{@link PacketInfo#varValArrOffset}
+     */
     private int packetField_var_int;
 
     /**
@@ -70,11 +72,13 @@ public class FieldInfo {
 
     /**
      * 对应 {@link PacketField#lenExpr()}表达式
+     * 其中的变量char 已经减去了{@link PacketInfo#varValArrOffset}
      */
     private Object[] lenRpn;
 
     /**
      * 对应 {@link PacketField#listLenExpr()}表达式
+     * 其中的变量char 已经减去了{@link PacketInfo#varValArrOffset}
      */
     private Object[] listLenRpn;
 

@@ -62,10 +62,9 @@ public class RpnUtil {
      *
      * @param rpn rpn表达式集合,其中变量必须是char,常量必须是int
      * @param vals 变量对应值数组,取值规则为 vals[int(char)-offset]
-     * @param offset 代表char对应的数字在vals的偏移量
      * @return
      */
-    public static int calcRPN_char_int(Object[] rpn, int[] vals,int offset){
+    public static int calcRPN_char_int(Object[] rpn, int[] vals){
         int stackIndex=-1;
         final int[] stack=new int[rpn.length];
         for (Object s : rpn) {
@@ -94,7 +93,7 @@ public class RpnUtil {
                         break;
                     }
                     default: {
-                        int val = vals[(char)s-offset];
+                        int val = vals[(char)s];
                         stack[++stackIndex] = val;
                         break;
                     }

@@ -47,8 +47,8 @@ import java.util.*;
  * 以gb32960协议为例子
  * cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
  * 单线程、在cpu使用率90%+ 的情况下
- * 解析速度约为 40-41w/s、多个线程成倍数增长
- * 反解析速度约为 29-31w/s、多个线程成倍数增长
+ * 解析速度约为 40-42w/s、多个线程成倍数增长
+ * 反解析速度约为 35-37w/s、多个线程成倍数增长
  * 具体查看{@link com.bcd.parser.impl.gb32960.Parser_gb32960#main(String[])}
  * 注意:
  * 因为是cpu密集型运算、所以性能达到计算机物理核心个数后已经达到上限、不能以逻辑核心为准、此时虽然整体cpu使用率没有满、但这只是使用率显示问题
@@ -238,7 +238,6 @@ public abstract class Parser {
     private void parsePacketField(PacketInfo packetInfo, ByteBuf data, Object instance, FieldProcessContext parentContext) throws IllegalAccessException {
         //进行解析
         int varValArrLen = packetInfo.getVarValArrLen();
-        int varValArrOffset = packetInfo.getVarValArrOffset();
         int[] vals = varValArrLen == 0 ? null : new int[varValArrLen];
         FieldProcessContext processContext = new FieldProcessContext();
         processContext.setParentContext(parentContext);
@@ -256,9 +255,9 @@ public abstract class Parser {
                 len = fieldInfo.getPacketField_len();
             } else {
                 if (lenRpn.length == 1) {
-                    len = vals[(char) lenRpn[0] - varValArrOffset];
+                    len = vals[(char) lenRpn[0]];
                 } else {
-                    len = RpnUtil.calcRPN_char_int(lenRpn, vals, varValArrOffset);
+                    len = RpnUtil.calcRPN_char_int(lenRpn, vals);
                 }
             }
             processContext.setLen(len);
@@ -280,9 +279,9 @@ public abstract class Parser {
             if (listLenRpn != null) {
                 int listLen;
                 if (listLenRpn.length == 1) {
-                    listLen = vals[(char) listLenRpn[0] - varValArrOffset];
+                    listLen = vals[(char) listLenRpn[0]];
                 } else {
-                    listLen = RpnUtil.calcRPN_char_int(listLenRpn, vals, varValArrOffset);
+                    listLen = RpnUtil.calcRPN_char_int(listLenRpn, vals);
                 }
                 processContext.setListLen(listLen);
             }
@@ -320,7 +319,7 @@ public abstract class Parser {
                 val = fieldProcessors[fieldInfo.getProcessorIndex()].process(data, processContext);
             }
             if (fieldInfo.isVar()) {
-                vals[fieldInfo.getPacketField_var_int() - varValArrOffset] = ((Number) val).intValue();
+                vals[fieldInfo.getPacketField_var_int()] = ((Number) val).intValue();
             }
             UnsafeUtil.setValue(instance,val,fieldInfo.getUnsafeOffset(),fieldInfo.getUnsafeType());
         }
@@ -408,16 +407,16 @@ public abstract class Parser {
                 len = fieldInfo.getPacketField_len();
             } else {
                 if (lenRpn.length == 1) {
-                    len = vals[(char) lenRpn[0] - varValArrOffset];
+                    len = vals[(char) lenRpn[0]];
                 } else {
-                    len = RpnUtil.calcRPN_char_int(lenRpn, vals, varValArrOffset);
+                    len = RpnUtil.calcRPN_char_int(lenRpn, vals);
                 }
             }
             if (lisLlenRpn != null) {
                 if (lisLlenRpn.length == 1) {
-                    listLen = vals[(char) lisLlenRpn[0] - varValArrOffset];
+                    listLen = vals[(char) lisLlenRpn[0]];
                 } else {
-                    listLen = RpnUtil.calcRPN_char_int(lisLlenRpn, vals, varValArrOffset);
+                    listLen = RpnUtil.calcRPN_char_int(lisLlenRpn, vals);
                 }
             }
             processContext.setFieldInfo(fieldInfo);
@@ -456,7 +455,7 @@ public abstract class Parser {
             }
 
             if (fieldInfo.isVar()) {
-                vals[fieldInfo.getPacketField_var() - varValArrOffset] = ((Number) data).intValue();
+                vals[fieldInfo.getPacketField_var_int()] = ((Number) data).intValue();
             }
         }
         return res;
