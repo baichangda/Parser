@@ -23,7 +23,7 @@ public class FieldInfo {
     private int packetField_singleLen;
     private Class packetField_parserClass;
     private String packetField_valExpr;
-    private int packetField_valExprPrecision;
+    private int packetField_valPrecision;
 
     //packetField_var对应的int
     private int packetField_var_int;
@@ -243,12 +243,12 @@ public class FieldInfo {
         this.reverseValRpn = reverseValRpn;
     }
 
-    public int getPacketField_valExprPrecision() {
-        return packetField_valExprPrecision;
+    public int getPacketField_valPrecision() {
+        return packetField_valPrecision;
     }
 
-    public void setPacketField_valExprPrecision(int packetField_valExprPrecision) {
-        this.packetField_valExprPrecision = packetField_valExprPrecision;
+    public void setPacketField_valPrecision(int packetField_valPrecision) {
+        this.packetField_valPrecision = packetField_valPrecision;
     }
 
     public int getValPrecision() {
