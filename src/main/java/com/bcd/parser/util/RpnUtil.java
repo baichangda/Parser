@@ -61,7 +61,7 @@ public class RpnUtil {
      * 同时需要进行偏移量计算也就是 字符-65
      *
      * @param rpn rpn表达式集合,其中变量必须是char,常量必须是int
-     * @param vals 变量对应值数组,取值规则为 vals[int(char)-offset]
+     * @param vals 变量对应值数组,取值规则为 vals[int(char)]
      * @return
      */
     public static int calcRPN_char_int(Object[] rpn, int[] vals){
@@ -73,28 +73,27 @@ public class RpnUtil {
             }else {
                 switch ((char)s) {
                     case '+': {
-                        stack[stackIndex-1]=stack[stackIndex-1]+stack[stackIndex];
                         stackIndex--;
+                        stack[stackIndex]=stack[stackIndex]+stack[stackIndex+1];
                         break;
                     }
                     case '-': {
-                        stack[stackIndex-1]=stack[stackIndex-1]-stack[stackIndex];
                         stackIndex--;
+                        stack[stackIndex]=stack[stackIndex]-stack[stackIndex+1];
                         break;
                     }
                     case '*': {
-                        stack[stackIndex-1]=stack[stackIndex-1]*stack[stackIndex];
                         stackIndex--;
+                        stack[stackIndex]=stack[stackIndex]*stack[stackIndex+1];
                         break;
                     }
                     case '/': {
-                        stack[stackIndex-1]=stack[stackIndex-1]/stack[stackIndex];
                         stackIndex--;
+                        stack[stackIndex]=stack[stackIndex]/stack[stackIndex+1];
                         break;
                     }
                     default: {
-                        int val = vals[(char)s];
-                        stack[++stackIndex] = val;
+                        stack[++stackIndex] = vals[(char)s];
                         break;
                     }
                 }
@@ -121,23 +120,23 @@ public class RpnUtil {
             }else {
                 switch ((char)o) {
                     case '+': {
-                        stack[stackIndex-1]=stack[stackIndex-1]+stack[stackIndex];
                         stackIndex--;
+                        stack[stackIndex]=stack[stackIndex]+stack[stackIndex+1];
                         break;
                     }
                     case '-': {
-                        stack[stackIndex-1]=stack[stackIndex-1]-stack[stackIndex];
                         stackIndex--;
+                        stack[stackIndex]=stack[stackIndex]-stack[stackIndex+1];
                         break;
                     }
                     case '*': {
-                        stack[stackIndex-1]=stack[stackIndex-1]*stack[stackIndex];
                         stackIndex--;
+                        stack[stackIndex]=stack[stackIndex]*stack[stackIndex+1];
                         break;
                     }
                     case '/': {
-                        stack[stackIndex-1]=stack[stackIndex-1]/stack[stackIndex];
                         stackIndex--;
+                        stack[stackIndex]=stack[stackIndex]/stack[stackIndex+1];
                         break;
                     }
                     default: {
