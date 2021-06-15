@@ -19,6 +19,75 @@ import java.util.stream.Collectors;
 @SuppressWarnings("unchecked")
 public class ParserUtil {
 
+    public static boolean checkInvalidOrExceptionVal_byte(byte val){
+        return val != (byte) 0xff && val != (byte) 0xfe;
+    }
+
+    public static boolean checkInvalidOrExceptionVal_short(short val,int len){
+        switch (len) {
+            case 1: {
+                return val != 0xff && val != 0xfe;
+            }
+            case 2: {
+                return val != (short)0xffff && val != (short)0xfffe;
+            }
+            default: {
+                throw BaseRuntimeException.getException("param len[{0}] not support", len);
+            }
+        }
+    }
+
+    public static boolean checkInvalidOrExceptionVal_int(int val,int len){
+        switch (len) {
+            case 1: {
+                return val != 0xff && val != 0xfe;
+            }
+            case 2: {
+                return val != 0xffff && val != 0xfffe;
+            }
+            case 3: {
+                return val != 0xffffff && val != 0xfffffe;
+            }
+            case 4: {
+                return val != 0xffffffff && val != 0xfffffffe;
+            }
+            default: {
+                throw BaseRuntimeException.getException("param len[{0}] not support", len);
+            }
+        }
+    }
+
+    public static boolean checkInvalidOrExceptionVal_long(long val,int len){
+        switch (len) {
+            case 1: {
+                return val != 0xff && val != 0xfe;
+            }
+            case 2: {
+                return val != 0xffff && val != 0xfffe;
+            }
+            case 3: {
+                return val != 0xffffff && val != 0xfffffe;
+            }
+            case 4: {
+                return val != 0xffffffff && val != 0xfffffffe;
+            }
+            case 5: {
+                return val != 0xffffffffffL && val != 0xfffffffffeL;
+            }
+            case 6: {
+                return val != 0xffffffffffffL && val != 0xfffffffffffeL;
+            }
+            case 7: {
+                return val != 0xffffffffffffffL && val != 0xfffffffffffffeL;
+            }
+            case 8: {
+                return val != 0xffffffffffffffffL && val != 0xfffffffffffffffeL;
+            }
+            default: {
+                throw BaseRuntimeException.getException("param len[{0}] not support", len);
+            }
+        }
+    }
 
 
     /**

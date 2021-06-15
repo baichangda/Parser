@@ -4,6 +4,7 @@ import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -43,7 +44,7 @@ public class DoubleProcessor extends FieldProcessor<Double> {
             return (double)res;
         }else{
             //验证异常、无效值
-            if(checkInvalidOrExceptionVal(res,len)){
+            if(ParserUtil.checkInvalidOrExceptionVal_long(res,len)){
                 return RpnUtil.calcRPN_char_double_singleVar(valRpn,res,processContext.getFieldInfo().getValPrecision());
             }else{
                 return (double)res;
@@ -61,7 +62,7 @@ public class DoubleProcessor extends FieldProcessor<Double> {
             newData=data.longValue();
         }else{
             //验证异常、无效值
-            if(checkInvalidOrExceptionVal(data.longValue(),processContext.getLen())){
+            if(ParserUtil.checkInvalidOrExceptionVal_long(data.longValue(),processContext.getLen())){
                 newData = (long) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,0);
             }else {
                 newData=data.longValue();
@@ -81,38 +82,6 @@ public class DoubleProcessor extends FieldProcessor<Double> {
             for (int i = len; i >= 1; i--) {
                 int move = 8 * (i - 1);
                 dest.writeByte((byte) (newData >>> move));
-            }
-        }
-    }
-
-    public boolean checkInvalidOrExceptionVal(long val,int len){
-        switch (len) {
-            case 1: {
-                return val != 0xff && val != 0xfe;
-            }
-            case 2: {
-                return val != 0xffff && val != 0xfffe;
-            }
-            case 3: {
-                return val != 0xffffff && val != 0xfffffe;
-            }
-            case 4: {
-                return val != 0xffffffff && val != 0xfffffffe;
-            }
-            case 5: {
-                return val != 0xffffffffffL && val != 0xfffffffffeL;
-            }
-            case 6: {
-                return val != 0xffffffffffffL && val != 0xfffffffffffeL;
-            }
-            case 7: {
-                return val != 0xffffffffffffffL && val != 0xfffffffffffffeL;
-            }
-            case 8: {
-                return val != 0xffffffffffffffffL && val != 0xfffffffffffffffeL;
-            }
-            default: {
-                throw BaseRuntimeException.getException("param len[{0}] not support", len);
             }
         }
     }

@@ -4,6 +4,7 @@ import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -59,7 +60,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
         }else{
             for(int i=0;i<res.length;i++){
                 //验证异常、无效值
-                if(checkInvalidOrExceptionVal(res[i],singleLen)){
+                if(ParserUtil.checkInvalidOrExceptionVal_int(res[i],singleLen)){
                     finalRes[i]=(float) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],processContext.getFieldInfo().getValPrecision());
                 }else{
                     finalRes[i]=res[i];
@@ -82,7 +83,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
             newData=new float[data.length];
             for(int i=0;i<data.length;i++){
                 //验证异常、无效值
-                if(checkInvalidOrExceptionVal((int)data[i],singleLen)){
+                if(ParserUtil.checkInvalidOrExceptionVal_int((int)data[i],singleLen)){
                     newData[i]=(float) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i],0);
                 }else{
                     newData[i]=data[i];
@@ -115,23 +116,4 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
         }
     }
 
-    public boolean checkInvalidOrExceptionVal(int val,int len){
-        switch (len){
-            case 1:{
-                return val != 0xff && val != 0xfe;
-            }
-            case 2:{
-                return val != 0xffff && val != 0xfffe;
-            }
-            case 3:{
-                return val != 0xffffff && val != 0xfffffe;
-            }
-            case 4:{
-                return val != 0xffffffff && val != 0xfffffffe;
-            }
-            default:{
-                throw BaseRuntimeException.getException("param len[{0}] not support",len);
-            }
-        }
-    }
 }

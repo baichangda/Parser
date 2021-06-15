@@ -4,6 +4,7 @@ import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -40,7 +41,7 @@ public class ShortProcessor extends FieldProcessor<Short> {
         if(valRpn==null){
             return res;
         }else{
-            if(checkInvalidOrExceptionVal(res,len)){
+            if(ParserUtil.checkInvalidOrExceptionVal_short(res,len)){
                 return (short)RpnUtil.calcRPN_char_double_singleVar(valRpn,res,-1);
             }else{
                 return res;
@@ -56,7 +57,7 @@ public class ShortProcessor extends FieldProcessor<Short> {
         if(reverseValRpn==null){
             newData=data;
         }else{
-            if(checkInvalidOrExceptionVal(data,processContext.getLen())){
+            if(ParserUtil.checkInvalidOrExceptionVal_short(data,processContext.getLen())){
                 newData = (short) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn, data,-1);
             }else {
                 newData=data;
@@ -75,17 +76,4 @@ public class ShortProcessor extends FieldProcessor<Short> {
 
     }
 
-    public boolean checkInvalidOrExceptionVal(short val,int len){
-        switch (len) {
-            case 1: {
-                return val != 0xff && val != 0xfe;
-            }
-            case 2: {
-                return val != (short)0xffff && val != (short)0xfffe;
-            }
-            default: {
-                throw BaseRuntimeException.getException("param len[{0}] not support", len);
-            }
-        }
-    }
 }

@@ -4,6 +4,7 @@ import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 
@@ -38,7 +39,7 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
         if(valRpn!=null){
             for(int i=0;i<res.length;i++){
                 //验证异常、无效值
-                if(checkInvalidOrExceptionVal(res[i])){
+                if(ParserUtil.checkInvalidOrExceptionVal_byte(res[i])){
                     res[i]=(byte) RpnUtil.calcRPN_char_double_singleVar(valRpn,res[i],-1);
                 }
             }
@@ -59,7 +60,7 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
             newData=new byte[data.length];
             for(int i=0;i<data.length;i++){
                 //验证异常、无效值
-                if(checkInvalidOrExceptionVal(data[i])){
+                if(ParserUtil.checkInvalidOrExceptionVal_byte(data[i])){
                     newData[i]=(byte) RpnUtil.calcRPN_char_double_singleVar(reverseValRpn,data[i],-1);
                 }else{
                     newData[i]=data[i];
@@ -77,7 +78,4 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
         }
     }
 
-    public boolean checkInvalidOrExceptionVal(byte val){
-        return val != (byte) 0xff && val != (byte) 0xfe;
-    }
 }
