@@ -70,11 +70,10 @@ public @interface PacketField {
      * 必须满足如下条件才能跳过
      * 1、{@link #var()}必须未设置
      * 2、{@link #len()} 或者 {@link #lenExpr()} 必须设置了一个
-     *
+     * <p>
      * 原理为解析到当前字段时候会得到当前字段所占字节长度、然后{@link io.netty.buffer.ByteBuf#skipBytes(int)}跳过
-     *
+     * <p>
      * 需要注意的是在deParse时候、会忽略此属性
-     *
      */
     boolean skip() default false;
 
@@ -98,20 +97,12 @@ public @interface PacketField {
     int singleLen() default 1;
 
     /**
-     * 值处理表达式
+     * 值处理表达式 y=ax+b
      * 在解析出的原始值得基础上,进行偏移量运算,只对数字类型值有效
      * 公式中的x变量都代表字段原始的值
-     * a!=0 , b>0
-     * 支持如下表达式
-     *      y=a*x
-     *      y=x+b
-     *      y=x-b
-     *      y=a*x+b
-     *      y=a*x-b
      * <p>
      * 注意:
-     * 必须严格按照表达式顺序
-
+     * 表达式顺序可以调整、可以加上括号
      */
     String valExpr() default "";
 
