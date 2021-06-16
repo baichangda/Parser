@@ -24,38 +24,33 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         //优化处理 int->long
-        switch (singleLen){
-            case 4:{
-                long[] res=new long[len/4];
-                for(int i=0;i<res.length;i++){
-                    long cur=data.readUnsignedInt();
-                    //验证异常、无效值
-                    if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_long(cur,singleLen)){
-                        res[i]=cur;
-                    }else {
-                        res[i] = (long) RpnUtil.calc_0(valExpr, res[i]);
-                    }
+        if(singleLen==4){
+            long[] res=new long[len/4];
+            for(int i=0;i<res.length;i++){
+                long cur=data.readUnsignedInt();
+                //验证异常、无效值
+                if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_long(cur,singleLen)){
+                    res[i]=cur;
+                }else {
+                    res[i] = (long) RpnUtil.calc_0(valExpr, res[i]);
                 }
-                return res;
             }
-            case BYTE_LENGTH:{
-                long[] res=new long[len/BYTE_LENGTH];
-                for(int i=0;i<res.length;i++){
-                    long cur=data.readLong();
-                    //验证异常、无效值
-                    if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_long(cur,singleLen)){
-                        res[i]=cur;
-                    }else {
-                        res[i] = (long) RpnUtil.calc_0(valExpr, res[i]);
-                    }
+            return res;
+        }else if(singleLen==BYTE_LENGTH){
+            long[] res=new long[len/BYTE_LENGTH];
+            for(int i=0;i<res.length;i++){
+                long cur=data.readLong();
+                //验证异常、无效值
+                if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_long(cur,singleLen)){
+                    res[i]=cur;
+                }else {
+                    res[i] = (long) RpnUtil.calc_0(valExpr, res[i]);
                 }
-                return res;
             }
-            default:{
-                throw ParserUtil.newSingleLenNotSupportException(processContext);
-            }
+            return res;
+        }else{
+            throw ParserUtil.newSingleLenNotSupportException(processContext);
         }
-
     }
 
     @Override
@@ -80,22 +75,16 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
             }
         }
 
-        switch (singleLen){
-            case 4:{
-                for (long num : newData) {
-                    dest.writeInt((int)num);
-                }
-                return;
+        if(singleLen==4){
+            for (long num : newData) {
+                dest.writeInt((int)num);
             }
-            case BYTE_LENGTH:{
-                for (long num : newData) {
-                    dest.writeLong(num);
-                }
-                return;
+        }else if(singleLen==BYTE_LENGTH){
+            for (long num : newData) {
+                dest.writeLong(num);
             }
-            default:{
-                throw ParserUtil.newSingleLenNotSupportException(processContext);
-            }
+        }else{
+            throw ParserUtil.newSingleLenNotSupportException(processContext);
         }
 
     }

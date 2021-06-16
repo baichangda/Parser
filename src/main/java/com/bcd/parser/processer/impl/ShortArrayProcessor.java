@@ -25,35 +25,31 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
         //值表达式处理
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         //优化处理 byte->short
-        switch (singleLen) {
-            case 1: {
-                short[] res = new short[len];
-                for (int i = 0; i < len; i++) {
-                    short cur = data.readUnsignedByte();
-                    if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_short(cur, singleLen)) {
-                        res[i] = cur;
-                    } else {
-                        res[i] = (short) RpnUtil.calc_0(valExpr, cur);
-                    }
+        if (singleLen==1){
+            short[] res = new short[len];
+            for (int i = 0; i < len; i++) {
+                short cur = data.readUnsignedByte();
+                if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_short(cur, singleLen)) {
+                    res[i] = cur;
+                } else {
+                    res[i] = (short) RpnUtil.calc_0(valExpr, cur);
                 }
-                return res;
             }
-            case BYTE_LENGTH: {
-                short[] res = new short[len / BYTE_LENGTH];
-                for (int i = 0; i < res.length; i++) {
-                    short cur = data.readShort();
-                    //验证异常、无效值
-                    if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_short(cur, singleLen)) {
-                        res[i] = cur;
-                    } else {
-                        res[i] = (short) RpnUtil.calc_0(valExpr, cur);
-                    }
+            return res;
+        }else if(singleLen==BYTE_LENGTH){
+            short[] res = new short[len / BYTE_LENGTH];
+            for (int i = 0; i < res.length; i++) {
+                short cur = data.readShort();
+                //验证异常、无效值
+                if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_short(cur, singleLen)) {
+                    res[i] = cur;
+                } else {
+                    res[i] = (short) RpnUtil.calc_0(valExpr, cur);
                 }
-                return res;
             }
-            default: {
-                throw ParserUtil.newSingleLenNotSupportException(processContext);
-            }
+            return res;
+        }else{
+            throw ParserUtil.newSingleLenNotSupportException(processContext);
         }
     }
 
@@ -78,24 +74,16 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
                 }
             }
         }
-
-        //优化处理
-        switch (singleLen) {
-            case 1: {
-                for (short num : newData) {
-                    dest.writeByte((byte) num);
-                }
-                return;
+        if(singleLen==1){
+            for (short num : newData) {
+                dest.writeByte((byte) num);
             }
-            case BYTE_LENGTH: {
-                for (short num : newData) {
-                    dest.writeShort(num);
-                }
-                return;
+        }else if(singleLen==BYTE_LENGTH){
+            for (short num : newData) {
+                dest.writeShort(num);
             }
-            default: {
-                throw ParserUtil.newSingleLenNotSupportException(processContext);
-            }
+        }else{
+            throw ParserUtil.newSingleLenNotSupportException(processContext);
         }
     }
 }

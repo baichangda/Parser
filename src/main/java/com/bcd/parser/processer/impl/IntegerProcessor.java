@@ -19,19 +19,12 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
     public Integer process(ByteBuf data, FieldProcessContext processContext) {
         int res;
         int len = processContext.getLen();
-        switch (len) {
-            case 2: {
-                //优化处理 short->int
-                res = data.readUnsignedShort();
-                break;
-            }
-            case BYTE_LENGTH: {
-                res = data.readInt();
-                break;
-            }
-            default: {
-                throw ParserUtil.newLenNotSupportException(processContext);
-            }
+        if (len==2){
+            res = data.readUnsignedShort();
+        }else if(len==BYTE_LENGTH){
+            res = data.readInt();
+        }else{
+            throw ParserUtil.newLenNotSupportException(processContext);
         }
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         if (valExpr == null) {
@@ -59,19 +52,12 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
             }
         }
         int len = processContext.getLen();
-        //优化处理
-        switch (len) {
-            case 2: {
-                dest.writeShort((short) newData);
-                return;
-            }
-            case BYTE_LENGTH: {
-                dest.writeInt(newData);
-                return;
-            }
-            default: {
-                throw ParserUtil.newLenNotSupportException(processContext);
-            }
+        if (len==2){
+            dest.writeShort((short) newData);
+        }else if(len==BYTE_LENGTH){
+            dest.writeInt(newData);
+        }else{
+            throw ParserUtil.newLenNotSupportException(processContext);
         }
     }
 

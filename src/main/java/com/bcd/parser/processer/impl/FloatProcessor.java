@@ -21,19 +21,12 @@ public class FloatProcessor extends FieldProcessor<Float> {
         int res;
         //读取原始值
         int len=processContext.getLen();
-        switch (len){
-            case 2:{
-                //优化处理 short->int
-                res=data.readUnsignedShort();
-                break;
-            }
-            case BYTE_LENGTH:{
-                res=data.readInt();
-                break;
-            }
-            default:{
-                throw ParserUtil.newLenNotSupportException(processContext);
-            }
+        if (len==2){
+            res = data.readUnsignedShort();
+        }else if(len==BYTE_LENGTH){
+            res = data.readInt();
+        }else{
+            throw ParserUtil.newLenNotSupportException(processContext);
         }
         //值表达式处理
         double[] valExpr = processContext.getFieldInfo().getValExpr();
@@ -65,18 +58,12 @@ public class FloatProcessor extends FieldProcessor<Float> {
             }
         }
         int len=processContext.getLen();
-        switch (len){
-            case 2:{
-                dest.writeShort((short)newData);
-                return;
-            }
-            case BYTE_LENGTH:{
-                dest.writeInt(newData);
-                return;
-            }
-            default:{
-                throw ParserUtil.newLenNotSupportException(processContext);
-            }
+        if (len==2){
+            dest.writeShort((short)newData);
+        }else if(len==BYTE_LENGTH){
+            dest.writeInt(newData);
+        }else{
+            throw ParserUtil.newLenNotSupportException(processContext);
         }
     }
 

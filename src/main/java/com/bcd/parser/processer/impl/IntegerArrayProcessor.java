@@ -24,38 +24,33 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
         int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         //优化处理 short->int
-        switch (singleLen){
-            case 2:{
-                int[] res = new int[len / 2];
-                for (int i = 0; i < res.length; i++) {
-                    int cur = data.readUnsignedShort();
-                    //验证异常、无效值
-                    if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
-                        res[i] = cur;
-                    } else {
-                        res[i] = (int) RpnUtil.calc_0(valExpr, res[i]);
-                    }
+        if(singleLen==2){
+            int[] res = new int[len / 2];
+            for (int i = 0; i < res.length; i++) {
+                int cur = data.readUnsignedShort();
+                //验证异常、无效值
+                if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
+                    res[i] = cur;
+                } else {
+                    res[i] = (int) RpnUtil.calc_0(valExpr, res[i]);
                 }
-                return res;
             }
-            case BYTE_LENGTH:{
-                int[] res = new int[len / BYTE_LENGTH];
-                for (int i = 0; i < res.length; i++) {
-                    int cur = data.readInt();
-                    //验证异常、无效值
-                    if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
-                        res[i] = cur;
-                    } else {
-                        res[i] = (int) RpnUtil.calc_0(valExpr, res[i]);
-                    }
+            return res;
+        }else if(singleLen==BYTE_LENGTH){
+            int[] res = new int[len / BYTE_LENGTH];
+            for (int i = 0; i < res.length; i++) {
+                int cur = data.readInt();
+                //验证异常、无效值
+                if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
+                    res[i] = cur;
+                } else {
+                    res[i] = (int) RpnUtil.calc_0(valExpr, res[i]);
                 }
-                return res;
             }
-            default:{
-                throw ParserUtil.newSingleLenNotSupportException(processContext);
-            }
+            return res;
+        }else {
+            throw ParserUtil.newSingleLenNotSupportException(processContext);
         }
-
     }
 
     @Override
@@ -81,23 +76,16 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
                 }
             }
         }
-        //写入原始值
-        switch (singleLen){
-            case 2:{
-                for (long num : newData) {
-                    dest.writeShort((short) num);
-                }
-                return;
+        if(singleLen==2){
+            for (long num : newData) {
+                dest.writeShort((short) num);
             }
-            case BYTE_LENGTH:{
-                for (int num : newData) {
-                    dest.writeInt(num);
-                }
-                return;
+        }else if(singleLen==BYTE_LENGTH){
+            for (int num : newData) {
+                dest.writeInt(num);
             }
-            default:{
-                throw ParserUtil.newSingleLenNotSupportException(processContext);
-            }
+        }else{
+            throw ParserUtil.newSingleLenNotSupportException(processContext);
         }
     }
 

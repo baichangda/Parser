@@ -26,38 +26,33 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         int valPrecision = processContext.getFieldInfo().getValPrecision();
         //优化处理 short->int
-        switch (singleLen) {
-            case 2: {
-                float[] res = new float[len / 2];
-                for (int i = 0; i < res.length; i++) {
-                    int cur = data.readUnsignedShort();
-                    //验证异常、无效值
-                    if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
-                        res[i] = (float) cur;
-                    } else {
-                        res[i] = (float) RpnUtil.calc(valExpr, res[i], valPrecision);
-                    }
+        if(singleLen==2){
+            float[] res = new float[len / 2];
+            for (int i = 0; i < res.length; i++) {
+                int cur = data.readUnsignedShort();
+                //验证异常、无效值
+                if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
+                    res[i] = (float) cur;
+                } else {
+                    res[i] = (float) RpnUtil.calc(valExpr, res[i], valPrecision);
                 }
-                return res;
             }
-            case BYTE_LENGTH: {
-                float[] res = new float[len / BYTE_LENGTH];
-                for (int i = 0; i < res.length; i++) {
-                    int cur = data.readInt();
-                    //验证异常、无效值
-                    if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
-                        res[i] = (float) cur;
-                    } else {
-                        res[i] = (float) RpnUtil.calc(valExpr, res[i], valPrecision);
-                    }
+            return res;
+        }else if(singleLen==BYTE_LENGTH){
+            float[] res = new float[len / BYTE_LENGTH];
+            for (int i = 0; i < res.length; i++) {
+                int cur = data.readInt();
+                //验证异常、无效值
+                if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
+                    res[i] = (float) cur;
+                } else {
+                    res[i] = (float) RpnUtil.calc(valExpr, res[i], valPrecision);
                 }
-                return res;
             }
-            default: {
-                throw ParserUtil.newSingleLenNotSupportException(processContext);
-            }
+            return res;
+        }else{
+            throw ParserUtil.newSingleLenNotSupportException(processContext);
         }
-
     }
 
     @Override
@@ -84,23 +79,16 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
             }
         }
 
-        //写入原始值
-        switch (singleLen){
-            case 2:{
-                for (float num : newData) {
-                    dest.writeShort((short) num);
-                }
-                return;
+        if(singleLen==2){
+            for (float num : newData) {
+                dest.writeShort((short) num);
             }
-            case BYTE_LENGTH:{
-                for (float num : newData) {
-                    dest.writeInt((int) num);
-                }
-                return;
+        }else if(singleLen==BYTE_LENGTH){
+            for (float num : newData) {
+                dest.writeInt((int) num);
             }
-            default:{
-                throw ParserUtil.newSingleLenNotSupportException(processContext);
-            }
+        }else{
+            throw ParserUtil.newSingleLenNotSupportException(processContext);
         }
     }
 

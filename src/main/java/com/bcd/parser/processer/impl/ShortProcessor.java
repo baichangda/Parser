@@ -19,19 +19,12 @@ public class ShortProcessor extends FieldProcessor<Short> {
     public Short process(ByteBuf data, FieldProcessContext processContext) {
         short res;
         int len = processContext.getLen();
-        switch (len) {
-            case 1: {
-                //优化处理 byte->short
-                res = data.readUnsignedByte();
-                break;
-            }
-            case BYTE_LENGTH: {
-                res = data.readShort();
-                break;
-            }
-            default: {
-                throw ParserUtil.newLenNotSupportException(processContext);
-            }
+        if (len==1){
+            res = data.readUnsignedByte();
+        }else if(len==BYTE_LENGTH){
+            res = data.readShort();
+        }else{
+            throw ParserUtil.newLenNotSupportException(processContext);
         }
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         if (valExpr == null) {
@@ -59,19 +52,12 @@ public class ShortProcessor extends FieldProcessor<Short> {
             }
         }
         int len = processContext.getLen();
-        //优化处理
-        switch (len){
-            case 1:{
-                dest.writeByte((byte) newData);
-                return;
-            }
-            case BYTE_LENGTH:{
-                dest.writeShort(newData);
-                return;
-            }
-            default:{
-                throw ParserUtil.newLenNotSupportException(processContext);
-            }
+        if (len==1){
+            dest.writeByte((byte) newData);
+        }else if(len==BYTE_LENGTH){
+            dest.writeShort(newData);
+        }else{
+            throw ParserUtil.newLenNotSupportException(processContext);
         }
     }
 

@@ -22,9 +22,9 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
             return new byte[0];
         }
         int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
         //读取原始值
         if (singleLen == BYTE_LENGTH) {
+            double[] valExpr = processContext.getFieldInfo().getValExpr();
             byte[] res = new byte[len];
             data.readBytes(res);
             if (valExpr != null) {

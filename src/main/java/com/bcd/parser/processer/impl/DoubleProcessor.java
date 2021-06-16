@@ -20,18 +20,12 @@ public class DoubleProcessor extends FieldProcessor<Double> {
     public Double process(ByteBuf data, FieldProcessContext processContext) {
         long res;
         int len = processContext.getLen();
-        switch (len) {
-            case 4: {
-                res = data.readUnsignedInt();
-                break;
-            }
-            case BYTE_LENGTH: {
-                res = data.readLong();
-                break;
-            }
-            default: {
-                throw ParserUtil.newLenNotSupportException(processContext);
-            }
+        if(len==4){
+            res = data.readUnsignedInt();
+        }else if(len==BYTE_LENGTH){
+            res = data.readLong();
+        }else{
+            throw ParserUtil.newLenNotSupportException(processContext);
         }
         //值表达式处理
         double[] valExpr = processContext.getFieldInfo().getValExpr();
@@ -64,19 +58,12 @@ public class DoubleProcessor extends FieldProcessor<Double> {
         }
         //写入原始值
         int len = processContext.getLen();
-        //优化处理
-        switch (len) {
-            case 4: {
-                dest.writeInt((int) newData);
-                return;
-            }
-            case BYTE_LENGTH: {
-                dest.writeLong(newData);
-                return;
-            }
-            default: {
-                throw ParserUtil.newLenNotSupportException(processContext);
-            }
+        if(len==4){
+            dest.writeInt((int) newData);
+        }else if(len==BYTE_LENGTH){
+            dest.writeLong(newData);
+        }else{
+            throw ParserUtil.newLenNotSupportException(processContext);
         }
     }
 }
