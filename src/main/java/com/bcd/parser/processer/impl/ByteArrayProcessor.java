@@ -43,7 +43,6 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
 
     @Override
     public void deProcess(byte[] data, ByteBuf dest, FieldDeProcessContext processContext) {
-        Objects.requireNonNull(data);
         int len = data.length;
         if (len == 0) {
             return;

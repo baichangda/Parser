@@ -62,7 +62,6 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
 
     @Override
     public void deProcess(float[] data, ByteBuf dest, FieldDeProcessContext processContext) {
-        Objects.requireNonNull(data);
         int len = data.length;
         if (len == 0) {
             return;

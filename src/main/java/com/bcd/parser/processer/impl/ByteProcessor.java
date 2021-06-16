@@ -42,7 +42,6 @@ public class ByteProcessor extends FieldProcessor<Byte> {
 
     @Override
     public void deProcess(Byte data, ByteBuf dest, FieldDeProcessContext processContext) {
-        Objects.requireNonNull(data);
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         byte newData;
         if(valExpr==null){

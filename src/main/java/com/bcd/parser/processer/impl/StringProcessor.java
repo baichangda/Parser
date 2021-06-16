@@ -34,7 +34,6 @@ public class StringProcessor extends FieldProcessor<String> {
 
     @Override
     public void deProcess(String data, ByteBuf dest, FieldDeProcessContext processContext) {
-        Objects.requireNonNull(data);
         int len=processContext.getLen();
         byte[] content=data.getBytes();
         if(content.length==len){

@@ -60,7 +60,6 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
 
     @Override
     public void deProcess(long[] data, ByteBuf dest, FieldDeProcessContext processContext) {
-        Objects.requireNonNull(data);
         int len = data.length;
         if(len ==0){
             return;

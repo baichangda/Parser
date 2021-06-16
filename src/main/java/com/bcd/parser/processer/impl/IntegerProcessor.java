@@ -47,7 +47,6 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
 
     @Override
     public void deProcess(Integer data, ByteBuf dest, FieldDeProcessContext processContext) {
-        Objects.requireNonNull(data);
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         int newData;
         if (valExpr == null) {

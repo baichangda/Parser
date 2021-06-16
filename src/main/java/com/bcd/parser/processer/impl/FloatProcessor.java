@@ -51,7 +51,6 @@ public class FloatProcessor extends FieldProcessor<Float> {
 
     @Override
     public void deProcess(Float data, ByteBuf dest, FieldDeProcessContext processContext) {
-        Objects.requireNonNull(data);
         //值表达式处理
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         int newData;

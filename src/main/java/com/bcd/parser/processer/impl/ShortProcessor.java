@@ -47,7 +47,6 @@ public class ShortProcessor extends FieldProcessor<Short> {
 
     @Override
     public void deProcess(Short data, ByteBuf dest, FieldDeProcessContext processContext) {
-        Objects.requireNonNull(data);
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         short newData;
         if (valExpr == null) {

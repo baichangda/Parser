@@ -60,7 +60,6 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
 
     @Override
     public void deProcess(int[] data, ByteBuf dest, FieldDeProcessContext processContext) {
-        Objects.requireNonNull(data);
         int len = data.length;
         if (len == 0) {
             return;

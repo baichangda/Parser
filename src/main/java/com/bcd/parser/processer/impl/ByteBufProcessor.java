@@ -23,7 +23,6 @@ public class ByteBufProcessor extends FieldProcessor<ByteBuf> {
 
     @Override
     public void deProcess(ByteBuf data, ByteBuf dest, FieldDeProcessContext processContext) {
-        Objects.requireNonNull(data);
         dest.writeBytes(data);
     }
 }

@@ -36,7 +36,6 @@ public class DateProcessor extends FieldProcessor<Date> {
 
     @Override
     public void deProcess(Date data, ByteBuf dest, FieldDeProcessContext processContext) {
-        Objects.requireNonNull(data);
         if(processContext.getLen()==6){
             LocalDateTime ldt= LocalDateTime.ofInstant(data.toInstant(), ZONE_OFFSET);
             dest.writeByte(ldt.getYear()-BASE_YEAR);

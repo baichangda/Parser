@@ -49,7 +49,6 @@ public class DoubleProcessor extends FieldProcessor<Double> {
 
     @Override
     public void deProcess(Double data, ByteBuf dest, FieldDeProcessContext processContext) {
-        Objects.requireNonNull(data);
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         long newData;
         //值表达式处理

@@ -47,7 +47,6 @@ public class LongProcessor extends FieldProcessor<Long> {
 
     @Override
     public void deProcess(Long data, ByteBuf dest, FieldDeProcessContext processContext) {
-        Objects.requireNonNull(data);
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         long newData;
         if(valExpr==null){
