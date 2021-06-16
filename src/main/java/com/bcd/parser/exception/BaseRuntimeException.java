@@ -18,11 +18,11 @@ public class BaseRuntimeException extends RuntimeException {
         return code;
     }
 
-    private BaseRuntimeException(String message) {
+    public BaseRuntimeException(String message) {
         super(message);
     }
 
-    private BaseRuntimeException(Throwable e) {
+    public BaseRuntimeException(Throwable e) {
         super(e);
     }
 

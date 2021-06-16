@@ -6,7 +6,6 @@ import com.bcd.parser.processer.FieldProcessor;
 import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 import java.util.Objects;
 
@@ -20,20 +19,18 @@ public class LongProcessor extends FieldProcessor<Long> {
     public Long process(ByteBuf data, FieldProcessContext processContext){
         long res;
         int len=processContext.getLen();
-        if(len==4){
-            //优化处理 int->long
-            res=data.readUnsignedInt();
-        }else {
-            if (len == BYTE_LENGTH) {
+        switch (len){
+            case 4:{
+                //优化处理 int->long
+                res=data.readUnsignedInt();
+                break;
+            }
+            case BYTE_LENGTH:{
                 res=data.readLong();
-            } else if (len > BYTE_LENGTH) {
-                data.skipBytes(len - BYTE_LENGTH);
-                res=data.readLong();
-            } else {
-                ByteBuf temp= Unpooled.buffer(BYTE_LENGTH,BYTE_LENGTH);
-                temp.writeBytes(new byte[BYTE_LENGTH-len]);
-                temp.writeBytes(data,len);
-                res=temp.readLong();
+                break;
+            }
+            default:{
+                throw ParserUtil.newLenNotSupportException(processContext);
             }
         }
         double[] valExpr = processContext.getFieldInfo().getValExpr();
@@ -41,7 +38,7 @@ public class LongProcessor extends FieldProcessor<Long> {
             return res;
         }else{
             if(ParserUtil.checkInvalidOrExceptionVal_long(res,len)){
-                return (long)RpnUtil.calc(valExpr,res,-1);
+                return (long)RpnUtil.calc_0(valExpr,res);
             }else{
                 return res;
             }
@@ -57,27 +54,25 @@ public class LongProcessor extends FieldProcessor<Long> {
             newData=data;
         }else{
             if(ParserUtil.checkInvalidOrExceptionVal_long(data,processContext.getLen())){
-                newData = (long) RpnUtil.deCalc(valExpr,data,0);
+                newData = (long) RpnUtil.deCalc_0(valExpr,data);
             }else {
                 newData=data;
             }
         }
         int len=processContext.getLen();
-        //优化处理
-        if(len==4){
-            dest.writeInt((int)newData);
-        }else if (len == BYTE_LENGTH) {
-            dest.writeLong(newData);
-        } else if (len > BYTE_LENGTH) {
-            dest.writeBytes(new byte[len - BYTE_LENGTH]);
-            dest.writeLong(newData);
-        } else {
-            for (int i = len; i >= 1; i--) {
-                int move = 8 * (i - 1);
-                dest.writeByte((byte) (newData >>> move));
+        switch (len){
+            case 4:{
+                dest.writeInt((int)newData);
+                return;
+            }
+            case BYTE_LENGTH:{
+                dest.writeLong(newData);
+                return;
+            }
+            default:{
+                throw ParserUtil.newLenNotSupportException(processContext);
             }
         }
-
     }
 
 

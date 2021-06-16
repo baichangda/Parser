@@ -23,11 +23,8 @@ public class ByteProcessor extends FieldProcessor<Byte> {
         byte res;
         if(len==BYTE_LENGTH){
             res=data.readByte();
-        }else if(len>BYTE_LENGTH){
-            data.skipBytes(len-BYTE_LENGTH);
-            res=data.readByte();
         }else{
-            res=0;
+            throw ParserUtil.newLenNotSupportException(processContext);
         }
         //值表达式处理
         double[] valExpr = processContext.getFieldInfo().getValExpr();
@@ -36,7 +33,7 @@ public class ByteProcessor extends FieldProcessor<Byte> {
         }else{
             //验证异常、无效值
             if(ParserUtil.checkInvalidOrExceptionVal_byte(res)){
-                return (byte)RpnUtil.calc(valExpr,res,-1);
+                return (byte)RpnUtil.calc_0(valExpr,res);
             }else{
                 return res;
             }
@@ -54,16 +51,14 @@ public class ByteProcessor extends FieldProcessor<Byte> {
             if(ParserUtil.checkInvalidOrExceptionVal_byte(data)){
                 newData=data;
             }else {
-                newData = (byte) RpnUtil.deCalc(valExpr,data,0);
+                newData = (byte) RpnUtil.deCalc_0(valExpr,data);
             }
         }
         int len=processContext.getLen();
         if(len==BYTE_LENGTH){
-            dest.writeByte(data);
+            dest.writeByte(newData);
         }else {
-            byte[] content = new byte[len];
-            content[len - BYTE_LENGTH] = newData;
-            dest.writeBytes(content);
+            throw ParserUtil.newLenNotSupportException(processContext);
         }
     }
 }

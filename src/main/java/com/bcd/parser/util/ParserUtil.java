@@ -5,6 +5,8 @@ import com.bcd.parser.anno.Parsable;
 import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.info.FieldInfo;
 import com.bcd.parser.info.PacketInfo;
+import com.bcd.parser.processer.FieldDeProcessContext;
+import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
 
@@ -18,6 +20,87 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class ParserUtil {
+
+    public static BaseRuntimeException newLenNotSupportException(FieldDeProcessContext processContext){
+        return BaseRuntimeException.getException("class[{}] field[{}] len[{}] not support",
+                processContext.getFieldInfo().getPacketInfo().getClazz().getName(),
+                processContext.getFieldInfo().getField().getName(),
+                processContext.getLen());
+    }
+    public static BaseRuntimeException newLenNotSupportException(FieldProcessContext processContext){
+        return BaseRuntimeException.getException("class[{}] field[{}] len[{}] not support",
+                processContext.getFieldInfo().getPacketInfo().getClazz().getName(),
+                processContext.getFieldInfo().getField().getName(),
+                processContext.getLen());
+    }
+
+
+    public static BaseRuntimeException newSingleLenNotSupportException(FieldDeProcessContext processContext){
+        return BaseRuntimeException.getException("class[{}] field[{}] singleLen[{}] not support",
+                processContext.getFieldInfo().getPacketInfo().getClazz().getName(),
+                processContext.getFieldInfo().getField().getName(),
+                processContext.getFieldInfo().getPacketField_singleLen());
+    }
+    public static BaseRuntimeException newSingleLenNotSupportException(FieldProcessContext processContext){
+        return BaseRuntimeException.getException("class[{}] field[{}] singleLen[{}] not support",
+                processContext.getFieldInfo().getPacketInfo().getClazz().getName(),
+                processContext.getFieldInfo().getField().getName(),
+                processContext.getFieldInfo().getPacketField_singleLen());
+    }
+
+    public static byte[] int_to_bytes_big_endian(int data) {
+        return new byte[]{
+                (byte)((data>>24)&0xff),
+                (byte)((data>>16)&0xff),
+                (byte)((data>>8)&0xff),
+                (byte)(data)
+        };
+    }
+
+    public static byte[] short_to_bytes_big_endian(short data) {
+        return new byte[]{
+                (byte)((data>>8)&0xff),
+                (byte)(data)
+        };
+    }
+
+    public static byte[] long_to_bytes_big_endian(long data) {
+        return new byte[]{
+                (byte)((data>>56)&0xff),
+                (byte)((data>>48)&0xff),
+                (byte)((data>>40)&0xff),
+                (byte)((data>>32)&0xff),
+                (byte)((data>>24)&0xff),
+                (byte)((data>>16)&0xff),
+                (byte)((data>>8)&0xff),
+                (byte)(data)
+        };
+    }
+
+    public static int bytes_to_int_big_endian(byte[] datas) {
+        return ((datas[0] & 0xff) << 24) |
+                ((datas[1] & 0xff) << 16) |
+                ((datas[2] & 0xff) << 8) |
+                (datas[3] & 0xff);
+    }
+
+    public static short bytes_to_short_big_endian(byte[] datas) {
+        return (short) (
+                ((datas[0] & 0xff) << 8) |
+                        (datas[1] & 0xff)
+        );
+    }
+
+    public static long bytes_to_long_big_endian(byte[] datas) {
+        return ((long) (datas[0] & 0xff) << 56) |
+                ((long) (datas[1] & 0xff) << 48) |
+                ((long) (datas[2] & 0xff) << 40) |
+                ((long) (datas[3] & 0xff) << 32) |
+                ((long) (datas[4] & 0xff) << 24) |
+                ((datas[5] & 0xff) << 16) |
+                ((datas[6] & 0xff) << 8) |
+                (datas[7] & 0xff);
+    }
 
     public static boolean checkInvalidOrExceptionVal_byte(byte val) {
         return val != (byte) 0xff && val != (byte) 0xfe;

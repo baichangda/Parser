@@ -9,55 +9,55 @@ import com.bcd.parser.anno.Parsable;
 @Parsable
 public class VehicleBaseData {
     //车辆状态
-    @PacketField(index = 1,len=1)
+    @PacketField(index = 1, len = 1)
     short vehicleStatus;
 
     //充电状态
-    @PacketField(index = 2,len=1)
+    @PacketField(index = 2, len = 1)
     short chargeStatus;
 
     //运行模式
-    @PacketField(index = 3,len=1)
+    @PacketField(index = 3, len = 1)
     short runMode;
 
     //车速
-    @PacketField(index = 4,len=2,valExpr = "0.1*x", valPrecision = 1)
+    @PacketField(index = 4, len = 2, valExpr = "0.1*x", valPrecision = 1)
     float vehicleSpeed;
 
     //累计里程
-    @PacketField(index = 5,len=4,valExpr = "0.1*x", valPrecision = 1)
+    @PacketField(index = 5, len = 4, valExpr = "0.1*x", valPrecision = 1)
     double totalMileage;
 
     //总电压
-    @PacketField(index = 6,len=2,valExpr = "0.1*x", valPrecision = 1)
+    @PacketField(index = 6, len = 2, valExpr = "0.1*x", valPrecision = 1)
     float totalVoltage;
 
     //总电流
-    @PacketField(index = 7,len=2,valExpr = "0.1*x-1000", valPrecision = 1)
+    @PacketField(index = 7, len = 2, valExpr = "0.1*x-1000", valPrecision = 1)
     float totalCurrent;
 
     //soc
-    @PacketField(index = 8,len=1)
+    @PacketField(index = 8, len = 1)
     short soc;
 
     //DC-DC状态
-    @PacketField(index = 9,len=1)
+    @PacketField(index = 9, len = 1)
     short dcStatus;
 
     //档位
-    @PacketField(index = 9,len=1)
-    int gearPosition;
+    @PacketField(index = 9, len = 1)
+    short gearPosition;
 
     //绝缘电阻
-    @PacketField(index = 10,len=2)
+    @PacketField(index = 10, len = 2)
     int resistance;
 
     //加速踏板行程值
-    @PacketField(index = 11,len=1)
+    @PacketField(index = 11, len = 1)
     short pedalVal;
 
     //制动踏板状态
-    @PacketField(index = 12,len=1)
+    @PacketField(index = 12, len = 1)
     short pedalStatus;
 
 
@@ -133,11 +133,11 @@ public class VehicleBaseData {
         this.dcStatus = dcStatus;
     }
 
-    public int getGearPosition() {
+    public short getGearPosition() {
         return gearPosition;
     }
 
-    public void setGearPosition(int gearPosition) {
+    public void setGearPosition(short gearPosition) {
         this.gearPosition = gearPosition;
     }
 

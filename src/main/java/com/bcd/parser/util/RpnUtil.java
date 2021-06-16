@@ -327,13 +327,37 @@ public class RpnUtil {
         System.out.println(Arrays.toString(parseSimpleExpr("(-0.01)*x")));
     }
 
+    public static double calc_0(double[] arr, double x) {
+        double res=arr[0] * x + arr[1];
+        if (res > 0) {
+            return Math.round(res);
+        } else if (res < 0) {
+            return -Math.round(-res);
+        } else {
+            return 0d;
+        }
+    }
+
+    public static double deCalc_0(double[] arr, double y) {
+        double res=(y - arr[1]) / arr[0];
+        if (res > 0) {
+            return Math.round(res);
+        } else if (res < 0) {
+            return -Math.round(-res);
+        } else {
+            return 0d;
+        }
+    }
+
     public static double calc(double[] arr, double x, int precision) {
-        return format(arr[0] * x + arr[1], precision);
+        return format(arr[0] * x + arr[1],precision);
     }
 
     public static double deCalc(double[] arr, double y, int precision) {
-        return format((y - arr[1]) / arr[0], precision);
+        return format((y - arr[1]) / arr[0],precision);
     }
+
+
 
     private static double format(double res, int precision) {
         if (precision < 0) {

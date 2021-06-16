@@ -6,7 +6,6 @@ import com.bcd.parser.processer.FieldProcessor;
 import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 import java.util.Objects;
 
@@ -22,20 +21,18 @@ public class FloatProcessor extends FieldProcessor<Float> {
         int res;
         //读取原始值
         int len=processContext.getLen();
-        if(len==2){
-            //优化处理 short->int
-            res=data.readUnsignedShort();
-        }else {
-            if (len == BYTE_LENGTH) {
+        switch (len){
+            case 2:{
+                //优化处理 short->int
+                res=data.readUnsignedShort();
+                break;
+            }
+            case BYTE_LENGTH:{
                 res=data.readInt();
-            } else if (len > BYTE_LENGTH) {
-                data.skipBytes(len - BYTE_LENGTH);
-                res=data.readInt();
-            } else {
-                ByteBuf temp= Unpooled.buffer(BYTE_LENGTH,BYTE_LENGTH);
-                temp.writeBytes(new byte[BYTE_LENGTH-len]);
-                temp.writeBytes(data,len);
-                res=temp.readInt();
+                break;
+            }
+            default:{
+                throw ParserUtil.newLenNotSupportException(processContext);
             }
         }
         //值表达式处理
@@ -63,24 +60,23 @@ public class FloatProcessor extends FieldProcessor<Float> {
         }else{
             //验证异常、无效值
             if(ParserUtil.checkInvalidOrExceptionVal_int(data.intValue(),processContext.getLen())){
-                newData = (int) RpnUtil.deCalc(valExpr,data,0);
+                newData = (int) RpnUtil.deCalc_0(valExpr,data);
             }else {
                 newData=data.intValue();
             }
         }
         int len=processContext.getLen();
-        //优化处理
-        if(len==2){
-            dest.writeShort((short)newData);
-        }else if (len == BYTE_LENGTH) {
-            dest.writeInt(newData);
-        } else if (len > BYTE_LENGTH) {
-            dest.writeBytes(new byte[len - BYTE_LENGTH]);
-            dest.writeInt(newData);
-        } else {
-            for (int i = len; i >= 1; i--) {
-                int move = 8 * (i - 1);
-                dest.writeByte((byte) (newData >>> move));
+        switch (len){
+            case 2:{
+                dest.writeShort((short)newData);
+                return;
+            }
+            case BYTE_LENGTH:{
+                dest.writeInt(newData);
+                return;
+            }
+            default:{
+                throw ParserUtil.newLenNotSupportException(processContext);
             }
         }
     }
