@@ -48,10 +48,21 @@ public class ParserUtil {
                 processContext.getFieldInfo().getPacketField_singleLen());
     }
 
+    /**
+     * 验证是否是异常、无效值
+     * @param val
+     * @return true正常、false异常或无效
+     */
     public static boolean checkInvalidOrExceptionVal_byte(byte val) {
         return val != (byte) 0xff && val != (byte) 0xfe;
     }
 
+    /**
+     * 验证是否是异常、无效值
+     * @param val
+     * @param len
+     * @return true正常、false异常或无效
+     */
     public static boolean checkInvalidOrExceptionVal_short(short val, int len) {
         switch (len) {
             case 1: {
@@ -66,6 +77,12 @@ public class ParserUtil {
         }
     }
 
+    /**
+     * 验证是否是异常、无效值
+     * @param val
+     * @param len
+     * @return true正常、false异常或无效
+     */
     public static boolean checkInvalidOrExceptionVal_int(int val, int len) {
         switch (len) {
             case 1: {
@@ -86,6 +103,12 @@ public class ParserUtil {
         }
     }
 
+    /**
+     * 验证是否是异常、无效值
+     * @param val
+     * @param len
+     * @return true正常、false异常或无效
+     */
     public static boolean checkInvalidOrExceptionVal_long(long val, int len) {
         switch (len) {
             case 1: {
@@ -144,6 +167,7 @@ public class ParserUtil {
     public static PacketInfo toPacketInfo(Class clazz, FieldProcessor[] processors) {
         PacketInfo packetInfo = new PacketInfo();
         packetInfo.setClazz(clazz);
+        //设置无参构造方法
         try {
             packetInfo.setConstructor(clazz.getConstructor());
             packetInfo.getConstructor().setAccessible(true);
