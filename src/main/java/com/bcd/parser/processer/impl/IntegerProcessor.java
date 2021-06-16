@@ -57,7 +57,7 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
             newData=data;
         }else{
             if(ParserUtil.checkInvalidOrExceptionVal_int(data,processContext.getLen())){
-                newData = (int) RpnUtil.deCalc(valExpr,data,-1);
+                newData = (int) RpnUtil.deCalc(valExpr,data,0);
             }else {
                 newData=data;
             }

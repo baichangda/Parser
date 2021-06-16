@@ -57,7 +57,7 @@ public class ShortProcessor extends FieldProcessor<Short> {
             newData=data;
         }else{
             if(ParserUtil.checkInvalidOrExceptionVal_short(data,processContext.getLen())){
-                newData = (short) RpnUtil.deCalc(valExpr,data,-1);
+                newData = (short) RpnUtil.deCalc(valExpr,data,0);
             }else {
                 newData=data;
             }

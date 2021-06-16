@@ -63,7 +63,7 @@ public class FloatProcessor extends FieldProcessor<Float> {
         }else{
             //验证异常、无效值
             if(ParserUtil.checkInvalidOrExceptionVal_int(data.intValue(),processContext.getLen())){
-                newData = (int) RpnUtil.deCalc(valExpr,data,-1);
+                newData = (int) RpnUtil.deCalc(valExpr,data,0);
             }else {
                 newData=data.intValue();
             }

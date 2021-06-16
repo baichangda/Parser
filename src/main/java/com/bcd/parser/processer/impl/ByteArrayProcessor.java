@@ -61,7 +61,7 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
             for(int i=0;i<data.length;i++){
                 //验证异常、无效值
                 if(ParserUtil.checkInvalidOrExceptionVal_byte(data[i])){
-                    newData[i]=(byte) RpnUtil.deCalc(valExpr,data[i],-1);
+                    newData[i]=(byte) RpnUtil.deCalc(valExpr,data[i],0);
                 }else{
                     newData[i]=data[i];
                 }

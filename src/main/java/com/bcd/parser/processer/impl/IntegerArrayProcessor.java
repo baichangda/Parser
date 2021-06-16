@@ -76,7 +76,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
             for(int i=0;i<data.length;i++){
                 //验证异常、无效值
                 if(ParserUtil.checkInvalidOrExceptionVal_int(data[i],singleLen)){
-                    newData[i]=(int) RpnUtil.deCalc(valExpr,data[i],-1);
+                    newData[i]=(int) RpnUtil.deCalc(valExpr,data[i],0);
                 }else{
                     newData[i]=data[i];
                 }

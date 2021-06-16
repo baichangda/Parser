@@ -57,7 +57,7 @@ public class LongProcessor extends FieldProcessor<Long> {
             newData=data;
         }else{
             if(ParserUtil.checkInvalidOrExceptionVal_long(data,processContext.getLen())){
-                newData = (long) RpnUtil.deCalc(valExpr,data,-1);
+                newData = (long) RpnUtil.deCalc(valExpr,data,0);
             }else {
                 newData=data;
             }

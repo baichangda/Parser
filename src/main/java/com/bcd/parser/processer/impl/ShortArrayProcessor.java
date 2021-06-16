@@ -75,7 +75,7 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
             newData=new short[data.length];
             for(int i=0;i<data.length;i++){
                 if(ParserUtil.checkInvalidOrExceptionVal_short(data[i], singleLen)){
-                    newData[i]=(short) RpnUtil.deCalc(valExpr,data[i],-1);
+                    newData[i]=(short) RpnUtil.deCalc(valExpr,data[i],0);
                 }else{
                     newData[i]=data[i];
                 }
