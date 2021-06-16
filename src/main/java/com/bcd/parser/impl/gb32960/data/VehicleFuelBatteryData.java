@@ -25,7 +25,7 @@ public class VehicleFuelBatteryData {
     int num;
 
     //探针温度值
-    @PacketField(index =5,lenExpr = "a",valExpr = "x-40")
+    @PacketField(index =5,lenExpr = "a",valExpr = "x-40",singleLen = 1)
     short[] temperatures;
 
     //氢系统中最高温度

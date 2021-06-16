@@ -17,7 +17,7 @@ public class StorageTemperatureData {
     int num;
 
     //可充电储能子系统各温度探针检测到的温度值
-    @PacketField(index = 3,lenExpr = "n",valExpr = "x-40")
+    @PacketField(index = 3,lenExpr = "n",valExpr = "x-40",singleLen = 1)
     short[] temperatures;
 
     public short getNo() {

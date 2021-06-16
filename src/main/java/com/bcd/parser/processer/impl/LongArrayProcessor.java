@@ -18,8 +18,11 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
 
     @Override
     public long[] process(ByteBuf data, FieldProcessContext processContext){
+        int len =processContext.getLen();
+        if(len==0){
+            return new long[0];
+        }
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
-        int len= processContext.getLen();
         long[] res=new long[len/singleLen];
         //优化处理 int->long
         if(singleLen==4){
@@ -64,15 +67,18 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
     @Override
     public void deProcess(long[] data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
+        int len = data.length;
+        if(len ==0){
+            return;
+        }
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
-
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         long[] newData;
         if(valExpr==null){
             newData=data;
         }else{
-            newData=new long[data.length];
-            for(int i=0;i<data.length;i++){
+            newData=new long[len];
+            for(int i = 0; i< len; i++){
                 if(ParserUtil.checkInvalidOrExceptionVal_long(data[i],singleLen)){
                     newData[i]=(long) RpnUtil.deCalc(valExpr,data[i],0);
                 }else{

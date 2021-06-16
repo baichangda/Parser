@@ -17,8 +17,11 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
     private final static int BYTE_LENGTH=2;
     @Override
     public short[] process(ByteBuf data, FieldProcessContext processContext) {
+        int len =processContext.getLen();
+        if(len==0){
+            return new short[0];
+        }
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
-        int len=processContext.getLen();
         short[] res;
         //优化处理 byte->short
         if(singleLen==1){
@@ -65,15 +68,18 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
     @Override
     public void deProcess(short[] data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
+        int len = data.length;
+        if(len ==0){
+            return;
+        }
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
-
         double[] valExpr = processContext.getFieldInfo().getValExpr();
         short[] newData;
         if(valExpr==null){
             newData=data;
         }else{
-            newData=new short[data.length];
-            for(int i=0;i<data.length;i++){
+            newData=new short[len];
+            for(int i = 0; i< len; i++){
                 if(ParserUtil.checkInvalidOrExceptionVal_short(data[i], singleLen)){
                     newData[i]=(short) RpnUtil.deCalc(valExpr,data[i],0);
                 }else{

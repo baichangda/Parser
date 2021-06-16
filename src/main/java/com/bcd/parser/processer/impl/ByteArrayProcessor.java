@@ -18,14 +18,18 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
 
     @Override
     public byte[] process(ByteBuf data, FieldProcessContext processContext)  {
+        int len =processContext.getLen();
+        if(len==0){
+            return new byte[0];
+        }
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
         //读取原始值
         byte[] res;
         if(singleLen==BYTE_LENGTH){
-            res=new byte[processContext.getLen()];
+            res=new byte[len];
             data.readBytes(res);
         }else if(singleLen>BYTE_LENGTH){
-            res=new byte[processContext.getLen()/singleLen];
+            res=new byte[len/singleLen];
             int diff=singleLen-BYTE_LENGTH;
             for(int i=0;i<res.length;i++){
                 data.skipBytes(diff);
@@ -50,6 +54,10 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
     @Override
     public void deProcess(byte[] data, ByteBuf dest, FieldDeProcessContext processContext) {
         Objects.requireNonNull(data);
+        int len = data.length;
+        if(len ==0){
+            return;
+        }
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
         //值表达式处理
         double[] valExpr = processContext.getFieldInfo().getValExpr();
@@ -57,8 +65,8 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
         if(valExpr==null){
             newData=data;
         }else{
-            newData=new byte[data.length];
-            for(int i=0;i<data.length;i++){
+            newData=new byte[len];
+            for(int i = 0; i< len; i++){
                 //验证异常、无效值
                 if(ParserUtil.checkInvalidOrExceptionVal_byte(data[i])){
                     newData[i]=(byte) RpnUtil.deCalc(valExpr,data[i],0);

@@ -21,32 +21,32 @@ public class VehicleAlarmData {
     short chargeBadNum;
 
     //可充电储能装置故障代码列表
-    @PacketField(index = 4,lenExpr = "a*4")
-    int[] chargeBadCodes;
+    @PacketField(index = 4,lenExpr = "a*4",singleLen = 4)
+    long[] chargeBadCodes;
 
     //驱动电机故障总数
     @PacketField(index = 5,len = 1,var = 'b')
     short driverBadNum;
 
     //驱动电机故障代码列表
-    @PacketField(index = 6,lenExpr = "b*4")
-    int[] driverBadCodes;
+    @PacketField(index = 6,lenExpr = "b*4",singleLen = 4)
+    long[] driverBadCodes;
 
     //驱动电机故障总数
     @PacketField(index = 7,len = 1,var = 'c')
     short engineBadNum;
 
     //驱动电机故障代码列表
-    @PacketField(index = 8,lenExpr = "c*4")
-    int[] engineBadCodes;
+    @PacketField(index = 8,lenExpr = "c*4",singleLen = 4)
+    long[] engineBadCodes;
 
     //其他故障总数
     @PacketField(index = 9,len = 1,var = 'd')
     short otherBadNum;
 
     //其他故障代码列表
-    @PacketField(index = 10,lenExpr = "d*4")
-    int[] otherBadCodes;
+    @PacketField(index = 10,lenExpr = "d*4",singleLen = 4)
+    long[] otherBadCodes;
 
     public short getMaxAlarmLevel() {
         return maxAlarmLevel;
@@ -72,11 +72,11 @@ public class VehicleAlarmData {
         this.chargeBadNum = chargeBadNum;
     }
 
-    public int[] getChargeBadCodes() {
+    public long[] getChargeBadCodes() {
         return chargeBadCodes;
     }
 
-    public void setChargeBadCodes(int[] chargeBadCodes) {
+    public void setChargeBadCodes(long[] chargeBadCodes) {
         this.chargeBadCodes = chargeBadCodes;
     }
 
@@ -88,11 +88,11 @@ public class VehicleAlarmData {
         this.driverBadNum = driverBadNum;
     }
 
-    public int[] getDriverBadCodes() {
+    public long[] getDriverBadCodes() {
         return driverBadCodes;
     }
 
-    public void setDriverBadCodes(int[] driverBadCodes) {
+    public void setDriverBadCodes(long[] driverBadCodes) {
         this.driverBadCodes = driverBadCodes;
     }
 
@@ -104,11 +104,11 @@ public class VehicleAlarmData {
         this.engineBadNum = engineBadNum;
     }
 
-    public int[] getEngineBadCodes() {
+    public long[] getEngineBadCodes() {
         return engineBadCodes;
     }
 
-    public void setEngineBadCodes(int[] engineBadCodes) {
+    public void setEngineBadCodes(long[] engineBadCodes) {
         this.engineBadCodes = engineBadCodes;
     }
 
@@ -120,11 +120,11 @@ public class VehicleAlarmData {
         this.otherBadNum = otherBadNum;
     }
 
-    public int[] getOtherBadCodes() {
+    public long[] getOtherBadCodes() {
         return otherBadCodes;
     }
 
-    public void setOtherBadCodes(int[] otherBadCodes) {
+    public void setOtherBadCodes(long[] otherBadCodes) {
         this.otherBadCodes = otherBadCodes;
     }
 }
