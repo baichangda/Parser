@@ -83,7 +83,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
             for(int i=0;i<data.length;i++){
                 //验证异常、无效值
                 if(ParserUtil.checkInvalidOrExceptionVal_int((int)data[i],singleLen)){
-                    newData[i]=(float) RpnUtil.deCalc(valExpr,data[i],0);
+                    newData[i]=(float) RpnUtil.deCalc(valExpr,data[i],-1);
                 }else{
                     newData[i]=data[i];
                 }

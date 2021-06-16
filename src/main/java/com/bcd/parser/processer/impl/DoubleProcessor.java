@@ -62,7 +62,7 @@ public class DoubleProcessor extends FieldProcessor<Double> {
         }else{
             //验证异常、无效值
             if(ParserUtil.checkInvalidOrExceptionVal_long(data.longValue(),processContext.getLen())){
-                newData = (long) RpnUtil.deCalc(valExpr,data,0);
+                newData = (long) RpnUtil.deCalc(valExpr,data,-1);
             }else {
                 newData=data.longValue();
             }

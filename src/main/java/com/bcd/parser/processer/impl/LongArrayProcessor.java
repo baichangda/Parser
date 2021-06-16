@@ -74,7 +74,7 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
             newData=new long[data.length];
             for(int i=0;i<data.length;i++){
                 if(ParserUtil.checkInvalidOrExceptionVal_long(data[i],singleLen)){
-                    newData[i]=(long) RpnUtil.deCalc(valExpr,data[i],0);
+                    newData[i]=(long) RpnUtil.deCalc(valExpr,data[i],-1);
                 }else{
                     newData[i]=data[i];
                 }

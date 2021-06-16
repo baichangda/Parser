@@ -54,7 +54,7 @@ public class ByteProcessor extends FieldProcessor<Byte> {
             if(ParserUtil.checkInvalidOrExceptionVal_byte(data)){
                 newData=data;
             }else {
-                newData = (byte) RpnUtil.deCalc(valExpr,data,0);
+                newData = (byte) RpnUtil.deCalc(valExpr,data,-1);
             }
         }
         int len=processContext.getLen();
