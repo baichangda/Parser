@@ -28,15 +28,10 @@ public class FloatProcessor extends FieldProcessor<Float> {
         }
         //值表达式处理
         double[] valExpr = processContext.getFieldInfo().getValExpr_double();
-        if(valExpr==null){
+        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_int(res,len)){
             return (float)res;
         }else{
-            //验证异常、无效值
-            if(ParserUtil.checkInvalidOrExceptionVal_int(res,len)){
-                return (float) RpnUtil.calc_double(valExpr,res,processContext.getFieldInfo().getValPrecision());
-            }else{
-                return (float)res;
-            }
+            return (float) RpnUtil.calc_double(valExpr,res,processContext.getFieldInfo().getValPrecision());
         }
     }
 
@@ -45,15 +40,10 @@ public class FloatProcessor extends FieldProcessor<Float> {
         //值表达式处理
         double[] valExpr = processContext.getFieldInfo().getValExpr_double();
         int newData;
-        if(valExpr==null){
+        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_int(data.intValue(),processContext.getLen())){
             newData=data.intValue();
         }else{
-            //验证异常、无效值
-            if(ParserUtil.checkInvalidOrExceptionVal_int(data.intValue(),processContext.getLen())){
-                newData = (int) RpnUtil.deCalc_double_0(valExpr,data);
-            }else {
-                newData=data.intValue();
-            }
+            newData = (int) RpnUtil.deCalc_double_0(valExpr,data);
         }
         int len=processContext.getLen();
         if (len==2){

@@ -27,15 +27,10 @@ public class DoubleProcessor extends FieldProcessor<Double> {
         }
         //值表达式处理
         double[] valExpr = processContext.getFieldInfo().getValExpr_double();
-        if (valExpr == null) {
+        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_long(res, len)) {
             return (double) res;
         } else {
-            //验证异常、无效值
-            if (ParserUtil.checkInvalidOrExceptionVal_long(res, len)) {
-                return RpnUtil.calc_double(valExpr, res, processContext.getFieldInfo().getValPrecision());
-            } else {
-                return (double) res;
-            }
+            return RpnUtil.calc_double(valExpr, res, processContext.getFieldInfo().getValPrecision());
         }
     }
 
@@ -44,15 +39,10 @@ public class DoubleProcessor extends FieldProcessor<Double> {
         double[] valExpr = processContext.getFieldInfo().getValExpr_double();
         long newData;
         //值表达式处理
-        if (valExpr == null) {
+        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_long(data.longValue(), processContext.getLen())) {
             newData = data.longValue();
         } else {
-            //验证异常、无效值
-            if (ParserUtil.checkInvalidOrExceptionVal_long(data.longValue(), processContext.getLen())) {
-                newData = (long) RpnUtil.deCalc_double_0(valExpr, data);
-            } else {
-                newData = data.longValue();
-            }
+            newData = (long) RpnUtil.deCalc_double_0(valExpr, data);
         }
         //写入原始值
         int len = processContext.getLen();

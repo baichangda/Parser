@@ -26,15 +26,10 @@ public class ByteProcessor extends FieldProcessor<Byte> {
         }
         //值表达式处理
         int[] valExpr = processContext.getFieldInfo().getValExpr_int();
-        if(valExpr==null){
+        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_byte(res)){
             return res;
         }else{
-            //验证异常、无效值
-            if(ParserUtil.checkInvalidOrExceptionVal_byte(res)){
-                return RpnUtil.calc_byte(valExpr,res);
-            }else{
-                return res;
-            }
+            return RpnUtil.calc_byte(valExpr,res);
         }
     }
 
@@ -42,14 +37,10 @@ public class ByteProcessor extends FieldProcessor<Byte> {
     public void deProcess(Byte data, ByteBuf dest, FieldDeProcessContext processContext) {
         int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         byte newData;
-        if(valExpr==null){
+        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_byte(data)){
             newData=data;
         }else{
-            if(ParserUtil.checkInvalidOrExceptionVal_byte(data)){
-                newData=data;
-            }else {
-                newData = RpnUtil.deCalc_byte(valExpr,data);
-            }
+            newData = RpnUtil.deCalc_byte(valExpr,data);
         }
         int len=processContext.getLen();
         if(len==BYTE_LENGTH){

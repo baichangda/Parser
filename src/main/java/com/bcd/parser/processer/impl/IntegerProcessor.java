@@ -25,14 +25,10 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
         int[] valExpr = processContext.getFieldInfo().getValExpr_int();
-        if (valExpr == null) {
+        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_int(res, len)) {
             return res;
         } else {
-            if (ParserUtil.checkInvalidOrExceptionVal_int(res, len)) {
-                return RpnUtil.calc_int(valExpr, res);
-            } else {
-                return res;
-            }
+            return RpnUtil.calc_int(valExpr, res);
         }
     }
 
@@ -40,14 +36,10 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
     public void deProcess(Integer data, ByteBuf dest, FieldDeProcessContext processContext) {
         int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         int newData;
-        if (valExpr == null) {
+        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_int(data, processContext.getLen())) {
             newData = data;
         } else {
-            if (ParserUtil.checkInvalidOrExceptionVal_int(data, processContext.getLen())) {
-                newData = RpnUtil.deCalc_int(valExpr, data);
-            } else {
-                newData = data;
-            }
+            newData = RpnUtil.deCalc_int(valExpr, data);
         }
         int len = processContext.getLen();
         if (len==2){

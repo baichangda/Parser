@@ -25,14 +25,10 @@ public class ShortProcessor extends FieldProcessor<Short> {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
         int[] valExpr = processContext.getFieldInfo().getValExpr_int();
-        if (valExpr == null) {
+        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_short(res, len)) {
             return res;
         } else {
-            if (ParserUtil.checkInvalidOrExceptionVal_short(res, len)) {
-                return RpnUtil.calc_short(valExpr, res);
-            } else {
-                return res;
-            }
+            return RpnUtil.calc_short(valExpr, res);
         }
     }
 
@@ -40,14 +36,10 @@ public class ShortProcessor extends FieldProcessor<Short> {
     public void deProcess(Short data, ByteBuf dest, FieldDeProcessContext processContext) {
         int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         short newData;
-        if (valExpr == null) {
+        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_short(data, processContext.getLen())) {
             newData = data;
         } else {
-            if (ParserUtil.checkInvalidOrExceptionVal_short(data, processContext.getLen())) {
-                newData = RpnUtil.deCalc_short(valExpr, data);
-            } else {
-                newData = data;
-            }
+            newData = RpnUtil.deCalc_short(valExpr, data);
         }
         int len = processContext.getLen();
         if (len==1){

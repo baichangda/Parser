@@ -25,14 +25,10 @@ public class LongProcessor extends FieldProcessor<Long> {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
         int[] valExpr = processContext.getFieldInfo().getValExpr_int();
-        if(valExpr==null){
+        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_long(res,len)){
             return res;
         }else{
-            if(ParserUtil.checkInvalidOrExceptionVal_long(res,len)){
-                return RpnUtil.calc_long(valExpr,res);
-            }else{
-                return res;
-            }
+            return RpnUtil.calc_long(valExpr,res);
         }
     }
 
@@ -40,14 +36,10 @@ public class LongProcessor extends FieldProcessor<Long> {
     public void deProcess(Long data, ByteBuf dest, FieldDeProcessContext processContext) {
         int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         long newData;
-        if(valExpr==null){
+        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_long(data,processContext.getLen())){
             newData=data;
         }else{
-            if(ParserUtil.checkInvalidOrExceptionVal_long(data,processContext.getLen())){
-                newData = RpnUtil.deCalc_long(valExpr,data);
-            }else {
-                newData=data;
-            }
+            newData = RpnUtil.deCalc_long(valExpr,data);
         }
         int len=processContext.getLen();
         if (len==4){
