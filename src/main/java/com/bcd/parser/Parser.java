@@ -252,6 +252,7 @@ public abstract class Parser {
         FieldInfo[] fieldInfos = packetInfo.getFieldInfos();
         for (int i = 0, end = fieldInfos.length; i < end; i++) {
             FieldInfo fieldInfo = fieldInfos[i];
+
             /**
              * 代表 {@link PacketField#lenExpr()}
              */
@@ -267,7 +268,6 @@ public abstract class Parser {
                     len = RpnUtil.calcRPN_char_int(lenRpn, vals);
                 }
             }
-            processContext.setLen(len);
 
             /**
              * 检查是否跳过解析
@@ -277,6 +277,9 @@ public abstract class Parser {
                 data.skipBytes(len);
                 continue;
             }
+
+            processContext.setLen(len);
+            processContext.setFieldInfo(fieldInfo);
 
             /**
              * 代表 {@link PacketField#listLenExpr()}
@@ -292,8 +295,6 @@ public abstract class Parser {
                 }
                 processContext.setListLen(listLen);
             }
-
-            processContext.setFieldInfo(fieldInfo);
 
             Object val;
             //过滤掉对象的日志
