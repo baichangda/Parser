@@ -7,8 +7,6 @@ import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 
-import java.util.Objects;
-
 /**
  * 解析int[]类型字段
  */
@@ -22,7 +20,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
             return new int[0];
         }
         int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         //优化处理 short->int
         if(singleLen==2){
             int[] res = new int[len / 2];
@@ -32,7 +30,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
                 if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
                     res[i] = cur;
                 } else {
-                    res[i] = (int) RpnUtil.calc_0(valExpr, res[i]);
+                    res[i] = RpnUtil.calc_int(valExpr, res[i]);
                 }
             }
             return res;
@@ -44,7 +42,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
                 if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
                     res[i] = cur;
                 } else {
-                    res[i] = (int) RpnUtil.calc_0(valExpr, res[i]);
+                    res[i] = RpnUtil.calc_int(valExpr, res[i]);
                 }
             }
             return res;
@@ -61,7 +59,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
         }
         int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
         //值表达式处理
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         int[] newData;
         if (valExpr == null) {
             newData = data;
@@ -70,7 +68,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
             for (int i = 0; i < len; i++) {
                 //验证异常、无效值
                 if (ParserUtil.checkInvalidOrExceptionVal_int(data[i], singleLen)) {
-                    newData[i] = (int) RpnUtil.deCalc_0(valExpr, data[i]);
+                    newData[i] = RpnUtil.deCalc_int(valExpr, data[i]);
                 } else {
                     newData[i] = data[i];
                 }

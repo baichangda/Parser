@@ -87,7 +87,8 @@ public class FieldInfo {
      * 对应 {@link PacketField#valExpr()}表达式
      * [a,b]
      */
-    private double[] valExpr;
+    private double[] valExpr_double;
+    private int[] valExpr_int;
 
     /**
      * 对应 {@link PacketField#valPrecision()}表达式
@@ -224,12 +225,12 @@ public class FieldInfo {
         this.packetField_valExpr = packetField_valExpr;
     }
 
-    public double[] getValExpr() {
-        return valExpr;
+    public double[] getValExpr_double() {
+        return valExpr_double;
     }
 
-    public void setValExpr(double[] valExpr) {
-        this.valExpr = valExpr;
+    public void setValExpr_double(double[] valExpr_double) {
+        this.valExpr_double = valExpr_double;
     }
 
     public int getPacketField_var_int() {
@@ -286,5 +287,13 @@ public class FieldInfo {
 
     public void setUnsafeType(int unsafeType) {
         this.unsafeType = unsafeType;
+    }
+
+    public int[] getValExpr_int() {
+        return valExpr_int;
+    }
+
+    public void setValExpr_int(int[] valExpr_int) {
+        this.valExpr_int = valExpr_int;
     }
 }

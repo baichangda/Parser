@@ -7,8 +7,6 @@ import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 
-import java.util.Objects;
-
 /**
  * 解析int、Integer类型字段
  */
@@ -26,12 +24,12 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);
         }
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         if (valExpr == null) {
             return res;
         } else {
             if (ParserUtil.checkInvalidOrExceptionVal_int(res, len)) {
-                return (int) RpnUtil.calc_0(valExpr, res);
+                return RpnUtil.calc_int(valExpr, res);
             } else {
                 return res;
             }
@@ -40,13 +38,13 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
 
     @Override
     public void deProcess(Integer data, ByteBuf dest, FieldDeProcessContext processContext) {
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         int newData;
         if (valExpr == null) {
             newData = data;
         } else {
             if (ParserUtil.checkInvalidOrExceptionVal_int(data, processContext.getLen())) {
-                newData = (int) RpnUtil.deCalc_0(valExpr, data);
+                newData = RpnUtil.deCalc_int(valExpr, data);
             } else {
                 newData = data;
             }

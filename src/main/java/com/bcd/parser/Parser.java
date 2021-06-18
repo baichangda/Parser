@@ -201,12 +201,18 @@ public abstract class Parser {
      * 初始化{@link #packetInfoCache}
      */
     private void initPacketInfo() {
+        int[] processorCount=new int[fieldProcessors.length];
         List<Class> classes = getParsableClass();
         for (Class clazz : classes) {
-            packetInfoCache.put(clazz, ParserUtil.toPacketInfo(clazz, fieldProcessors));
+            packetInfoCache.put(clazz, ParserUtil.toPacketInfo(clazz, fieldProcessors,processorCount));
         }
         if (logger.isInfoEnabled()) {
-            logger.info("init packetInfo succeed,follow list:\n{}", packetInfoCache.values().stream().map(e -> e.getClazz().getName()).reduce((e1, e2) -> e1 + "\n" + e2).orElse(""));
+            logger.info("=======================init packetInfo succeed,follow list:\n{}", packetInfoCache.values().stream().map(e -> e.getClazz().getName()).reduce((e1, e2) -> e1 + "\n" + e2).orElse(""));
+        }
+        //打印processor处理数量
+        logger.info("=======================processor info:");
+        for (int i = 0; i < fieldProcessors.length; i++) {
+            logger.info("{}:[{}]",fieldProcessors[i].getClass().getName(),processorCount[i]);
         }
     }
 

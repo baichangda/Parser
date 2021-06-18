@@ -7,8 +7,6 @@ import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 
-import java.util.Objects;
-
 /**
  * 解析short[]类型字段
  */
@@ -23,7 +21,7 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
         }
         int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
         //值表达式处理
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         //优化处理 byte->short
         if (singleLen==1){
             short[] res = new short[len];
@@ -32,7 +30,7 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
                 if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_short(cur, singleLen)) {
                     res[i] = cur;
                 } else {
-                    res[i] = (short) RpnUtil.calc_0(valExpr, cur);
+                    res[i] = RpnUtil.calc_short(valExpr, cur);
                 }
             }
             return res;
@@ -44,7 +42,7 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
                 if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_short(cur, singleLen)) {
                     res[i] = cur;
                 } else {
-                    res[i] = (short) RpnUtil.calc_0(valExpr, cur);
+                    res[i] = RpnUtil.calc_short(valExpr, cur);
                 }
             }
             return res;
@@ -60,7 +58,7 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
             return;
         }
         int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         short[] newData;
         if (valExpr == null) {
             newData = data;
@@ -68,7 +66,7 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
             newData = new short[len];
             for (int i = 0; i < len; i++) {
                 if (ParserUtil.checkInvalidOrExceptionVal_short(data[i], singleLen)) {
-                    newData[i] = (short) RpnUtil.deCalc_0(valExpr, data[i]);
+                    newData[i] = RpnUtil.deCalc_short(valExpr, data[i]);
                 } else {
                     newData[i] = data[i];
                 }

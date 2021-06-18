@@ -8,8 +8,6 @@ import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 
-import java.util.Objects;
-
 /**
  * 解析byte、Byte类型字段
  */
@@ -27,13 +25,13 @@ public class ByteProcessor extends FieldProcessor<Byte> {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
         //值表达式处理
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         if(valExpr==null){
             return res;
         }else{
             //验证异常、无效值
             if(ParserUtil.checkInvalidOrExceptionVal_byte(res)){
-                return (byte)RpnUtil.calc_0(valExpr,res);
+                return RpnUtil.calc_byte(valExpr,res);
             }else{
                 return res;
             }
@@ -42,7 +40,7 @@ public class ByteProcessor extends FieldProcessor<Byte> {
 
     @Override
     public void deProcess(Byte data, ByteBuf dest, FieldDeProcessContext processContext) {
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         byte newData;
         if(valExpr==null){
             newData=data;
@@ -50,7 +48,7 @@ public class ByteProcessor extends FieldProcessor<Byte> {
             if(ParserUtil.checkInvalidOrExceptionVal_byte(data)){
                 newData=data;
             }else {
-                newData = (byte) RpnUtil.deCalc_0(valExpr,data);
+                newData = RpnUtil.deCalc_byte(valExpr,data);
             }
         }
         int len=processContext.getLen();

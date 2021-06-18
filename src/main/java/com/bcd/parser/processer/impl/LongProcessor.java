@@ -7,8 +7,6 @@ import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 
-import java.util.Objects;
-
 /**
  * 解析long、Long类型字段
  */
@@ -26,12 +24,12 @@ public class LongProcessor extends FieldProcessor<Long> {
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);
         }
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         if(valExpr==null){
             return res;
         }else{
             if(ParserUtil.checkInvalidOrExceptionVal_long(res,len)){
-                return (long)RpnUtil.calc_0(valExpr,res);
+                return RpnUtil.calc_long(valExpr,res);
             }else{
                 return res;
             }
@@ -40,13 +38,13 @@ public class LongProcessor extends FieldProcessor<Long> {
 
     @Override
     public void deProcess(Long data, ByteBuf dest, FieldDeProcessContext processContext) {
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         long newData;
         if(valExpr==null){
             newData=data;
         }else{
             if(ParserUtil.checkInvalidOrExceptionVal_long(data,processContext.getLen())){
-                newData = (long) RpnUtil.deCalc_0(valExpr,data);
+                newData = RpnUtil.deCalc_long(valExpr,data);
             }else {
                 newData=data;
             }

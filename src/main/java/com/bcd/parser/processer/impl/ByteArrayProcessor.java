@@ -7,8 +7,6 @@ import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 
-import java.util.Objects;
-
 /**
  * 解析byte[]类型字段
  */
@@ -24,13 +22,13 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
         int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
         //读取原始值
         if (singleLen == BYTE_LENGTH) {
-            double[] valExpr = processContext.getFieldInfo().getValExpr();
+            int[] valExpr = processContext.getFieldInfo().getValExpr_int();
             byte[] res = new byte[len];
             data.readBytes(res);
             if (valExpr != null) {
                 for (int i = 0; i < len; i++) {
                     if(ParserUtil.checkInvalidOrExceptionVal_byte(res[i])){
-                        res[i] = (byte) RpnUtil.calc_0(valExpr, res[i]);
+                        res[i] = RpnUtil.calc_byte(valExpr, res[i]);
                     }
                 }
             }
@@ -49,7 +47,7 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
         }
         int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
         //值表达式处理
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         byte[] newData;
         if (valExpr == null) {
             newData = data;
@@ -58,7 +56,7 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
             for (int i = 0; i < len; i++) {
                 //验证异常、无效值
                 if (ParserUtil.checkInvalidOrExceptionVal_byte(data[i])) {
-                    newData[i] = (byte) RpnUtil.deCalc_0(valExpr, data[i]);
+                    newData[i] = RpnUtil.deCalc_byte(valExpr, data[i]);
                 } else {
                     newData[i] = data[i];
                 }

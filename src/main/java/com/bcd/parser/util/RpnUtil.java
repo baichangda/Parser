@@ -229,7 +229,7 @@ public class RpnUtil {
      * 顺序可以调整、可以加上括号
      *
      * @param expr
-     * @return [a,b]
+     * @return [a, b]
      */
     public static double[] parseSimpleExpr(String expr) {
         double a = 1;
@@ -327,8 +327,91 @@ public class RpnUtil {
         System.out.println(Arrays.toString(parseSimpleExpr("(-0.01)*x")));
     }
 
-    public static double calc_0(double[] arr, double x) {
-        double res=arr[0] * x + arr[1];
+    /**
+     * 计算 y=ax+b
+     * @param arr
+     * @param x
+     * @return
+     */
+    public static byte calc_byte(int[] arr, byte x) {
+        return (byte) (x * arr[0] + arr[1]);
+    }
+
+    /**
+     * 计算 y=ax+b
+     * @param arr
+     * @param x
+     * @return
+     */
+    public static long calc_long(int[] arr, long x) {
+        return x * arr[0] + arr[1];
+    }
+
+    /**
+     * 计算 y=ax+b
+     * @param arr
+     * @param x
+     * @return
+     */
+    public static int calc_int(int[] arr, int x) {
+        return x * arr[0] + arr[1];
+    }
+
+    /**
+     * 计算 y=ax+b
+     * @param arr
+     * @param x
+     * @return
+     */
+    public static short calc_short(int[] arr, short x) {
+        return (short) (x * arr[0] + arr[1]);
+    }
+
+    /**
+     * 计算x=(y-b)/a
+     * @param arr
+     * @param y
+     * @return
+     */
+    public static byte deCalc_byte(int[] arr, byte y) {
+        return (byte) ((y - arr[1]) / arr[0]);
+    }
+    /**
+     * 计算x=(y-b)/a
+     * @param arr
+     * @param y
+     * @return
+     */
+    public static long deCalc_long(int[] arr, long y) {
+        return (y - arr[1]) / arr[0];
+    }
+    /**
+     * 计算x=(y-b)/a
+     * @param arr
+     * @param y
+     * @return
+     */
+    public static int deCalc_int(int[] arr, int y) {
+        return (y - arr[1]) / arr[0];
+    }
+    /**
+     * 计算x=(y-b)/a
+     * @param arr
+     * @param y
+     * @return
+     */
+    public static short deCalc_short(int[] arr, short y) {
+        return (short) ((y - arr[1]) / arr[0]);
+    }
+    /**
+     * 计算x=(y-b)/a
+     * 精度为0
+     * @param arr
+     * @param y
+     * @return
+     */
+    public static double deCalc_double_0(double[] arr, double y) {
+        double res = (y - arr[1]) / arr[0];
         if (res > 0) {
             return Math.round(res);
         } else if (res < 0) {
@@ -338,25 +421,28 @@ public class RpnUtil {
         }
     }
 
-    public static double deCalc_0(double[] arr, double y) {
-        double res=(y - arr[1]) / arr[0];
-        if (res > 0) {
-            return Math.round(res);
-        } else if (res < 0) {
-            return -Math.round(-res);
-        } else {
-            return 0d;
-        }
+    /**
+     * 计算 y=ax+b
+     * @param arr
+     * @param x
+     * @param precision 精度
+     * @return
+     */
+    public static double calc_double(double[] arr, double x, int precision) {
+        return format(arr[0] * x + arr[1], precision);
     }
 
-    public static double calc(double[] arr, double x, int precision) {
-        return format(arr[0] * x + arr[1],precision);
-    }
 
-    public static double deCalc(double[] arr, double y, int precision) {
-        return format((y - arr[1]) / arr[0],precision);
+    /**
+     * 计算x=(y-b)/a
+     * @param arr
+     * @param y
+     * @param precision 精度
+     * @return
+     */
+    public static double deCalc_double(double[] arr, double y, int precision) {
+        return format((y - arr[1]) / arr[0], precision);
     }
-
 
 
     private static double format(double res, int precision) {

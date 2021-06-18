@@ -7,8 +7,6 @@ import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 
-import java.util.Objects;
-
 /**
  * 解析long[]类型字段
  */
@@ -22,7 +20,7 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
             return new long[0];
         }
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         //优化处理 int->long
         if(singleLen==4){
             long[] res=new long[len/4];
@@ -32,7 +30,7 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
                 if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_long(cur,singleLen)){
                     res[i]=cur;
                 }else {
-                    res[i] = (long) RpnUtil.calc_0(valExpr, res[i]);
+                    res[i] = RpnUtil.calc_long(valExpr, res[i]);
                 }
             }
             return res;
@@ -44,7 +42,7 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
                 if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_long(cur,singleLen)){
                     res[i]=cur;
                 }else {
-                    res[i] = (long) RpnUtil.calc_0(valExpr, res[i]);
+                    res[i] = RpnUtil.calc_long(valExpr, res[i]);
                 }
             }
             return res;
@@ -60,7 +58,7 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
             return;
         }
         int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         long[] newData;
         if(valExpr==null){
             newData=data;
@@ -68,7 +66,7 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
             newData=new long[len];
             for(int i = 0; i< len; i++){
                 if(ParserUtil.checkInvalidOrExceptionVal_long(data[i],singleLen)){
-                    newData[i]=(long) RpnUtil.deCalc_0(valExpr,data[i]);
+                    newData[i]=RpnUtil.deCalc_long(valExpr,data[i]);
                 }else{
                     newData[i]=data[i];
                 }

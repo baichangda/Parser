@@ -7,8 +7,6 @@ import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 
-import java.util.Objects;
-
 /**
  * 解析double、Double类型字段
  * 读取为long类型再转换为double
@@ -28,13 +26,13 @@ public class DoubleProcessor extends FieldProcessor<Double> {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
         //值表达式处理
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        double[] valExpr = processContext.getFieldInfo().getValExpr_double();
         if (valExpr == null) {
             return (double) res;
         } else {
             //验证异常、无效值
             if (ParserUtil.checkInvalidOrExceptionVal_long(res, len)) {
-                return RpnUtil.calc(valExpr, res, processContext.getFieldInfo().getValPrecision());
+                return RpnUtil.calc_double(valExpr, res, processContext.getFieldInfo().getValPrecision());
             } else {
                 return (double) res;
             }
@@ -43,7 +41,7 @@ public class DoubleProcessor extends FieldProcessor<Double> {
 
     @Override
     public void deProcess(Double data, ByteBuf dest, FieldDeProcessContext processContext) {
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        double[] valExpr = processContext.getFieldInfo().getValExpr_double();
         long newData;
         //值表达式处理
         if (valExpr == null) {
@@ -51,7 +49,7 @@ public class DoubleProcessor extends FieldProcessor<Double> {
         } else {
             //验证异常、无效值
             if (ParserUtil.checkInvalidOrExceptionVal_long(data.longValue(), processContext.getLen())) {
-                newData = (long) RpnUtil.deCalc_0(valExpr, data);
+                newData = (long) RpnUtil.deCalc_double_0(valExpr, data);
             } else {
                 newData = data.longValue();
             }

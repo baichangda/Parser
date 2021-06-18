@@ -9,6 +9,8 @@ import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -20,6 +22,8 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class ParserUtil {
+
+    static Logger logger= LoggerFactory.getLogger(ParserUtil.class);
 
     public static BaseRuntimeException newLenNotSupportException(FieldDeProcessContext processContext){
         return BaseRuntimeException.getException("class[{}] field[{}] len[{}] not support",
@@ -164,7 +168,7 @@ public class ParserUtil {
      * @param processors
      * @return
      */
-    public static PacketInfo toPacketInfo(Class clazz, FieldProcessor[] processors) {
+    public static PacketInfo toPacketInfo(Class clazz, FieldProcessor[] processors,int[]processorCount) {
         PacketInfo packetInfo = new PacketInfo();
         packetInfo.setClazz(clazz);
         //设置无参构造方法
@@ -304,10 +308,16 @@ public class ParserUtil {
                 processorIndex = findProcessorIndexByFieldProcessorClass(packetField.processorClass(), processors);
             }
 
+            //统计各个processor处理字段数量
+            if(processorCount!=null){
+                processorCount[processorIndex]+=1;
+            }
+
             //转换逆波兰表达式
             Object[] lenRpn = null;
             Object[] listLenRpn = null;
-            double[] valExpr = null;
+            double[] valExpr_double = null;
+            int[] valExpr_int = null;
             if (!packetField.lenExpr().isEmpty()) {
                 lenRpn = RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.lenExpr()));
             }
@@ -316,7 +326,8 @@ public class ParserUtil {
             }
             if (!packetField.valExpr().isEmpty()) {
                 try {
-                    valExpr = RpnUtil.parseSimpleExpr(packetField.valExpr());
+                    valExpr_double = RpnUtil.parseSimpleExpr(packetField.valExpr());
+                    valExpr_int=new int[]{(int)valExpr_double[0],(int)valExpr_double[1]};
                 } catch (Exception ex) {
                     throw BaseRuntimeException.getException("class[{}] field[{}] valExpr[{}] ot support", clazz.getName(), field.getName(), packetField.valExpr());
                 }
@@ -361,7 +372,8 @@ public class ParserUtil {
             fieldInfo.setProcessorIndex(processorIndex);
             fieldInfo.setLenRpn(lenRpn);
             fieldInfo.setListLenRpn(listLenRpn);
-            fieldInfo.setValExpr(valExpr);
+            fieldInfo.setValExpr_double(valExpr_double);
+            fieldInfo.setValExpr_int(valExpr_int);
             fieldInfo.setValPrecision(packetField.valPrecision());
             fieldInfo.setPacketField_index(packetField.index());
             fieldInfo.setPacketField_len(packetField.len());
@@ -413,6 +425,8 @@ public class ParserUtil {
                 }
             }
         }
+
+
 
         return packetInfo;
     }

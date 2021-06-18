@@ -7,8 +7,6 @@ import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
 
-import java.util.Objects;
-
 /**
  * 解析short、Short类型字段
  */
@@ -26,12 +24,12 @@ public class ShortProcessor extends FieldProcessor<Short> {
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);
         }
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         if (valExpr == null) {
             return res;
         } else {
             if (ParserUtil.checkInvalidOrExceptionVal_short(res, len)) {
-                return (short) RpnUtil.calc_0(valExpr, res);
+                return RpnUtil.calc_short(valExpr, res);
             } else {
                 return res;
             }
@@ -40,13 +38,13 @@ public class ShortProcessor extends FieldProcessor<Short> {
 
     @Override
     public void deProcess(Short data, ByteBuf dest, FieldDeProcessContext processContext) {
-        double[] valExpr = processContext.getFieldInfo().getValExpr();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         short newData;
         if (valExpr == null) {
             newData = data;
         } else {
             if (ParserUtil.checkInvalidOrExceptionVal_short(data, processContext.getLen())) {
-                newData = (short) RpnUtil.deCalc_0(valExpr, data);
+                newData = RpnUtil.deCalc_short(valExpr, data);
             } else {
                 newData = data;
             }
