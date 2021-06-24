@@ -101,6 +101,7 @@ public class FieldInfo {
     private long unsafeOffset;
 
     /**
+     * {@link com.bcd.parser.util.UnsafeUtil#fieldType(Field)} 得出类型
      *  字段基础类型、如果不属于java基础类型、则为0
      *  1:byte
      *  2:short
