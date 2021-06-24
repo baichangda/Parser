@@ -23,6 +23,7 @@ public class Parser_gb32960 extends Parser{
     static Logger logger= LoggerFactory.getLogger(Parser_gb32960.class);
 
     public Parser_gb32960() {
+        super();
     }
 
     @Override
@@ -37,7 +38,6 @@ public class Parser_gb32960 extends Parser{
 
     public static void main(String[] args) throws Exception{
         Parser parser= new Parser_gb32960();
-        parser.setPrintStack(false);
         parser.init();
 
         String data="232303FE4C534A4132343033304853313932393639010135" +

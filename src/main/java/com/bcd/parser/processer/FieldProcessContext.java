@@ -35,6 +35,14 @@ public class FieldProcessContext {
      */
     FieldProcessContext parentContext;
 
+    public FieldProcessContext(Object instance, FieldProcessContext parentContext) {
+        this.instance = instance;
+        this.parentContext = parentContext;
+    }
+
+    public FieldProcessContext() {
+    }
+
     public FieldInfo getFieldInfo() {
         return fieldInfo;
     }

@@ -49,7 +49,7 @@ import java.util.*;
  * cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
  * 单线程、在cpu使用率90%+ 的情况下
  * 解析速度约为 51-53w/s、多个线程成倍数增长
- * 反解析速度约为 38-40w/s、多个线程成倍数增长
+ * 反解析速度约为 39-41w/s、多个线程成倍数增长
  * 具体查看{@link com.bcd.parser.impl.gb32960.Parser_gb32960#main(String[])}
  * 注意:
  * 因为是cpu密集型运算、所以性能达到计算机物理核心个数后已经达到上限、不能以逻辑核心为准、此时虽然整体cpu使用率没有满、但这只是top使用率显示问题
@@ -96,7 +96,15 @@ public abstract class Parser {
     protected FieldProcessor<Object> parsableObjectArrayProcessor = new ParsableObjectArrayProcessor();
     protected FieldProcessor<Object> parsableObjectProcessor = new ParsableObjectProcessor();
 
-    protected boolean printStack = false;
+    protected final boolean printStack;
+
+    public Parser(boolean printStack) {
+        this.printStack = printStack;
+    }
+
+    public Parser() {
+        this.printStack=false;
+    }
 
     public void init() {
         //初始化处理器
@@ -201,10 +209,10 @@ public abstract class Parser {
      * 初始化{@link #packetInfoCache}
      */
     private void initPacketInfo() {
-        int[] processorCount=new int[fieldProcessors.length];
+        int[] processorCount = new int[fieldProcessors.length];
         List<Class> classes = getParsableClass();
         for (Class clazz : classes) {
-            packetInfoCache.put(clazz, ParserUtil.toPacketInfo(clazz, fieldProcessors,processorCount));
+            packetInfoCache.put(clazz, ParserUtil.toPacketInfo(clazz, fieldProcessors, processorCount));
         }
         if (logger.isInfoEnabled()) {
             logger.info("=======================init packetInfo succeed,follow list:\n{}", packetInfoCache.values().stream().map(e -> e.getClazz().getName()).reduce((e1, e2) -> e1 + "\n" + e2).orElse(""));
@@ -212,7 +220,7 @@ public abstract class Parser {
         //打印processor处理数量
         logger.info("=======================processor info:");
         for (int i = 0; i < fieldProcessors.length; i++) {
-            logger.info("{}:[{}]",fieldProcessors[i].getClass().getName(),processorCount[i]);
+            logger.info("{}:[{}]", fieldProcessors[i].getClass().getName(), processorCount[i]);
         }
     }
 
@@ -246,9 +254,7 @@ public abstract class Parser {
         //进行解析
         int varValArrLen = packetInfo.getVarValArrLen();
         int[] vals = varValArrLen == 0 ? null : new int[varValArrLen];
-        FieldProcessContext processContext = new FieldProcessContext();
-        processContext.setParentContext(parentContext);
-        processContext.setInstance(instance);
+        FieldProcessContext processContext = new FieldProcessContext(instance,parentContext);
         FieldInfo[] fieldInfos = packetInfo.getFieldInfos();
         for (int i = 0, end = fieldInfos.length; i < end; i++) {
             FieldInfo fieldInfo = fieldInfos[i];
@@ -390,17 +396,14 @@ public abstract class Parser {
         Class clazz = t.getClass();
         PacketInfo packetInfo = packetInfoCache.get(clazz);
         //进行解析
-        int[] vals = null;
         int varValArrLen = packetInfo.getVarValArrLen();
-        if (varValArrLen != 0) {
-            vals = new int[varValArrLen];
-        }
-        FieldDeProcessContext processContext = new FieldDeProcessContext();
-        processContext.setInstance(t);
-        processContext.setParentContext(parentContext);
-        for (FieldInfo fieldInfo : packetInfo.getFieldInfos()) {
+        int[] vals = varValArrLen == 0 ? null : new int[varValArrLen];
+        FieldDeProcessContext processContext = new FieldDeProcessContext(t,parentContext);
+        FieldInfo[] fieldInfos = packetInfo.getFieldInfos();
+        for (int i = 0, end = fieldInfos.length; i < end; i++) {
+            FieldInfo fieldInfo=fieldInfos[i];
             int processorIndex = fieldInfo.getProcessorIndex();
-            Object data = UnsafeUtil.getValue(t, fieldInfo.getUnsafeOffset(), fieldInfo.getUnsafeType());
+
             /**
              * 代表 {@link PacketField#lenExpr()}
              */
@@ -430,6 +433,8 @@ public abstract class Parser {
             processContext.setFieldInfo(fieldInfo);
             processContext.setLen(len);
             processContext.setListLen(listLen);
+
+            Object data = UnsafeUtil.getValue(t, fieldInfo.getUnsafeOffset(), fieldInfo.getUnsafeType());
 
             if (printStack
 //                        &&fieldInfo.getProcessorIndex()!=17
@@ -650,11 +655,4 @@ public abstract class Parser {
         this.parsableObjectArrayProcessor = parsableObjectArrayProcessor;
     }
 
-    public boolean isPrintStack() {
-        return printStack;
-    }
-
-    public void setPrintStack(boolean printStack) {
-        this.printStack = printStack;
-    }
 }

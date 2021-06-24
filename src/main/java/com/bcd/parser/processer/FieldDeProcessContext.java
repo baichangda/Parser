@@ -35,6 +35,13 @@ public class FieldDeProcessContext {
      */
     FieldDeProcessContext parentContext;
 
+    public FieldDeProcessContext(Object instance, FieldDeProcessContext parentContext) {
+        this.instance = instance;
+        this.parentContext = parentContext;
+    }
+
+    public FieldDeProcessContext() {
+    }
 
     public FieldInfo getFieldInfo() {
         return fieldInfo;
