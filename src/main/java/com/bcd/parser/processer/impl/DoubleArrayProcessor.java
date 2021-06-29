@@ -12,7 +12,6 @@ import io.netty.buffer.ByteBuf;
  * 读取为long类型再转换为double
  */
 public class DoubleArrayProcessor extends FieldProcessor<double[]> {
-    public final static int BYTE_LENGTH = 8;
 
     @Override
     public double[] process(ByteBuf data, FieldProcessContext processContext) {
@@ -24,8 +23,8 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
         double[] valExpr = processContext.getFieldInfo().getValExpr_double();
         int valPrecision = processContext.getFieldInfo().getValPrecision();
         //优化处理 int->long
-        if(singleLen==4){
-            double[] res = new double[len / 4];
+        if (singleLen == 4) {
+            double[] res = new double[len >> 2];
             for (int i = 0; i < res.length; i++) {
                 long cur = data.readUnsignedInt();
                 //验证异常、无效值
@@ -36,8 +35,8 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
                 }
             }
             return res;
-        }else if(singleLen==BYTE_LENGTH){
-            double[] res = new double[len / BYTE_LENGTH];
+        } else if (singleLen == 8) {
+            double[] res = new double[len >>> 3];
             for (int i = 0; i < res.length; i++) {
                 long cur = data.readLong();
                 //验证异常、无效值
@@ -48,7 +47,7 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
                 }
             }
             return res;
-        }else{
+        } else {
             throw ParserUtil.newSingleLenNotSupportException(processContext);
         }
     }
@@ -76,15 +75,15 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
                 }
             }
         }
-        if(singleLen==4){
+        if (singleLen == 4) {
             for (double num : newData) {
                 dest.writeInt((int) num);
             }
-        }else if(singleLen==BYTE_LENGTH){
+        } else if (singleLen == 8) {
             for (double num : newData) {
                 dest.writeLong((long) num);
             }
-        }else{
+        } else {
             throw ParserUtil.newSingleLenNotSupportException(processContext);
         }
     }

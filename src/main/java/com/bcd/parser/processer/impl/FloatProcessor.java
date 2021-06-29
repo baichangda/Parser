@@ -12,7 +12,6 @@ import io.netty.buffer.ByteBuf;
  * 读取为int类型再转换为float
  */
 public class FloatProcessor extends FieldProcessor<Float> {
-    public final static int BYTE_LENGTH=4;
 
     @Override
     public Float process(ByteBuf data, FieldProcessContext processContext) {
@@ -21,7 +20,7 @@ public class FloatProcessor extends FieldProcessor<Float> {
         int len=processContext.getLen();
         if (len==2){
             res = data.readUnsignedShort();
-        }else if(len==BYTE_LENGTH){
+        }else if(len==4){
             res = data.readInt();
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);
@@ -48,7 +47,7 @@ public class FloatProcessor extends FieldProcessor<Float> {
         int len=processContext.getLen();
         if (len==2){
             dest.writeShort((short)newData);
-        }else if(len==BYTE_LENGTH){
+        }else if(len==4){
             dest.writeInt(newData);
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);

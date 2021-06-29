@@ -12,7 +12,6 @@ import io.netty.buffer.ByteBuf;
  * 读取为long类型再转换为double
  */
 public class DoubleProcessor extends FieldProcessor<Double> {
-    public final static int BYTE_LENGTH = 8;
 
     @Override
     public Double process(ByteBuf data, FieldProcessContext processContext) {
@@ -20,7 +19,7 @@ public class DoubleProcessor extends FieldProcessor<Double> {
         int len = processContext.getLen();
         if(len==4){
             res = data.readUnsignedInt();
-        }else if(len==BYTE_LENGTH){
+        }else if(len==8){
             res = data.readLong();
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);
@@ -48,7 +47,7 @@ public class DoubleProcessor extends FieldProcessor<Double> {
         int len = processContext.getLen();
         if(len==4){
             dest.writeInt((int) newData);
-        }else if(len==BYTE_LENGTH){
+        }else if(len==8){
             dest.writeLong(newData);
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);

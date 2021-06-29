@@ -11,7 +11,6 @@ import io.netty.buffer.ByteBuf;
  * 解析long[]类型字段
  */
 public class LongArrayProcessor extends FieldProcessor<long[]> {
-    public final static int BYTE_LENGTH=8;
 
     @Override
     public long[] process(ByteBuf data, FieldProcessContext processContext){
@@ -23,7 +22,7 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
         int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         //优化处理 int->long
         if(singleLen==4){
-            long[] res=new long[len/4];
+            long[] res=new long[len>>>2];
             for(int i=0;i<res.length;i++){
                 long cur=data.readUnsignedInt();
                 //验证异常、无效值
@@ -34,8 +33,8 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
                 }
             }
             return res;
-        }else if(singleLen==BYTE_LENGTH){
-            long[] res=new long[len/BYTE_LENGTH];
+        }else if(singleLen==8){
+            long[] res=new long[len>>>3];
             for(int i=0;i<res.length;i++){
                 long cur=data.readLong();
                 //验证异常、无效值
@@ -77,7 +76,7 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
             for (long num : newData) {
                 dest.writeInt((int)num);
             }
-        }else if(singleLen==BYTE_LENGTH){
+        }else if(singleLen==8){
             for (long num : newData) {
                 dest.writeLong(num);
             }

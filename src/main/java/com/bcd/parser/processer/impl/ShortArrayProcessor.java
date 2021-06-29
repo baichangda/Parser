@@ -11,7 +11,6 @@ import io.netty.buffer.ByteBuf;
  * 解析short[]类型字段
  */
 public class ShortArrayProcessor extends FieldProcessor<short[]> {
-    private final static int BYTE_LENGTH = 2;
 
     @Override
     public short[] process(ByteBuf data, FieldProcessContext processContext) {
@@ -23,7 +22,7 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
         //值表达式处理
         int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         //优化处理 byte->short
-        if (singleLen==1){
+        if (singleLen == 1) {
             short[] res = new short[len];
             for (int i = 0; i < len; i++) {
                 short cur = data.readUnsignedByte();
@@ -34,8 +33,8 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
                 }
             }
             return res;
-        }else if(singleLen==BYTE_LENGTH){
-            short[] res = new short[len / BYTE_LENGTH];
+        } else if (singleLen == 2) {
+            short[] res = new short[len >>> 1];
             for (int i = 0; i < res.length; i++) {
                 short cur = data.readShort();
                 //验证异常、无效值
@@ -46,7 +45,7 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
                 }
             }
             return res;
-        }else{
+        } else {
             throw ParserUtil.newSingleLenNotSupportException(processContext);
         }
     }
@@ -72,15 +71,15 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
                 }
             }
         }
-        if(singleLen==1){
+        if (singleLen == 1) {
             for (short num : newData) {
                 dest.writeByte((byte) num);
             }
-        }else if(singleLen==BYTE_LENGTH){
+        } else if (singleLen == 2) {
             for (short num : newData) {
                 dest.writeShort(num);
             }
-        }else{
+        } else {
             throw ParserUtil.newSingleLenNotSupportException(processContext);
         }
     }

@@ -11,7 +11,6 @@ import io.netty.buffer.ByteBuf;
  * 解析long、Long类型字段
  */
 public class LongProcessor extends FieldProcessor<Long> {
-    public final static int BYTE_LENGTH=8;
 
     @Override
     public Long process(ByteBuf data, FieldProcessContext processContext){
@@ -19,7 +18,7 @@ public class LongProcessor extends FieldProcessor<Long> {
         int len=processContext.getLen();
         if (len==4){
             res = data.readUnsignedInt();
-        }else if(len==BYTE_LENGTH){
+        }else if(len==8){
             res = data.readLong();
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);
@@ -44,7 +43,7 @@ public class LongProcessor extends FieldProcessor<Long> {
         int len=processContext.getLen();
         if (len==4){
             dest.writeInt((int)newData);
-        }else if(len==BYTE_LENGTH){
+        }else if(len==8){
             dest.writeLong(newData);
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);

@@ -11,7 +11,6 @@ import io.netty.buffer.ByteBuf;
  * 解析int[]类型字段
  */
 public class IntegerArrayProcessor extends FieldProcessor<int[]> {
-    private final static int BYTE_LENGTH = 4;
 
     @Override
     public int[] process(ByteBuf data, FieldProcessContext processContext) {
@@ -23,7 +22,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
         int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         //优化处理 short->int
         if(singleLen==2){
-            int[] res = new int[len / 2];
+            int[] res = new int[len >>>1];
             for (int i = 0; i < res.length; i++) {
                 int cur = data.readUnsignedShort();
                 //验证异常、无效值
@@ -34,8 +33,8 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
                 }
             }
             return res;
-        }else if(singleLen==BYTE_LENGTH){
-            int[] res = new int[len / BYTE_LENGTH];
+        }else if(singleLen==4){
+            int[] res = new int[len >>>2];
             for (int i = 0; i < res.length; i++) {
                 int cur = data.readInt();
                 //验证异常、无效值
@@ -78,7 +77,7 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
             for (long num : newData) {
                 dest.writeShort((short) num);
             }
-        }else if(singleLen==BYTE_LENGTH){
+        }else if(singleLen==4){
             for (int num : newData) {
                 dest.writeInt(num);
             }

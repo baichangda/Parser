@@ -12,14 +12,13 @@ import io.netty.buffer.ByteBuf;
  * 解析byte、Byte类型字段
  */
 public class ByteProcessor extends FieldProcessor<Byte> {
-    private final static int BYTE_LENGTH=1;
 
     @Override
     public Byte process(ByteBuf data, FieldProcessContext processContext) {
         //读取原始值
         int len=processContext.getLen();
         byte res;
-        if(len==BYTE_LENGTH){
+        if(len==1){
             res=data.readByte();
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);
@@ -43,7 +42,7 @@ public class ByteProcessor extends FieldProcessor<Byte> {
             newData = RpnUtil.deCalc_byte(valExpr,data);
         }
         int len=processContext.getLen();
-        if(len==BYTE_LENGTH){
+        if(len==1){
             dest.writeByte(newData);
         }else {
             throw ParserUtil.newLenNotSupportException(processContext);

@@ -11,7 +11,6 @@ import io.netty.buffer.ByteBuf;
  * 解析byte[]类型字段
  */
 public class ByteArrayProcessor extends FieldProcessor<byte[]> {
-    private final static int BYTE_LENGTH = 1;
 
     @Override
     public byte[] process(ByteBuf data, FieldProcessContext processContext) {
@@ -21,7 +20,7 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
         }
         int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
         //读取原始值
-        if (singleLen == BYTE_LENGTH) {
+        if (singleLen == 1) {
             int[] valExpr = processContext.getFieldInfo().getValExpr_int();
             byte[] res = new byte[len];
             data.readBytes(res);
@@ -63,7 +62,7 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
             }
         }
         //写入原始值
-        if (singleLen == BYTE_LENGTH) {
+        if (singleLen == 1) {
             dest.writeBytes(newData);
         } else {
             throw ParserUtil.newSingleLenNotSupportException(processContext);

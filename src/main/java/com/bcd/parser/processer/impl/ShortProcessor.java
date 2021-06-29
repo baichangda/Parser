@@ -11,7 +11,6 @@ import io.netty.buffer.ByteBuf;
  * 解析short、Short类型字段
  */
 public class ShortProcessor extends FieldProcessor<Short> {
-    private final static int BYTE_LENGTH = 2;
 
     @Override
     public Short process(ByteBuf data, FieldProcessContext processContext) {
@@ -19,7 +18,7 @@ public class ShortProcessor extends FieldProcessor<Short> {
         int len = processContext.getLen();
         if (len==1){
             res = data.readUnsignedByte();
-        }else if(len==BYTE_LENGTH){
+        }else if(len==2){
             res = data.readShort();
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);
@@ -44,7 +43,7 @@ public class ShortProcessor extends FieldProcessor<Short> {
         int len = processContext.getLen();
         if (len==1){
             dest.writeByte((byte) newData);
-        }else if(len==BYTE_LENGTH){
+        }else if(len==2){
             dest.writeShort(newData);
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);
