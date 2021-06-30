@@ -108,9 +108,24 @@ public @interface PacketField {
 
     /**
      * 值表达式精度、即经过表达式运算后、结果的小数点位数
-     * 默认0位
+     * 主要用于 float、double、float[]、double[] 类型
+     * 默认-1、不格式化
+     *
+     * <0: 代表不进行格式化
+     * >=0: 代表精度
+     *
+     * 注意:
+     * 当>0时候格式化可能会精度丢失、因为会使用方法 Math.round(num*(10^n))/(10^n)
+     *
+     * 如果 num 为 float、float[]
+     * 则使用{@link com.bcd.parser.util.RpnUtil#format_float(float, int)}
+     * 其中 num*(10^n) 可能会超过 {@link Float#MAX_VALUE}
+     *
+     * 如果 num 为 double、double[]
+     * 则使用{@link com.bcd.parser.util.RpnUtil#format_double(double, int)}
+     * 其中 num*(10^n) 可能会超过 {@link Double#MAX_VALUE}
      */
-    int valPrecision() default 0;
+    int valPrecision() default -1;
 
     /**
      * 处理类

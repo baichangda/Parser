@@ -371,6 +371,7 @@ public class ParserUtil {
             Object[] lenRpn = null;
             Object[] listLenRpn = null;
             double[] valExpr_double = null;
+            float[] valExpr_float = null;
             int[] valExpr_int = null;
             if (!packetField.lenExpr().isEmpty()) {
                 lenRpn = RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.lenExpr()));
@@ -381,6 +382,7 @@ public class ParserUtil {
             if (!packetField.valExpr().isEmpty()) {
                 try {
                     valExpr_double = RpnUtil.parseSimpleExpr(packetField.valExpr());
+                    valExpr_float=new float[]{(float)valExpr_double[0],(float)valExpr_double[1]};
                     valExpr_int=new int[]{(int)valExpr_double[0],(int)valExpr_double[1]};
                 } catch (Exception ex) {
                     throw BaseRuntimeException.getException("class[{}] field[{}] valExpr[{}] ot support", clazz.getName(), field.getName(), packetField.valExpr());
@@ -427,6 +429,7 @@ public class ParserUtil {
             fieldInfo.setLenRpn(lenRpn);
             fieldInfo.setListLenRpn(listLenRpn);
             fieldInfo.setValExpr_double(valExpr_double);
+            fieldInfo.setValExpr_float(valExpr_float);
             fieldInfo.setValExpr_int(valExpr_int);
             fieldInfo.setValPrecision(packetField.valPrecision());
             fieldInfo.setPacketField_index(packetField.index());

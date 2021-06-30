@@ -20,7 +20,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
             return new float[0];
         }
         int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
-        double[] valExpr = processContext.getFieldInfo().getValExpr_double();
+        float[] valExpr = processContext.getFieldInfo().getValExpr_float();
         int valPrecision = processContext.getFieldInfo().getValPrecision();
         //优化处理 short->int
         if (singleLen == 2) {
@@ -31,7 +31,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
                 if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
                     res[i] = (float) cur;
                 } else {
-                    res[i] = (float) RpnUtil.calc_double(valExpr, res[i], valPrecision);
+                    res[i] = RpnUtil.calc_float(valExpr, res[i], valPrecision);
                 }
             }
             return res;
@@ -43,7 +43,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
                 if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
                     res[i] = (float) cur;
                 } else {
-                    res[i] = (float) RpnUtil.calc_double(valExpr, res[i], valPrecision);
+                    res[i] = RpnUtil.calc_float(valExpr, res[i], valPrecision);
                 }
             }
             return res;
@@ -60,7 +60,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
         }
         int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
         //值表达式处理
-        double[] valExpr = processContext.getFieldInfo().getValExpr_double();
+        float[] valExpr = processContext.getFieldInfo().getValExpr_float();
         float[] newData;
         if (valExpr == null) {
             newData = data;
@@ -69,7 +69,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
             for (int i = 0; i < len; i++) {
                 //验证异常、无效值
                 if (ParserUtil.checkInvalidOrExceptionVal_int((int) data[i], singleLen)) {
-                    newData[i] = (float) RpnUtil.deCalc_double_0(valExpr, data[i]);
+                    newData[i] = (float) RpnUtil.deCalc_float_0(valExpr, data[i]);
                 } else {
                     newData[i] = data[i];
                 }

@@ -88,6 +88,7 @@ public class FieldInfo {
      * [a,b]
      */
     private double[] valExpr_double;
+    private float[] valExpr_float;
     private int[] valExpr_int;
 
     /**
@@ -296,5 +297,13 @@ public class FieldInfo {
 
     public void setValExpr_int(int[] valExpr_int) {
         this.valExpr_int = valExpr_int;
+    }
+
+    public float[] getValExpr_float() {
+        return valExpr_float;
+    }
+
+    public void setValExpr_float(float[] valExpr_float) {
+        this.valExpr_float = valExpr_float;
     }
 }
