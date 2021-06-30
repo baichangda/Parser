@@ -111,7 +111,7 @@ public @interface PacketField {
      * 主要用于 float、double、float[]、double[] 类型
      * 默认-1、不格式化
      *
-     * <0: 代表不进行格式化
+     * <0: 代表不进行格式化(解析速度会有提升)
      * >=0: 代表精度
      *
      * 注意:
