@@ -531,7 +531,7 @@ public class RpnUtil {
     }
 
     /**
-     * 计算 y=ax+b
+     * 计算 y=x/a+b
      *
      * @param arr
      * @param x
@@ -559,10 +559,16 @@ public class RpnUtil {
      * @return
      */
     public static long deCalc_long(int[] arr, long y) {
-        if (arr[0] == 1) {
-            return y - arr[1];
-        }else {
-            return (y - arr[1]) * arr[0];
+        switch (arr[0]){
+            case 0:{
+                return y;
+            }
+            case 1:{
+                return y - arr[1];
+            }
+            default:{
+                return (y - arr[1]) * arr[0];
+            }
         }
     }
 
@@ -574,10 +580,16 @@ public class RpnUtil {
      * @return
      */
     public static int deCalc_int(int[] arr, int y) {
-        if (arr[0] == 1) {
-            return y - arr[1];
-        }else {
-            return (y - arr[1]) * arr[0];
+        switch (arr[0]){
+            case 0:{
+                return y;
+            }
+            case 1:{
+                return y - arr[1];
+            }
+            default:{
+                return (y - arr[1]) * arr[0];
+            }
         }
     }
 
@@ -589,10 +601,16 @@ public class RpnUtil {
      * @return
      */
     public static double deCalc_double(int[] arr, double y) {
-        if (arr[0] == 1) {
-            return y - arr[1];
-        }else {
-            return (y - arr[1]) * arr[0];
+        switch (arr[0]){
+            case 0:{
+                return y;
+            }
+            case 1:{
+                return y - arr[1];
+            }
+            default:{
+                return (y - arr[1]) * arr[0];
+            }
         }
     }
 
@@ -604,10 +622,16 @@ public class RpnUtil {
      * @return
      */
     public static double deCalc_float(int[] arr, float y) {
-        if (arr[0] == 1) {
-            return y - arr[1];
-        }else {
-            return (y - arr[1]) * arr[0];
+        switch (arr[0]){
+            case 0:{
+                return y;
+            }
+            case 1:{
+                return y - arr[1];
+            }
+            default:{
+                return (y - arr[1]) * arr[0];
+            }
         }
     }
 
