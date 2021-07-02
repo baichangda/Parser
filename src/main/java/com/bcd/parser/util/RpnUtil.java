@@ -341,20 +341,18 @@ public class RpnUtil {
 
 
     /**
-     *
      * 解析如下表达式
      * y=a*x+b
      * y=a/x+b
      * 其中
      * a、b没有限制
-     *
+     * <p>
      * 例如:
      * y=3*x+2
      * y=2-x*4
      * y=-3*-x-1
      * y=-x
      * y=1
-     *
      *
      * @param expr
      * @return [a, b]
@@ -477,7 +475,17 @@ public class RpnUtil {
      * @return
      */
     public static long calc_long(int[] arr, long x) {
-        return x / arr[0] + arr[1];
+        switch (arr[0]){
+            case 0:{
+                return arr[1];
+            }
+            case 1:{
+                return x + arr[1];
+            }
+            default:{
+                return x / arr[0] + arr[1];
+            }
+        }
     }
 
     /**
@@ -488,19 +496,38 @@ public class RpnUtil {
      * @return
      */
     public static int calc_int(int[] arr, int x) {
-        return x / arr[0] + arr[1];
+        switch (arr[0]){
+            case 0:{
+                return arr[1];
+            }
+            case 1:{
+                return x + arr[1];
+            }
+            default:{
+                return x / arr[0] + arr[1];
+            }
+        }
     }
 
-
     /**
-     * 计算 y=ax+b
+     * 计算 y=x/a+b
      *
      * @param arr
      * @param x
      * @return
      */
     public static double calc_double(int[] arr, double x) {
-        return arr[0] / x + arr[1];
+        switch (arr[0]){
+            case 0:{
+                return arr[1];
+            }
+            case 1:{
+                return x + arr[1];
+            }
+            default:{
+                return x / arr[0] + arr[1];
+            }
+        }
     }
 
     /**
@@ -511,7 +538,17 @@ public class RpnUtil {
      * @return
      */
     public static float calc_float(int[] arr, float x) {
-        return arr[0] / x + arr[1];
+        switch (arr[0]){
+            case 0:{
+                return arr[1];
+            }
+            case 1:{
+                return x + arr[1];
+            }
+            default:{
+                return x / arr[0] + arr[1];
+            }
+        }
     }
 
     /**
@@ -522,7 +559,11 @@ public class RpnUtil {
      * @return
      */
     public static long deCalc_long(int[] arr, long y) {
-        return (y - arr[1]) * arr[0];
+        if (arr[0] == 1) {
+            return y - arr[1];
+        }else {
+            return (y - arr[1]) * arr[0];
+        }
     }
 
     /**
@@ -533,29 +574,41 @@ public class RpnUtil {
      * @return
      */
     public static int deCalc_int(int[] arr, int y) {
-        return (y - arr[1]) * arr[0];
+        if (arr[0] == 1) {
+            return y - arr[1];
+        }else {
+            return (y - arr[1]) * arr[0];
+        }
     }
 
     /**
-     * 计算x=(y-b)/a
+     * 计算x=(y-b)*a
      *
      * @param arr
      * @param y
      * @return
      */
     public static double deCalc_double(int[] arr, double y) {
-        return (y - arr[1]) * arr[0];
+        if (arr[0] == 1) {
+            return y - arr[1];
+        }else {
+            return (y - arr[1]) * arr[0];
+        }
     }
 
     /**
-     * 计算x=(y-b)/a
+     * 计算x=(y-b)*a
      *
      * @param arr
      * @param y
      * @return
      */
     public static double deCalc_float(int[] arr, float y) {
-        return (y - arr[1]) * arr[0];
+        if (arr[0] == 1) {
+            return y - arr[1];
+        }else {
+            return (y - arr[1]) * arr[0];
+        }
     }
 
 }
