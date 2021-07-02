@@ -1,24 +1,9 @@
 package com.bcd.parser.util;
 
 import com.bcd.parser.exception.BaseRuntimeException;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class RpnUtil {
-
-    /**
-     * Math.pow缓存、避免每次都要计算
-     * 最多9个、10个就超过{@link Integer#MAX_VALUE}了
-     */
-    final static int[] pows = new int[9];
-
-    static {
-        for (int i = 0; i < pows.length; i++) {
-            pows[i] = (int) Math.pow(10, i);
-        }
-    }
 
     /**
      * 处理rpn表达式集合
@@ -226,34 +211,34 @@ public class RpnUtil {
     }
 
     /**
-     * 解析表达式 y=ax+b 中的a、b
+     * 解析表达式 y=x/a+b 中的a、b
      * 顺序可以调整、可以加上括号
      *
      * @param expr
      * @return [a, b]
      */
-    public static double[] parseSimpleExpr(String expr) {
-        double a = 1;
-        double b = 0;
+    public static int[] parseSimpleExpr(String expr) {
+        int a = 1;
+        int b = 0;
         String[] rpn = parseArithmeticToRPN(expr);
         int stackIndex = -1;
         final Object[] stack = new Object[expr.length()];
         for (String s : rpn) {
             try {
-                double v = Double.parseDouble(s);
+                int v = Integer.parseInt(s);
                 stack[++stackIndex] = v;
             } catch (NumberFormatException ex) {
                 switch (s) {
                     case "+": {
                         stackIndex--;
                         if (stack[stackIndex] instanceof String) {
-                            b = (double) stack[stackIndex + 1];
+                            b = (int) stack[stackIndex + 1];
                             stack[stackIndex] = stack[stackIndex] + "+" + stack[stackIndex + 1];
                         } else if (stack[stackIndex + 1] instanceof String) {
-                            b = (double) stack[stackIndex];
+                            b = (int) stack[stackIndex];
                             stack[stackIndex] = stack[stackIndex] + "+" + stack[stackIndex + 1];
                         } else {
-                            stack[stackIndex] = (double) stack[stackIndex] + (double) stack[stackIndex + 1];
+                            stack[stackIndex] = (int) stack[stackIndex] + (int) stack[stackIndex + 1];
                         }
                         break;
                     }
@@ -264,33 +249,33 @@ public class RpnUtil {
                                 a = -a;
                                 stack[0] = "-" + stack[stackIndex + 1];
                             } else {
-                                stack[0] = -(double) stack[stackIndex + 1];
+                                stack[0] = -(int) stack[stackIndex + 1];
                             }
                             stackIndex = 0;
                         } else {
                             if (stack[stackIndex] instanceof String) {
-                                b = -(double) stack[stackIndex + 1];
+                                b = -(int) stack[stackIndex + 1];
                                 stack[stackIndex] = stack[stackIndex] + "-" + stack[stackIndex + 1];
                             } else if (stack[stackIndex + 1] instanceof String) {
-                                b = (double) stack[stackIndex];
+                                b = (int) stack[stackIndex];
                                 a = -a;
                                 stack[stackIndex] = stack[stackIndex] + "-" + stack[stackIndex + 1];
                             } else {
-                                stack[stackIndex] = (double) stack[stackIndex] - (double) stack[stackIndex + 1];
+                                stack[stackIndex] = (int) stack[stackIndex] - (int) stack[stackIndex + 1];
                             }
                         }
                         break;
                     }
-                    case "*": {
+                    case "/": {
                         stackIndex--;
                         if (stack[stackIndex] instanceof String) {
-                            a = (double) stack[stackIndex + 1];
+                            a = (int) stack[stackIndex + 1];
                             stack[stackIndex] = stack[stackIndex] + "*" + stack[stackIndex + 1];
                         } else if (stack[stackIndex + 1] instanceof String) {
-                            a = (double) stack[stackIndex];
+                            a = (int) stack[stackIndex];
                             stack[stackIndex] = stack[stackIndex] + "*" + stack[stackIndex + 1];
                         } else {
-                            stack[stackIndex] = (double) stack[stackIndex] * (double) stack[stackIndex + 1];
+                            stack[stackIndex] = (int) stack[stackIndex] * (int) stack[stackIndex + 1];
                         }
                         break;
                     }
@@ -303,90 +288,90 @@ public class RpnUtil {
         }
 
         //处理特殊情况、y=b时候
-        if (stack[0] instanceof Double) {
+        if (stack[0] instanceof Integer) {
             a = 0;
-            b = (double) stack[0];
+            b = (int) stack[0];
         }
 
-        return new double[]{a, b};
+        return new int[]{a, b};
     }
 
 
     /**
-     * 计算 y=ax+b
+     * 计算 y=x/a+b
      *
      * @param arr
      * @param x
      * @return
      */
     public static byte calc_byte(int[] arr, byte x) {
-        return (byte) (x * arr[0] + arr[1]);
+        return (byte) (x / arr[0] + arr[1]);
     }
 
     /**
-     * 计算 y=ax+b
+     * 计算 y=x/a+b
      *
      * @param arr
      * @param x
      * @return
      */
     public static long calc_long(int[] arr, long x) {
-        return x * arr[0] + arr[1];
+        return x / arr[0] + arr[1];
     }
 
     /**
-     * 计算 y=ax+b
+     * 计算 y=x/a+b
      *
      * @param arr
      * @param x
      * @return
      */
     public static int calc_int(int[] arr, int x) {
-        return x * arr[0] + arr[1];
+        return x / arr[0] + arr[1];
     }
 
     /**
-     * 计算 y=ax+b
+     * 计算 y=x/a+b
      *
      * @param arr
      * @param x
      * @return
      */
     public static short calc_short(int[] arr, short x) {
-        return (short) (x * arr[0] + arr[1]);
+        return (short) (x / arr[0] + arr[1]);
     }
 
     /**
-     * 计算x=(y-b)/a
+     * 计算x=(y-b)*a
      *
      * @param arr
      * @param y
      * @return
      */
     public static byte deCalc_byte(int[] arr, byte y) {
-        return (byte) ((y - arr[1]) / arr[0]);
+        return (byte) ((y - arr[1]) * arr[0]);
     }
 
     /**
-     * 计算x=(y-b)/a
+     * 计算x=(y-b)*a
      *
      * @param arr
      * @param y
      * @return
      */
     public static long deCalc_long(int[] arr, long y) {
-        return (y - arr[1]) / arr[0];
+        return (y - arr[1]) * arr[0];
     }
 
     /**
-     * 计算x=(y-b)/a
+     * 计算x=(y-b)*a
      *
      * @param arr
      * @param y
      * @return
      */
     public static int deCalc_int(int[] arr, int y) {
-        return (y - arr[1]) / arr[0];
+        return (y - arr[1]) * arr[0];
     }
 
     /**
@@ -397,45 +382,7 @@ public class RpnUtil {
      * @return
      */
     public static short deCalc_short(int[] arr, short y) {
-        return (short) ((y - arr[1]) / arr[0]);
-    }
-
-    /**
-     * 计算x=(y-b)/a
-     * 精度为0
-     *
-     * @param arr
-     * @param y
-     * @return
-     */
-    public static double deCalc_double_0(double[] arr, double y) {
-        double res = (y - arr[1]) / arr[0];
-        if (res > 0) {
-            return Math.round(res);
-        } else if (res < 0) {
-            return -Math.round(-res);
-        } else {
-            return 0d;
-        }
-    }
-
-    /**
-     * 计算x=(y-b)/a
-     * 精度为0
-     *
-     * @param arr
-     * @param y
-     * @return
-     */
-    public static double deCalc_float_0(float[] arr, float y) {
-        float res = (y - arr[1]) / arr[0];
-        if (res > 0) {
-            return Math.round(res);
-        } else if (res < 0) {
-            return -Math.round(-res);
-        } else {
-            return 0f;
-        }
+        return (short) ((y - arr[1]) * arr[0]);
     }
 
     /**
@@ -443,11 +390,10 @@ public class RpnUtil {
      *
      * @param arr
      * @param x
-     * @param precision 精度
      * @return
      */
-    public static double calc_double(double[] arr, double x, int precision) {
-        return format_double(arr[0] * x + arr[1], precision);
+    public static double calc_double(int[] arr, double x) {
+        return arr[0] / x + arr[1];
     }
 
     /**
@@ -455,11 +401,10 @@ public class RpnUtil {
      *
      * @param arr
      * @param x
-     * @param precision 精度
      * @return
      */
-    public static float calc_float(float[] arr, float x, int precision) {
-        return format_float(arr[0] * x + arr[1], precision);
+    public static float calc_float(int[] arr, float x) {
+        return arr[0] / x + arr[1];
     }
 
 
@@ -468,11 +413,10 @@ public class RpnUtil {
      *
      * @param arr
      * @param y
-     * @param precision 精度
      * @return
      */
-    public static double deCalc_double(double[] arr, double y, int precision) {
-        return format_double((y - arr[1]) / arr[0], precision);
+    public static double deCalc_double(int[] arr, double y) {
+        return (y - arr[1]) * arr[0];
     }
 
     /**
@@ -480,97 +424,10 @@ public class RpnUtil {
      *
      * @param arr
      * @param y
-     * @param precision 精度
      * @return
      */
-    public static double deCalc_float(float[] arr, float y, int precision) {
-        return format_float((y - arr[1]) / arr[0], precision);
-    }
-
-    /**
-     * 格式化四舍五入
-     * <p>
-     * 注意:
-     * 可能会在 res * pow 产生精度丢失、因为可能超过最大{@link Float#MAX_VALUE}
-     *
-     * @param res
-     * @param precision
-     * @return
-     */
-    private static float format_float(float res, int precision) {
-        if (precision < 0) {
-            return precision;
-        } else if (precision > 0) {
-            if (res > 0) {
-                final int pow = pows[precision];
-                return Math.round(res * pow) / (float)pow;
-            } else if (res < 0) {
-                final int pow = pows[precision];
-                return -Math.round(-res * pow) / (float)pow;
-            } else {
-                return 0f;
-            }
-        } else {
-            if (res > 0) {
-                return Math.round(res);
-            } else if (res < 0) {
-                return -Math.round(-res);
-            } else {
-                return 0f;
-            }
-        }
-    }
-
-    /**
-     * 格式化四舍五入
-     * <p>
-     * 注意:
-     * 可能会在 res * pow 产生精度丢失、因为可能超过最大{@link Float#MAX_VALUE}
-     *
-     * @param res
-     * @param precision
-     * @return
-     */
-    private static double format_double(double res, int precision) {
-        if (precision < 0) {
-            return precision;
-        } else if (precision > 0) {
-            if (res > 0) {
-                final int pow = pows[precision];
-                return Math.round(res*pow)/(double)pow;
-            } else if (res < 0) {
-                final int pow = pows[precision];
-                return -Math.round(-res * pow) /(double)pow;
-            } else {
-                return 0d;
-            }
-        } else {
-            if (res > 0) {
-                return Math.round(res);
-            } else if (res < 0) {
-                return -Math.round(-res);
-            } else {
-                return 0d;
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        System.out.println(format_float(11111111.1111111111f, 10));
-        System.out.println(Arrays.toString(parseSimpleExpr("-0.01*x+1000")));
-        System.out.println(Arrays.toString(parseSimpleExpr("0.01*x-1000")));
-        System.out.println(Arrays.toString(parseSimpleExpr("-x*5.1-1000")));
-        System.out.println(Arrays.toString(parseSimpleExpr("1000+0.1*x")));
-        System.out.println(Arrays.toString(parseSimpleExpr("1000-x*0.001")));
-        System.out.println(Arrays.toString(parseSimpleExpr("x*0.1-10")));
-        System.out.println(Arrays.toString(parseSimpleExpr("(-x*5.1)-1000")));
-        System.out.println(Arrays.toString(parseSimpleExpr("5")));
-        System.out.println(Arrays.toString(parseSimpleExpr("-5")));
-        System.out.println(Arrays.toString(parseSimpleExpr("x")));
-        System.out.println(Arrays.toString(parseSimpleExpr("-x")));
-        System.out.println(Arrays.toString(parseSimpleExpr("x+0")));
-        System.out.println(Arrays.toString(parseSimpleExpr("0.01*x")));
-        System.out.println(Arrays.toString(parseSimpleExpr("(-0.01)*x")));
+    public static double deCalc_float(int[] arr, float y) {
+        return (y - arr[1]) * arr[0];
     }
 
 }
