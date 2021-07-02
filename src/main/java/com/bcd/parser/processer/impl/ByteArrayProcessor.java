@@ -27,7 +27,7 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
             if (valExpr != null) {
                 for (int i = 0; i < len; i++) {
                     if(ParserUtil.checkInvalidOrExceptionVal_byte(res[i])){
-                        res[i] = RpnUtil.calc_byte(valExpr, res[i]);
+                        res[i] = (byte) RpnUtil.calc_int(valExpr, res[i]);
                     }
                 }
             }
@@ -55,7 +55,7 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
             for (int i = 0; i < len; i++) {
                 //验证异常、无效值
                 if (ParserUtil.checkInvalidOrExceptionVal_byte(data[i])) {
-                    newData[i] = RpnUtil.deCalc_byte(valExpr, data[i]);
+                    newData[i] = (byte) RpnUtil.deCalc_int(valExpr, data[i]);
                 } else {
                     newData[i] = data[i];
                 }

@@ -29,7 +29,7 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
                 if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_short(cur, singleLen)) {
                     res[i] = cur;
                 } else {
-                    res[i] = RpnUtil.calc_short(valExpr, cur);
+                    res[i] = (short) RpnUtil.calc_int(valExpr, cur);
                 }
             }
             return res;
@@ -41,7 +41,7 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
                 if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_short(cur, singleLen)) {
                     res[i] = cur;
                 } else {
-                    res[i] = RpnUtil.calc_short(valExpr, cur);
+                    res[i] = (short) RpnUtil.calc_int(valExpr, cur);
                 }
             }
             return res;
@@ -65,7 +65,7 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
             newData = new short[len];
             for (int i = 0; i < len; i++) {
                 if (ParserUtil.checkInvalidOrExceptionVal_short(data[i], singleLen)) {
-                    newData[i] = RpnUtil.deCalc_short(valExpr, data[i]);
+                    newData[i] = (short) RpnUtil.deCalc_int(valExpr, data[i]);
                 } else {
                     newData[i] = data[i];
                 }

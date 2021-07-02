@@ -25,23 +25,23 @@ public class DoubleProcessor extends FieldProcessor<Double> {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
         //值表达式处理
-        double[] valExpr = processContext.getFieldInfo().getValExpr_double();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_long(res, len)) {
             return (double) res;
         } else {
-            return RpnUtil.calc_double(valExpr, res, processContext.getFieldInfo().getValPrecision());
+            return RpnUtil.calc_double(valExpr, res);
         }
     }
 
     @Override
     public void deProcess(Double data, ByteBuf dest, FieldDeProcessContext processContext) {
-        double[] valExpr = processContext.getFieldInfo().getValExpr_double();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         long newData;
         //值表达式处理
         if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_long(data.longValue(), processContext.getLen())) {
             newData = data.longValue();
         } else {
-            newData = (long) RpnUtil.deCalc_double_0(valExpr, data);
+            newData = (long) RpnUtil.deCalc_double(valExpr, data);
         }
         //写入原始值
         int len = processContext.getLen();

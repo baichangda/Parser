@@ -20,8 +20,7 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
             return new double[0];
         }
         int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
-        double[] valExpr = processContext.getFieldInfo().getValExpr_double();
-        int valPrecision = processContext.getFieldInfo().getValPrecision();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         //优化处理 int->long
         if (singleLen == 4) {
             double[] res = new double[len >> 2];
@@ -31,7 +30,7 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
                 if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_long(cur, singleLen)) {
                     res[i] = (double) cur;
                 } else {
-                    res[i] = RpnUtil.calc_double(valExpr, res[i], valPrecision);
+                    res[i] = RpnUtil.calc_double(valExpr, res[i]);
                 }
             }
             return res;
@@ -43,7 +42,7 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
                 if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_long(cur, singleLen)) {
                     res[i] = (double) cur;
                 } else {
-                    res[i] = RpnUtil.calc_double(valExpr, res[i], valPrecision);
+                    res[i] = RpnUtil.calc_double(valExpr, res[i]);
                 }
             }
             return res;
@@ -60,7 +59,7 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
         }
         int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
         //值表达式处理
-        double[] valExpr = processContext.getFieldInfo().getValExpr_double();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         double[] newData;
         if (valExpr == null) {
             newData = data;
@@ -69,7 +68,7 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
             for (int i = 0; i < len; i++) {
                 //验证异常、无效值
                 if (ParserUtil.checkInvalidOrExceptionVal_long((long) data[i], singleLen)) {
-                    newData[i] = RpnUtil.deCalc_double_0(valExpr, data[i]);
+                    newData[i] = RpnUtil.deCalc_double(valExpr, data[i]);
                 } else {
                     newData[i] = data[i];
                 }

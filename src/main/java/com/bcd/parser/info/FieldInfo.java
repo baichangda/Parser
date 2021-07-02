@@ -87,14 +87,7 @@ public class FieldInfo {
      * 对应 {@link PacketField#valExpr()}表达式
      * [a,b]
      */
-    private double[] valExpr_double;
-    private float[] valExpr_float;
     private int[] valExpr_int;
-
-    /**
-     * 对应 {@link PacketField#valPrecision()}表达式
-     */
-    private int valPrecision;
 
     /**
      * {@link sun.misc.Unsafe#objectFieldOffset(Field)} 得出的偏移量
@@ -227,14 +220,6 @@ public class FieldInfo {
         this.packetField_valExpr = packetField_valExpr;
     }
 
-    public double[] getValExpr_double() {
-        return valExpr_double;
-    }
-
-    public void setValExpr_double(double[] valExpr_double) {
-        this.valExpr_double = valExpr_double;
-    }
-
     public int getPacketField_var_int() {
         return packetField_var_int;
     }
@@ -249,14 +234,6 @@ public class FieldInfo {
 
     public void setPacketField_valPrecision(int packetField_valPrecision) {
         this.packetField_valPrecision = packetField_valPrecision;
-    }
-
-    public int getValPrecision() {
-        return valPrecision;
-    }
-
-    public void setValPrecision(int valPrecision) {
-        this.valPrecision = valPrecision;
     }
 
     public PacketInfo getPacketInfo() {
@@ -299,11 +276,4 @@ public class FieldInfo {
         this.valExpr_int = valExpr_int;
     }
 
-    public float[] getValExpr_float() {
-        return valExpr_float;
-    }
-
-    public void setValExpr_float(float[] valExpr_float) {
-        this.valExpr_float = valExpr_float;
-    }
 }

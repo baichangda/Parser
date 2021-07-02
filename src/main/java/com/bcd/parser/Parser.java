@@ -320,13 +320,12 @@ public abstract class Parser {
                             val,
                             fieldProcessors[fieldInfo.getProcessorIndex()].getClass().getName());
                 } else {
-                    logger.info("parse class[{}] field[{}] hex[{}] val[{}] valExpr[{}] valExprPrecision[{}] parser[{}]",
+                    logger.info("parse class[{}] field[{}] hex[{}] val[{}] valExpr[{}] parser[{}]",
                             packetInfo.getClazz().getName(),
                             fieldInfo.getField().getName(),
                             ByteBufUtil.hexDump(arr),
                             val,
                             fieldInfo.getPacketField_valExpr(),
-                            fieldInfo.getValPrecision(),
                             fieldProcessors[fieldInfo.getProcessorIndex()].getClass().getName());
                 }
             } else {
@@ -452,13 +451,12 @@ public abstract class Parser {
                             data,
                             fieldProcessors[processorIndex].getClass().getName());
                 } else {
-                    logger.info("deParse class[{}] field[{}] hex[{}] val[{}] valExpr[{}] valExprPrecision[{}] parser[{}]",
+                    logger.info("deParse class[{}] field[{}] hex[{}] val[{}] valExpr[{}] parser[{}]",
                             packetInfo.getClazz().getName(),
                             fieldInfo.getField().getName(),
                             ByteBufUtil.hexDump(arr),
                             data,
                             fieldInfo.getPacketField_valExpr(),
-                            fieldInfo.getValPrecision(),
                             fieldProcessors[processorIndex].getClass().getName());
                 }
             } else {

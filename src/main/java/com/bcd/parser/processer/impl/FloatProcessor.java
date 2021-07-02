@@ -26,23 +26,23 @@ public class FloatProcessor extends FieldProcessor<Float> {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
         //值表达式处理
-        float[] valExpr = processContext.getFieldInfo().getValExpr_float();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_int(res,len)){
             return (float)res;
         }else{
-            return RpnUtil.calc_float(valExpr,res,processContext.getFieldInfo().getValPrecision());
+            return RpnUtil.calc_float(valExpr,res);
         }
     }
 
     @Override
     public void deProcess(Float data, ByteBuf dest, FieldDeProcessContext processContext) {
         //值表达式处理
-        float[] valExpr = processContext.getFieldInfo().getValExpr_float();
+        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
         int newData;
         if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_int(data.intValue(),processContext.getLen())){
             newData=data.intValue();
         }else{
-            newData = (int) RpnUtil.deCalc_float_0(valExpr,data);
+            newData = (int) RpnUtil.deCalc_float(valExpr,data);
         }
         int len=processContext.getLen();
         if (len==2){

@@ -28,7 +28,7 @@ public class ByteProcessor extends FieldProcessor<Byte> {
         if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_byte(res)){
             return res;
         }else{
-            return RpnUtil.calc_byte(valExpr,res);
+            return (byte)RpnUtil.calc_int(valExpr,res);
         }
     }
 
@@ -39,7 +39,7 @@ public class ByteProcessor extends FieldProcessor<Byte> {
         if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_byte(data)){
             newData=data;
         }else{
-            newData = RpnUtil.deCalc_byte(valExpr,data);
+            newData = (byte) RpnUtil.deCalc_int(valExpr,data);
         }
         int len=processContext.getLen();
         if(len==1){

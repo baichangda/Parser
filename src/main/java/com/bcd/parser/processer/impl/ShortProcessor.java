@@ -27,7 +27,7 @@ public class ShortProcessor extends FieldProcessor<Short> {
         if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_short(res, len)) {
             return res;
         } else {
-            return RpnUtil.calc_short(valExpr, res);
+            return (short)RpnUtil.calc_int(valExpr, res);
         }
     }
 
@@ -38,7 +38,7 @@ public class ShortProcessor extends FieldProcessor<Short> {
         if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_short(data, processContext.getLen())) {
             newData = data;
         } else {
-            newData = RpnUtil.deCalc_short(valExpr, data);
+            newData = (short) RpnUtil.deCalc_int(valExpr, data);
         }
         int len = processContext.getLen();
         if (len==1){
