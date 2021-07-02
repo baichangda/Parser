@@ -323,7 +323,9 @@ public class RpnUtil {
                     if (p1 != -1 && p1 < curSymbolPriority) {
                         s1 = "(" + s1 + ")";
                     }
-                    if ((p2 != -1 && p2 < curSymbolPriority) || (s.equals("-"))) {
+                    if ((p2 != -1 && p2 < curSymbolPriority) ||
+                            s.equals("-") && s2.charAt(0) != '(' && (s2.contains("+") || s2.contains("-"))
+                    ) {
                         s2 = "(" + s2 + ")";
                     }
                     int curIndex = ++index;
