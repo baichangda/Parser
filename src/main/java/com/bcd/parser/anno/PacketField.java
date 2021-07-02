@@ -97,7 +97,7 @@ public @interface PacketField {
     int singleLen() default 1;
 
     /**
-     * 值处理表达式 y=ax+b
+     * 值处理表达式 y=x/a+b
      * 在解析出的原始值得基础上,进行偏移量运算,只对数字类型值有效
      * 公式中的x变量都代表字段原始的值
      * <p>
@@ -105,27 +105,6 @@ public @interface PacketField {
      * 表达式顺序可以调整、可以加上括号
      */
     String valExpr() default "";
-
-    /**
-     * 值表达式精度、即经过表达式运算后、结果的小数点位数
-     * 主要用于 float、double、float[]、double[] 类型
-     * 默认-1、不格式化
-     *
-     * <0: 代表不进行格式化(解析速度会有提升)
-     * >=0: 代表精度
-     *
-     * 注意:
-     * 当>0时候格式化可能会精度丢失、因为会使用方法 Math.round(num*(10^n))/(10^n)
-     *
-     * 如果 num 为 float、float[]
-     * 则使用{@link com.bcd.parser.util.RpnUtil#format_float(float, int)}
-     * 其中 num*(10^n) 可能会超过 {@link Float#MAX_VALUE}
-     *
-     * 如果 num 为 double、double[]
-     * 则使用{@link com.bcd.parser.util.RpnUtil#format_double(double, int)}
-     * 其中 num*(10^n) 可能会超过 {@link Double#MAX_VALUE}
-     */
-    int valPrecision() default -1;
 
     /**
      * 处理类
