@@ -75,13 +75,13 @@ public class FieldInfo {
      * 对应 {@link PacketField#lenExpr()}表达式
      * 其中的变量char 已经减去了{@link PacketInfo#varValArrOffset}
      */
-    public RpnUtil.Ele[] lenRpn;
+    public RpnUtil.Ele_int[] lenRpn;
 
     /**
      * 对应 {@link PacketField#listLenExpr()}表达式
      * 其中的变量char 已经减去了{@link PacketInfo#varValArrOffset}
      */
-    public RpnUtil.Ele[] listLenRpn;
+    public RpnUtil.Ele_int[] listLenRpn;
 
     /**
      * 对应 {@link PacketField#valExpr()}表达式

@@ -373,8 +373,8 @@ public class ParserUtil {
             }
 
             //转换逆波兰表达式
-            RpnUtil.Ele[] lenRpn = null;
-            RpnUtil.Ele[] listLenRpn = null;
+            RpnUtil.Ele_int[] lenRpn = null;
+            RpnUtil.Ele_int[] listLenRpn = null;
             int[] valExpr_int = null;
             if (!packetField.lenExpr().isEmpty()) {
                 lenRpn = RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.lenExpr()));
@@ -398,7 +398,7 @@ public class ParserUtil {
 
             //求maxVarInt、minVarInt
             if (lenRpn != null) {
-                for (RpnUtil.Ele e : lenRpn) {
+                for (RpnUtil.Ele_int e : lenRpn) {
                     switch (e.type) {
                         case 2:
                         case 3: {
@@ -413,7 +413,7 @@ public class ParserUtil {
                 }
             }
             if (listLenRpn != null) {
-                for (RpnUtil.Ele e : listLenRpn) {
+                for (RpnUtil.Ele_int e : listLenRpn) {
                     switch (e.type) {
                         case 2:
                         case 3: {
@@ -463,9 +463,9 @@ public class ParserUtil {
             if (fieldInfo.isVar) {
                 fieldInfo.packetField_var_int=fieldInfo.packetField_var_int - varValArrOffset;
             }
-            RpnUtil.Ele[] lenRpn = fieldInfo.lenRpn;
+            RpnUtil.Ele_int[] lenRpn = fieldInfo.lenRpn;
             if (lenRpn != null) {
-                for (RpnUtil.Ele cur : lenRpn) {
+                for (RpnUtil.Ele_int cur : lenRpn) {
                     switch (cur.type) {
                         case 2:
                         case 3: {
@@ -474,9 +474,9 @@ public class ParserUtil {
                     }
                 }
             }
-            RpnUtil.Ele[] listLenRpn = fieldInfo.listLenRpn;
+            RpnUtil.Ele_int[] listLenRpn = fieldInfo.listLenRpn;
             if (listLenRpn != null) {
-                for (RpnUtil.Ele cur : listLenRpn) {
+                for (RpnUtil.Ele_int cur : listLenRpn) {
                     switch (cur.type) {
                         case 2:
                         case 3: {

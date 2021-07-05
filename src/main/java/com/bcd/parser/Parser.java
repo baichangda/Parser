@@ -48,7 +48,7 @@ import java.util.*;
  * 以gb32960协议为例子
  * cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
  * 单线程、在cpu使用率90%+ 的情况下
- * 解析速度约为 50-53w/s、多个线程成倍数增长
+ * 解析速度约为 51-53w/s、多个线程成倍数增长
  * 反解析速度约为 38-40w/s、多个线程成倍数增长
  * 具体查看{@link com.bcd.parser.impl.gb32960.Parser_gb32960#main(String[])}
  * 注意:
@@ -262,7 +262,7 @@ public abstract class Parser {
             /**
              * 代表 {@link PacketField#lenExpr()}
              */
-            RpnUtil.Ele[] lenRpn = fieldInfo.lenRpn;
+            RpnUtil.Ele_int[] lenRpn = fieldInfo.lenRpn;
 
             int len;
             if (lenRpn == null) {
@@ -286,7 +286,7 @@ public abstract class Parser {
             /**
              * 代表 {@link PacketField#listLenExpr()}
              */
-            RpnUtil.Ele[] listLenRpn = fieldInfo.listLenRpn;
+            RpnUtil.Ele_int[] listLenRpn = fieldInfo.listLenRpn;
 
             if (listLenRpn != null) {
                 processContext.listLen=RpnUtil.calcRPN_char_int(listLenRpn, vals);
@@ -396,11 +396,11 @@ public abstract class Parser {
             /**
              * 代表 {@link PacketField#lenExpr()}
              */
-            RpnUtil.Ele[] lenRpn = fieldInfo.lenRpn;
+            RpnUtil.Ele_int[] lenRpn = fieldInfo.lenRpn;
             /**
              * 代表 {@link PacketField#listLenExpr()}
              */
-            RpnUtil.Ele[] listlenRpn = fieldInfo.listLenRpn;
+            RpnUtil.Ele_int[] listlenRpn = fieldInfo.listLenRpn;
             int len;
             int listLen = 0;
             if (lenRpn == null) {
