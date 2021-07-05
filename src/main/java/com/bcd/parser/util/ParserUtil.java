@@ -377,14 +377,14 @@ public class ParserUtil {
             RpnUtil.Ele_int[] listLenRpn = null;
             int[] valExpr_int = null;
             if (!packetField.lenExpr().isEmpty()) {
-                lenRpn = RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.lenExpr()));
+                lenRpn = RpnUtil.to_ele_int(RpnUtil.toRpn(packetField.lenExpr()));
             }
             if (!packetField.listLenExpr().isEmpty()) {
-                listLenRpn = RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.listLenExpr()));
+                listLenRpn = RpnUtil.to_ele_int(RpnUtil.toRpn(packetField.listLenExpr()));
             }
             if (!packetField.valExpr().isEmpty()) {
                 try {
-                    double[] simpleExpr = RpnUtil.parseSimpleExpr(packetField.valExpr());
+                    double[] simpleExpr = RpnUtil.toExprVar(packetField.valExpr());
                     valExpr_int = new int[]{(int) simpleExpr[0], (int) simpleExpr[1]};
                 } catch (Exception ex) {
                     throw BaseRuntimeException.getException("class[{}] field[{}] valExpr[{}] ot support", clazz.getName(), field.getName(), packetField.valExpr());
@@ -452,6 +452,11 @@ public class ParserUtil {
             return fieldInfo;
         }).toArray(FieldInfo[]::new);
 
+        /**
+         * A-Z --> 65-90
+         * a-z --> 97-122
+         * 将所有的变量减去最小的偏移、使得最小的变量存在数组的第一位
+         */
         if (maxVarInt[0] != 0) {
             packetInfo.varValArrLen=maxVarInt[0] - minVarInt[0] + 1;
             packetInfo.varValArrOffset=minVarInt[0];

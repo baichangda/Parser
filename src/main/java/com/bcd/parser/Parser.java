@@ -268,7 +268,7 @@ public abstract class Parser {
             if (lenRpn == null) {
                 len = fieldInfo.packetField_len;
             } else {
-                len = RpnUtil.calcRPN_char_int(lenRpn, vals);
+                len = RpnUtil.calc_int(lenRpn, vals);
             }
 
             /**
@@ -289,7 +289,7 @@ public abstract class Parser {
             RpnUtil.Ele_int[] listLenRpn = fieldInfo.listLenRpn;
 
             if (listLenRpn != null) {
-                processContext.listLen=RpnUtil.calcRPN_char_int(listLenRpn, vals);
+                processContext.listLen=RpnUtil.calc_int(listLenRpn, vals);
             }
 
             Object val;
@@ -406,10 +406,10 @@ public abstract class Parser {
             if (lenRpn == null) {
                 len = fieldInfo.packetField_len;
             } else {
-                len = RpnUtil.calcRPN_char_int(lenRpn, vals);
+                len = RpnUtil.calc_int(lenRpn, vals);
             }
             if (listlenRpn != null) {
-                listLen = RpnUtil.calcRPN_char_int(listlenRpn, vals);
+                listLen = RpnUtil.calc_int(listlenRpn, vals);
             }
             processContext.fieldInfo=fieldInfo;
             processContext.len=len;
