@@ -16,10 +16,10 @@ public class ParsableObjectListProcessor extends FieldProcessor<List> {
 
     @Override
     public List process(ByteBuf data, FieldProcessContext processContext) {
-        int listLen=processContext.getListLen();
+        int listLen=processContext.listLen;
         List list=new ArrayList(listLen);
         for (int i = 0; i < listLen; i++) {
-            list.add(parser.parse(processContext.getFieldInfo().getClazz(),data,processContext));
+            list.add(parser.parse(processContext.fieldInfo.clazz,data,processContext));
         }
         return list;
     }

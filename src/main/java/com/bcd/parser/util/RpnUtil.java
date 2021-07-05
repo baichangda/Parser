@@ -9,49 +9,40 @@ import java.util.List;
 public class RpnUtil {
 
     /**
-     * 处理rpn表达式集合
-     * 字符串变量 --> char
-     * 负的字符变量 --> string
-     * 将数字字符串 --> double
+     * 处理rpn表达式集合、不同类型值转换为不同对象
      *
      * @param rpn rpn表达式集合
      * @return
      */
-    public static Object[] doWithRpnList_char_double(String[] rpn) {
+    public static Ele[] doWithRpnList_char_int(String[] rpn) {
         return Arrays.stream(rpn).map(e -> {
             try {
-                return Double.parseDouble(e);
+                return new Ele(1, Integer.parseInt(e));
             } catch (NumberFormatException ex) {
                 if (e.length() == 1) {
-                    return e.charAt(0);
+                    char c = e.charAt(0);
+                    switch (c){
+                        case '+':{
+                            return new Ele(4, c);
+                        }
+                        case '-':{
+                            return new Ele(5, c);
+                        }
+                        case '*':{
+                            return new Ele(6, c);
+                        }
+                        case '/':{
+                            return new Ele(7, c);
+                        }
+                        default:{
+                            return new Ele(2, c);
+                        }
+                    }
                 } else {
-                    return e;
+                    return new Ele(3, e.charAt(1));
                 }
             }
-        }).toArray();
-    }
-
-    /**
-     * 处理rpn表达式集合
-     * 字符串变量 --> char
-     * 负的字符变量 --> string
-     * 将数字字符串 --> int
-     *
-     * @param rpn rpn表达式集合
-     * @return
-     */
-    public static Object[] doWithRpnList_char_int(String[] rpn) {
-        return Arrays.stream(rpn).map(e -> {
-            try {
-                return Integer.parseInt(e);
-            } catch (NumberFormatException ex) {
-                if (e.length() == 1) {
-                    return e.charAt(0);
-                } else {
-                    return e;
-                }
-            }
-        }).toArray();
+        }).toArray(Ele[]::new);
     }
 
     /**
@@ -66,46 +57,65 @@ public class RpnUtil {
      * @param vals 变量对应值数组,取值规则为 vals[int(char)]
      * @return
      */
-    public static int calcRPN_char_int(Object[] rpn, int[] vals) {
-        int stackIndex = -1;
-        final int[] stack = new int[rpn.length];
-        for (Object s : rpn) {
-            if (s instanceof Integer) {
-                stack[++stackIndex] = (int) s;
-            } else if (s instanceof String) {
-                stack[++stackIndex] = -vals[((String) s).charAt(1)];
-            } else {
-                switch ((char) s) {
-                    case '+': {
+    public static int calcRPN_char_int(Ele[] rpn, int[] vals) {
+        if (rpn.length == 1) {
+            Ele first = rpn[0];
+            switch (first.type) {
+                case 1: {
+                    return first.val;
+                }
+                case 2: {
+                    return vals[first.val];
+                }
+                case 3: {
+                    return -vals[first.val];
+                }
+                default: {
+                    throw BaseRuntimeException.getException("error single type[{}] val[{}]", first.type, first.val);
+                }
+            }
+        } else {
+            int stackIndex = -1;
+            final int[] stack = new int[rpn.length];
+            for (Ele e : rpn) {
+                switch (e.type) {
+                    case 1: {
+                        stack[++stackIndex] = e.val;
+                        break;
+                    }
+                    case 2: {
+                        stack[++stackIndex] = vals[e.val];
+                        break;
+                    }
+                    case 3: {
+                        stack[++stackIndex] = -vals[e.val];
+                        break;
+                    }
+                    case 4: {
                         stackIndex--;
                         stack[stackIndex] = stack[stackIndex] + stack[stackIndex + 1];
                         break;
                     }
-                    case '-': {
+                    case 5: {
                         stackIndex--;
                         stack[stackIndex] = stack[stackIndex] - stack[stackIndex + 1];
                         break;
                     }
-                    case '*': {
+                    case 6: {
                         stackIndex--;
                         stack[stackIndex] = stack[stackIndex] * stack[stackIndex + 1];
                         break;
                     }
-                    case '/': {
+                    case 7: {
                         stackIndex--;
                         stack[stackIndex] = stack[stackIndex] / stack[stackIndex + 1];
                         break;
                     }
-                    default: {
-                        stack[++stackIndex] = vals[(char) s];
-                        break;
-                    }
                 }
             }
+            return stack[0];
         }
-        return stack[0];
     }
-
 
     public static void main(String[] args) {
 //        System.err.println(parseRPNToArithmetic(parseArithmeticToRPN("-(a-(b+(c)))")));
@@ -299,7 +309,6 @@ public class RpnUtil {
         }
     }
 
-
     public static String parseRPNToArithmetic(Object[] rpn) {
         if (rpn.length == 1) {
             return rpn[0].toString();
@@ -340,7 +349,6 @@ public class RpnUtil {
             return stack[0];
         }
     }
-
 
     /**
      * 解析如下表达式
@@ -468,7 +476,6 @@ public class RpnUtil {
         return new double[]{a, b};
     }
 
-
     /**
      * 计算 y=x/a+b
      *
@@ -477,14 +484,14 @@ public class RpnUtil {
      * @return
      */
     public static long calc_long(int[] arr, long x) {
-        switch (arr[0]){
-            case 0:{
+        switch (arr[0]) {
+            case 0: {
                 return arr[1];
             }
-            case 1:{
+            case 1: {
                 return x + arr[1];
             }
-            default:{
+            default: {
                 return x / arr[0] + arr[1];
             }
         }
@@ -498,14 +505,14 @@ public class RpnUtil {
      * @return
      */
     public static int calc_int(int[] arr, int x) {
-        switch (arr[0]){
-            case 0:{
+        switch (arr[0]) {
+            case 0: {
                 return arr[1];
             }
-            case 1:{
+            case 1: {
                 return x + arr[1];
             }
-            default:{
+            default: {
                 return x / arr[0] + arr[1];
             }
         }
@@ -519,14 +526,14 @@ public class RpnUtil {
      * @return
      */
     public static double calc_double(int[] arr, double x) {
-        switch (arr[0]){
-            case 0:{
+        switch (arr[0]) {
+            case 0: {
                 return arr[1];
             }
-            case 1:{
+            case 1: {
                 return x + arr[1];
             }
-            default:{
+            default: {
                 return x / arr[0] + arr[1];
             }
         }
@@ -540,14 +547,14 @@ public class RpnUtil {
      * @return
      */
     public static float calc_float(int[] arr, float x) {
-        switch (arr[0]){
-            case 0:{
+        switch (arr[0]) {
+            case 0: {
                 return arr[1];
             }
-            case 1:{
+            case 1: {
                 return x + arr[1];
             }
-            default:{
+            default: {
                 return x / arr[0] + arr[1];
             }
         }
@@ -561,14 +568,14 @@ public class RpnUtil {
      * @return
      */
     public static long deCalc_long(int[] arr, long y) {
-        switch (arr[0]){
-            case 0:{
+        switch (arr[0]) {
+            case 0: {
                 return y;
             }
-            case 1:{
+            case 1: {
                 return y - arr[1];
             }
-            default:{
+            default: {
                 return (y - arr[1]) * arr[0];
             }
         }
@@ -582,14 +589,14 @@ public class RpnUtil {
      * @return
      */
     public static int deCalc_int(int[] arr, int y) {
-        switch (arr[0]){
-            case 0:{
+        switch (arr[0]) {
+            case 0: {
                 return y;
             }
-            case 1:{
+            case 1: {
                 return y - arr[1];
             }
-            default:{
+            default: {
                 return (y - arr[1]) * arr[0];
             }
         }
@@ -603,14 +610,14 @@ public class RpnUtil {
      * @return
      */
     public static double deCalc_double(int[] arr, double y) {
-        switch (arr[0]){
-            case 0:{
+        switch (arr[0]) {
+            case 0: {
                 return y;
             }
-            case 1:{
+            case 1: {
                 return y - arr[1];
             }
-            default:{
+            default: {
                 return (y - arr[1]) * arr[0];
             }
         }
@@ -624,16 +631,43 @@ public class RpnUtil {
      * @return
      */
     public static double deCalc_float(int[] arr, float y) {
-        switch (arr[0]){
-            case 0:{
+        switch (arr[0]) {
+            case 0: {
                 return y;
             }
-            case 1:{
+            case 1: {
                 return y - arr[1];
             }
-            default:{
+            default: {
                 return (y - arr[1]) * arr[0];
             }
+        }
+    }
+
+    public static class Ele {
+        /**
+         * 1: 数字常量
+         * 2: 正数字变量
+         * 3: 负数字变量
+         * 4: +
+         * 5: -
+         * 6: *
+         * 7: /
+         */
+        public int type;
+        public int val;
+
+        public Ele(int type, int val) {
+            this.type = type;
+            this.val = val;
+        }
+
+        public int getType() {
+            return type;
+        }
+
+        public int getVal() {
+            return val;
         }
     }
 

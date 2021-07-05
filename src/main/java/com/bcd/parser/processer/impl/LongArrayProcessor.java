@@ -14,12 +14,12 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
 
     @Override
     public long[] process(ByteBuf data, FieldProcessContext processContext){
-        int len =processContext.getLen();
+        int len =processContext.len;
         if(len==0){
             return new long[0];
         }
-        int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int singleLen= processContext.fieldInfo.packetField_singleLen;
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         //优化处理 int->long
         if(singleLen==4){
             long[] res=new long[len>>>2];
@@ -56,8 +56,8 @@ public class LongArrayProcessor extends FieldProcessor<long[]> {
         if(len ==0){
             return;
         }
-        int singleLen= processContext.getFieldInfo().getPacketField_singleLen();
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int singleLen= processContext.fieldInfo.packetField_singleLen;
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         long[] newData;
         if(valExpr==null){
             newData=data;

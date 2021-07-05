@@ -8,13 +8,13 @@ import java.lang.reflect.Constructor;
 
 public class PacketInfo {
     //对应的class
-    private Class clazz;
+    public Class clazz;
 
     //对应无参构造方法
-    private Constructor constructor;
+    public Constructor constructor;
 
     //解析的字段信息集合
-    private FieldInfo[] fieldInfos;
+    public FieldInfo[] fieldInfos;
 
     /**
      * 类中{@link PacketField#var()}属性存在的字段个数
@@ -29,43 +29,4 @@ public class PacketInfo {
     public PacketInfo() {
     }
 
-    public Constructor getConstructor() {
-        return constructor;
-    }
-
-    public void setConstructor(Constructor constructor) {
-        this.constructor = constructor;
-    }
-
-    public Class getClazz() {
-        return clazz;
-    }
-
-    public void setClazz(Class clazz) {
-        this.clazz = clazz;
-    }
-
-    public FieldInfo[] getFieldInfos() {
-        return fieldInfos;
-    }
-
-    public void setFieldInfos(FieldInfo[] fieldInfos) {
-        this.fieldInfos = fieldInfos;
-    }
-
-    public int getVarValArrLen() {
-        return varValArrLen;
-    }
-
-    public void setVarValArrLen(int varValArrLen) {
-        this.varValArrLen = varValArrLen;
-    }
-
-    public int getVarValArrOffset() {
-        return varValArrOffset;
-    }
-
-    public void setVarValArrOffset(int varValArrOffset) {
-        this.varValArrOffset = varValArrOffset;
-    }
 }

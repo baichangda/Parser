@@ -18,7 +18,6 @@ import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @SuppressWarnings("unchecked")
 public class ParserUtil {
@@ -81,31 +80,31 @@ public class ParserUtil {
 
     public static BaseRuntimeException newLenNotSupportException(FieldDeProcessContext processContext) {
         return BaseRuntimeException.getException("class[{}] field[{}] len[{}] not support",
-                processContext.getFieldInfo().getPacketInfo().getClazz().getName(),
-                processContext.getFieldInfo().getField().getName(),
-                processContext.getLen());
+                processContext.fieldInfo.packetInfo.clazz.getName(),
+                processContext.fieldInfo.field.getName(),
+                processContext.len);
     }
 
     public static BaseRuntimeException newLenNotSupportException(FieldProcessContext processContext) {
         return BaseRuntimeException.getException("class[{}] field[{}] len[{}] not support",
-                processContext.getFieldInfo().getPacketInfo().getClazz().getName(),
-                processContext.getFieldInfo().getField().getName(),
-                processContext.getLen());
+                processContext.fieldInfo.packetInfo.clazz.getName(),
+                processContext.fieldInfo.field.getName(),
+                processContext.len);
     }
 
 
     public static BaseRuntimeException newSingleLenNotSupportException(FieldDeProcessContext processContext) {
         return BaseRuntimeException.getException("class[{}] field[{}] singleLen[{}] not support",
-                processContext.getFieldInfo().getPacketInfo().getClazz().getName(),
-                processContext.getFieldInfo().getField().getName(),
-                processContext.getFieldInfo().getPacketField_singleLen());
+                processContext.fieldInfo.packetInfo.clazz.getName(),
+                processContext.fieldInfo.field.getName(),
+                processContext.fieldInfo.packetField_singleLen);
     }
 
     public static BaseRuntimeException newSingleLenNotSupportException(FieldProcessContext processContext) {
         return BaseRuntimeException.getException("class[{}] field[{}] singleLen[{}] not support",
-                processContext.getFieldInfo().getPacketInfo().getClazz().getName(),
-                processContext.getFieldInfo().getField().getName(),
-                processContext.getFieldInfo().getPacketField_singleLen());
+                processContext.fieldInfo.packetInfo.clazz.getName(),
+                processContext.fieldInfo.field.getName(),
+                processContext.fieldInfo.packetField_singleLen);
     }
 
     /**
@@ -230,11 +229,11 @@ public class ParserUtil {
      */
     public static PacketInfo toPacketInfo(Class clazz, FieldProcessor[] processors, int[] processorCount) {
         PacketInfo packetInfo = new PacketInfo();
-        packetInfo.setClazz(clazz);
+        packetInfo.clazz = clazz;
         //设置无参构造方法
         try {
-            packetInfo.setConstructor(clazz.getConstructor());
-            packetInfo.getConstructor().setAccessible(true);
+            packetInfo.constructor = clazz.getConstructor();
+            packetInfo.constructor.setAccessible(true);
         } catch (NoSuchMethodException e) {
             throw BaseRuntimeException.getException(e);
         }
@@ -247,7 +246,7 @@ public class ParserUtil {
          * 2、将字段按照{@link PacketField#index()}正序
          * 3、将每个字段类型解析成FieldInfo
          */
-        List<FieldInfo> fieldInfoList = Arrays.stream(declaredFields).filter(field -> field.getAnnotation(PacketField.class) != null).sorted((f1, f2) -> {
+        packetInfo.fieldInfos = Arrays.stream(declaredFields).filter(field -> field.getAnnotation(PacketField.class) != null).sorted((f1, f2) -> {
             int i1 = f1.getAnnotation(PacketField.class).index();
             int i2 = f2.getAnnotation(PacketField.class).index();
             if (i1 < i2) {
@@ -374,8 +373,8 @@ public class ParserUtil {
             }
 
             //转换逆波兰表达式
-            Object[] lenRpn = null;
-            Object[] listLenRpn = null;
+            RpnUtil.Ele[] lenRpn = null;
+            RpnUtil.Ele[] listLenRpn = null;
             int[] valExpr_int = null;
             if (!packetField.lenExpr().isEmpty()) {
                 lenRpn = RpnUtil.doWithRpnList_char_int(RpnUtil.parseArithmeticToRPN(packetField.lenExpr()));
@@ -399,84 +398,89 @@ public class ParserUtil {
 
             //求maxVarInt、minVarInt
             if (lenRpn != null) {
-                for (Object o : lenRpn) {
-                    if (o instanceof Character) {
-                        if (maxVarInt[0] == 0 || (char) o > maxVarInt[0]) {
-                            maxVarInt[0] = (char) o;
-                        }
-                        if (minVarInt[0] == 0 || (char) o < minVarInt[0]) {
-                            minVarInt[0] = (char) o;
+                for (RpnUtil.Ele e : lenRpn) {
+                    switch (e.type) {
+                        case 2:
+                        case 3: {
+                            if (maxVarInt[0] == 0 || e.val > maxVarInt[0]) {
+                                maxVarInt[0] = e.val;
+                            }
+                            if (minVarInt[0] == 0 || e.val < minVarInt[0]) {
+                                minVarInt[0] = e.val;
+                            }
                         }
                     }
                 }
             }
             if (listLenRpn != null) {
-                for (Object o : listLenRpn) {
-                    if (o instanceof Character) {
-                        if (maxVarInt[0] == 0 || (char) o > maxVarInt[0]) {
-                            maxVarInt[0] = (char) o;
-                        }
-                        if (minVarInt[0] == 0 || (char) o < minVarInt[0]) {
-                            minVarInt[0] = (char) o;
+                for (RpnUtil.Ele e : listLenRpn) {
+                    switch (e.type) {
+                        case 2:
+                        case 3: {
+                            if (maxVarInt[0] == 0 || e.val > maxVarInt[0]) {
+                                maxVarInt[0] = e.val;
+                            }
+                            if (minVarInt[0] == 0 || e.val < minVarInt[0]) {
+                                minVarInt[0] = e.val;
+                            }
                         }
                     }
                 }
             }
 
             FieldInfo fieldInfo = new FieldInfo();
-            fieldInfo.setPacketInfo(packetInfo);
-            fieldInfo.setField(field);
-            fieldInfo.setVar(isVar);
-            fieldInfo.setClazz(typeClazz);
-            fieldInfo.setProcessorIndex(processorIndex);
-            fieldInfo.setLenRpn(lenRpn);
-            fieldInfo.setListLenRpn(listLenRpn);
-            fieldInfo.setValExpr_int(valExpr_int);
-            fieldInfo.setPacketField_index(packetField.index());
-            fieldInfo.setPacketField_len(packetField.len());
-            fieldInfo.setPacketField_lenExpr(packetField.lenExpr());
-            fieldInfo.setPacketField_skip(packetField.skip());
-            fieldInfo.setPacketField_listLenExpr(packetField.listLenExpr());
-            fieldInfo.setPacketField_singleLen(packetField.singleLen());
-            fieldInfo.setPacketField_var(packetField.var());
-            fieldInfo.setPacketField_var_int(packetField.var());
-            fieldInfo.setPacketField_parserClass(packetField.processorClass());
-            fieldInfo.setPacketField_valExpr(packetField.valExpr());
-            fieldInfo.setUnsafeOffset(UnsafeUtil.fieldOffset(field));
-            fieldInfo.setUnsafeType(UnsafeUtil.fieldType(field));
+            fieldInfo.packetInfo = packetInfo;
+            fieldInfo.field = field;
+            fieldInfo.isVar = isVar;
+            fieldInfo.clazz = typeClazz;
+            fieldInfo.processorIndex = processorIndex;
+            fieldInfo.lenRpn = lenRpn;
+            fieldInfo.listLenRpn = listLenRpn;
+            fieldInfo.valExpr_int = valExpr_int;
+            fieldInfo.packetField_index = packetField.index();
+            fieldInfo.packetField_len = packetField.len();
+            fieldInfo.packetField_lenExpr = packetField.lenExpr();
+            fieldInfo.packetField_skip = packetField.skip();
+            fieldInfo.packetField_listLenExpr = packetField.listLenExpr();
+            fieldInfo.packetField_singleLen = packetField.singleLen();
+            fieldInfo.packetField_var = packetField.var();
+            fieldInfo.packetField_var_int = packetField.var();
+            fieldInfo.packetField_parserClass = packetField.processorClass();
+            fieldInfo.packetField_valExpr = packetField.valExpr();
+            fieldInfo.unsafeOffset = UnsafeUtil.fieldOffset(field);
+            fieldInfo.unsafeType = UnsafeUtil.fieldType(field);
             return fieldInfo;
-        }).collect(Collectors.toList());
-        packetInfo.setFieldInfos(fieldInfoList.toArray(new FieldInfo[0]));
+        }).toArray(FieldInfo[]::new);
 
         if (maxVarInt[0] != 0) {
-            packetInfo.setVarValArrLen(maxVarInt[0] - minVarInt[0] + 1);
-            packetInfo.setVarValArrOffset(minVarInt[0]);
+            packetInfo.varValArrLen=maxVarInt[0] - minVarInt[0] + 1;
+            packetInfo.varValArrOffset=minVarInt[0];
         }
 
         //预先将var和表达式中的偏移量算出来、在解析时候不用重复计算
-        for (FieldInfo fieldInfo : packetInfo.getFieldInfos()) {
-            int varValArrOffset = fieldInfo.getPacketInfo().getVarValArrOffset();
-            if (fieldInfo.isVar()) {
-                fieldInfo.setPacketField_var_int(fieldInfo.getPacketField_var_int() - varValArrOffset);
+        for (FieldInfo fieldInfo : packetInfo.fieldInfos) {
+            int varValArrOffset = fieldInfo.packetInfo.varValArrOffset;
+            if (fieldInfo.isVar) {
+                fieldInfo.packetField_var_int=fieldInfo.packetField_var_int - varValArrOffset;
             }
-            Object[] lenRpn = fieldInfo.getLenRpn();
+            RpnUtil.Ele[] lenRpn = fieldInfo.lenRpn;
             if (lenRpn != null) {
-                for (int i = 0; i < lenRpn.length; i++) {
-                    if (lenRpn[i] instanceof Character) {
-                        char curChar = (char) lenRpn[i];
-                        if (curChar != '+' && curChar != '-' && curChar != '*' && curChar != '/') {
-                            lenRpn[i] = (char) (curChar - varValArrOffset);
+                for (RpnUtil.Ele cur : lenRpn) {
+                    switch (cur.type) {
+                        case 2:
+                        case 3: {
+                            cur.val = (cur.val - varValArrOffset);
                         }
                     }
                 }
             }
-            Object[] listLenRpn = fieldInfo.getListLenRpn();
+            RpnUtil.Ele[] listLenRpn = fieldInfo.listLenRpn;
             if (listLenRpn != null) {
-                for (int i = 0; i < listLenRpn.length; i++) {
-                    if (listLenRpn[i] instanceof Character) {
-                        char curChar = (char) listLenRpn[i];
-                        if (curChar != '+' && curChar != '-' && curChar != '*' && curChar != '/') {
-                            listLenRpn[i] = (char) (curChar - varValArrOffset);
+                for (RpnUtil.Ele cur : listLenRpn) {
+                    switch (cur.type) {
+                        case 2:
+                        case 3: {
+                            cur.val = (cur.val - varValArrOffset);
                         }
                     }
                 }

@@ -22,8 +22,8 @@ public class Parser_gb32960 extends Parser{
 
     static Logger logger= LoggerFactory.getLogger(Parser_gb32960.class);
 
-    public Parser_gb32960() {
-        super();
+    public Parser_gb32960(boolean printStack) {
+        super(printStack);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class Parser_gb32960 extends Parser{
     }
 
     public static void main(String[] args){
-        Parser parser= new Parser_gb32960();
+        Parser parser= new Parser_gb32960(false);
         parser.init();
 
         String data="232303FE4C534A4132343033304853313932393639010135" +
@@ -47,7 +47,7 @@ public class Parser_gb32960 extends Parser{
             threadNum=Integer.parseInt(args[0]);
         }
         logger.info("param threadNum[{}]",threadNum);
-        int num=1000000000;
+        int num=100000000;
         PerformanceUtil.testMultiThreadPerformance(data,parser,Packet.class,threadNum,num,false);
 //        testMultiThreadPerformance(data,threadNum,num);
 //        PerformanceUtil.testDeParse(data,parser,Packet.class,1,new LongAdder());

@@ -14,14 +14,14 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
 
     @Override
     public byte[] process(ByteBuf data, FieldProcessContext processContext) {
-        int len = processContext.getLen();
+        int len = processContext.len;
         if (len == 0) {
             return new byte[0];
         }
-        int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
+        int singleLen = processContext.fieldInfo.packetField_singleLen;
         //读取原始值
         if (singleLen == 1) {
-            int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+            int[] valExpr = processContext.fieldInfo.valExpr_int;
             byte[] res = new byte[len];
             data.readBytes(res);
             if (valExpr != null) {
@@ -44,9 +44,9 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
         if (len == 0) {
             return;
         }
-        int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
+        int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         byte[] newData;
         if (valExpr == null) {
             newData = data;
