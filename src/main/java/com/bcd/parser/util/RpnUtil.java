@@ -724,7 +724,7 @@ public class RpnUtil {
     public static long deCalc_long(int[] arr, long y) {
         switch (arr[0]) {
             case 0: {
-                return y;
+                return arr[1];
             }
             case 1: {
                 return y - arr[1];
@@ -745,7 +745,7 @@ public class RpnUtil {
     public static int deCalc_int(int[] arr, int y) {
         switch (arr[0]) {
             case 0: {
-                return y;
+                return arr[1];
             }
             case 1: {
                 return y - arr[1];
@@ -766,7 +766,7 @@ public class RpnUtil {
     public static double deCalc_double(int[] arr, double y) {
         switch (arr[0]) {
             case 0: {
-                return y;
+                return arr[1];
             }
             case 1: {
                 return y - arr[1];
@@ -787,7 +787,7 @@ public class RpnUtil {
     public static double deCalc_float(int[] arr, float y) {
         switch (arr[0]) {
             case 0: {
-                return y;
+                return arr[1];
             }
             case 1: {
                 return y - arr[1];
