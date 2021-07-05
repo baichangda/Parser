@@ -8,6 +8,26 @@ import java.util.List;
 
 public class RpnUtil {
 
+    public static class Ele {
+        /**
+         * 1: 数字常量
+         * 2: 正数字变量
+         * 3: 负数字变量
+         * 4: +
+         * 5: -
+         * 6: *
+         * 7: /
+         */
+        public int type;
+        public int val;
+
+        public Ele(int type, int val) {
+            this.type = type;
+            this.val = val;
+        }
+
+    }
+
     /**
      * 处理rpn表达式集合、不同类型值转换为不同对象
      *
@@ -644,31 +664,6 @@ public class RpnUtil {
         }
     }
 
-    public static class Ele {
-        /**
-         * 1: 数字常量
-         * 2: 正数字变量
-         * 3: 负数字变量
-         * 4: +
-         * 5: -
-         * 6: *
-         * 7: /
-         */
-        public int type;
-        public int val;
 
-        public Ele(int type, int val) {
-            this.type = type;
-            this.val = val;
-        }
-
-        public int getType() {
-            return type;
-        }
-
-        public int getVal() {
-            return val;
-        }
-    }
 
 }
