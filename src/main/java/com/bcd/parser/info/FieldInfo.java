@@ -19,7 +19,7 @@ public class FieldInfo {
     public int packetField_len;
     public char packetField_var;
     public String packetField_lenExpr;
-    public boolean packetField_skip;
+    public boolean packetField_skipParse;
     public String packetField_listLenExpr;
     public int packetField_singleLen;
     public Class packetField_parserClass;

@@ -28,12 +28,12 @@ public class Parser_gb32960 extends Parser{
 
     @Override
     protected List<Class> getParsableClass() {
-        return ParserUtil.getParsableClassByScanPackage("com.bcd");
+        return ParserUtil.getParsableClassByScanPackage("com.bcd.parser.impl.gb32960");
     }
 
     @Override
     protected List<FieldProcessor> initExtProcessor() {
-        return super.initProcessorByScanClass("com.bcd");
+        return super.initProcessorByScanClass("com.bcd.parser.impl.gb32960");
     }
 
     public static void main(String[] args){

@@ -2,8 +2,7 @@ package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
-import com.bcd.parser.impl.gb32960.processer.PacketDataFieldProcessor;
-import jdk.nashorn.internal.objects.annotations.Setter;
+import com.bcd.parser.impl.gb32960.processor.PacketDataFieldProcessor;
 
 
 @Parsable

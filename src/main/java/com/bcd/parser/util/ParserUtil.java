@@ -261,9 +261,9 @@ public class ParserUtil {
             PacketField packetField = field.getAnnotation(PacketField.class);
 
             /**
-             * 检查{@link PacketField#skip()}条件
+             * 检查{@link PacketField#skipParse()}条件
              */
-            if (packetField.skip() &&
+            if (packetField.skipParse() &&
                     (packetField.var() != '0' || (packetField.len() == 0 && packetField.lenExpr().equals("")))) {
                 throw BaseRuntimeException.getException("Class[" + clazz.getName() + "] Field[" + field.getName() + "] PacketField#skip Not Support");
             }
@@ -440,7 +440,7 @@ public class ParserUtil {
             fieldInfo.packetField_index = packetField.index();
             fieldInfo.packetField_len = packetField.len();
             fieldInfo.packetField_lenExpr = packetField.lenExpr();
-            fieldInfo.packetField_skip = packetField.skip();
+            fieldInfo.packetField_skipParse = packetField.skipParse();
             fieldInfo.packetField_listLenExpr = packetField.listLenExpr();
             fieldInfo.packetField_singleLen = packetField.singleLen();
             fieldInfo.packetField_var = packetField.var();
