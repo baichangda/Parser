@@ -184,7 +184,7 @@ public abstract class Parser {
      * @param pkg
      * @return
      */
-    protected List<FieldProcessor> initProcessorByScanClass(String pkg) {
+    protected List<FieldProcessor> initProcessorByScanPackage(String pkg) {
         List<FieldProcessor> processorList = new ArrayList<>();
         try {
             A:
@@ -225,6 +225,19 @@ public abstract class Parser {
      * 加载所有 {@link Parsable} 注解的类
      */
     protected abstract List<Class> getParsableClass();
+
+    /**
+     * 扫描包下面的所有 {@link Parsable} 注解的类
+     * @param pkg
+     * @return
+     */
+    protected List<Class> getParsableClassByScanPackage(String pkg){
+        try {
+            return ClassUtil.getClassesWithAnno(Parsable.class, pkg);
+        } catch (IOException | ClassNotFoundException e) {
+            throw BaseRuntimeException.getException(e);
+        }
+    }
 
     /**
      * 解析对象

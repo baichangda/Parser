@@ -60,6 +60,6 @@ public class Parser_someip extends Parser {
 
     @Override
     protected List<FieldProcessor> initExtProcessor() {
-        return super.initProcessorByScanClass("com.bcd.parser.impl.someip");
+        return super.initProcessorByScanPackage("com.bcd.parser.impl.someip");
     }
 }

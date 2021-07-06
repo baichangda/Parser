@@ -33,7 +33,7 @@ public class Parser_gb32960 extends Parser{
 
     @Override
     protected List<FieldProcessor> initExtProcessor() {
-        return super.initProcessorByScanClass("com.bcd.parser.impl.gb32960");
+        return super.initProcessorByScanPackage("com.bcd.parser.impl.gb32960");
     }
 
     public static void main(String[] args){
