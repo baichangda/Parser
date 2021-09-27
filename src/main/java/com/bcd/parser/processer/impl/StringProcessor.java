@@ -20,7 +20,7 @@ public class StringProcessor extends FieldProcessor<String> {
     @Override
     public String process(ByteBuf data, FieldProcessContext processContext) {
         int discardLen=0;
-        byte[] bytes=new byte[processContext.getLen()];
+        byte[] bytes=new byte[processContext.len];
         data.readBytes(bytes);
         for(int i=bytes.length-1;i>=0;i--){
             if(bytes[i]==0){
@@ -34,7 +34,7 @@ public class StringProcessor extends FieldProcessor<String> {
 
     @Override
     public void deProcess(String data, ByteBuf dest, FieldDeProcessContext processContext) {
-        int len=processContext.getLen();
+        int len=processContext.len;
         byte[] content=data.getBytes();
         if(content.length==len){
             dest.writeBytes(content);

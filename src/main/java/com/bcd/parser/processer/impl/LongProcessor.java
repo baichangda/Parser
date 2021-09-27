@@ -15,7 +15,7 @@ public class LongProcessor extends FieldProcessor<Long> {
     @Override
     public Long process(ByteBuf data, FieldProcessContext processContext){
         long res;
-        int len=processContext.getLen();
+        int len=processContext.len;
         if (len==4){
             res = data.readUnsignedInt();
         }else if(len==8){
@@ -23,7 +23,7 @@ public class LongProcessor extends FieldProcessor<Long> {
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);
         }
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_long(res,len)){
             return res;
         }else{
@@ -33,14 +33,14 @@ public class LongProcessor extends FieldProcessor<Long> {
 
     @Override
     public void deProcess(Long data, ByteBuf dest, FieldDeProcessContext processContext) {
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         long newData;
-        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_long(data,processContext.getLen())){
+        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_long(data,processContext.len)){
             newData=data;
         }else{
             newData = RpnUtil.deCalc_long(valExpr,data);
         }
-        int len=processContext.getLen();
+        int len=processContext.len;
         if (len==4){
             dest.writeInt((int)newData);
         }else if(len==8){

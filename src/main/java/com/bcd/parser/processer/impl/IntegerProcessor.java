@@ -15,7 +15,7 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
     @Override
     public Integer process(ByteBuf data, FieldProcessContext processContext) {
         int res;
-        int len = processContext.getLen();
+        int len = processContext.len;
         if (len==2){
             res = data.readUnsignedShort();
         }else if(len==4){
@@ -23,7 +23,8 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);
         }
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        //值表达式处理
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_int(res, len)) {
             return res;
         } else {
@@ -33,14 +34,15 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
 
     @Override
     public void deProcess(Integer data, ByteBuf dest, FieldDeProcessContext processContext) {
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        //值表达式处理
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         int newData;
-        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_int(data, processContext.getLen())) {
+        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_int(data, processContext.len)) {
             newData = data;
         } else {
             newData = RpnUtil.deCalc_int(valExpr, data);
         }
-        int len = processContext.getLen();
+        int len = processContext.len;
         if (len==2){
             dest.writeShort((short) newData);
         }else if(len==4){

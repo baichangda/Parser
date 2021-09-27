@@ -15,12 +15,13 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
 
     @Override
     public double[] process(ByteBuf data, FieldProcessContext processContext) {
-        int len = processContext.getLen();
+        int len = processContext.len;
         if (len == 0) {
             return new double[0];
         }
-        int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int singleLen = processContext.fieldInfo.packetField_singleLen;
+        //值表达式处理
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         //优化处理 int->long
         if (singleLen == 4) {
             double[] res = new double[len >> 2];
@@ -57,9 +58,9 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
         if (len == 0) {
             return;
         }
-        int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
+        int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         double[] newData;
         if (valExpr == null) {
             newData = data;

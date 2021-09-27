@@ -16,7 +16,7 @@ public class ByteProcessor extends FieldProcessor<Byte> {
     @Override
     public Byte process(ByteBuf data, FieldProcessContext processContext) {
         //读取原始值
-        int len=processContext.getLen();
+        int len=processContext.len;
         byte res;
         if(len==1){
             res=data.readByte();
@@ -24,7 +24,7 @@ public class ByteProcessor extends FieldProcessor<Byte> {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
         //值表达式处理
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_byte(res)){
             return res;
         }else{
@@ -34,14 +34,14 @@ public class ByteProcessor extends FieldProcessor<Byte> {
 
     @Override
     public void deProcess(Byte data, ByteBuf dest, FieldDeProcessContext processContext) {
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         byte newData;
         if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_byte(data)){
             newData=data;
         }else{
             newData = (byte) RpnUtil.deCalc_int(valExpr,data);
         }
-        int len=processContext.getLen();
+        int len=processContext.len;
         if(len==1){
             dest.writeByte(newData);
         }else {

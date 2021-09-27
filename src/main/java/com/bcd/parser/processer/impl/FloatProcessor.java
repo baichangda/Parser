@@ -17,7 +17,7 @@ public class FloatProcessor extends FieldProcessor<Float> {
     public Float process(ByteBuf data, FieldProcessContext processContext) {
         int res;
         //读取原始值
-        int len=processContext.getLen();
+        int len=processContext.len;
         if (len==2){
             res = data.readUnsignedShort();
         }else if(len==4){
@@ -26,7 +26,7 @@ public class FloatProcessor extends FieldProcessor<Float> {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
         //值表达式处理
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_int(res,len)){
             return (float)res;
         }else{
@@ -37,14 +37,14 @@ public class FloatProcessor extends FieldProcessor<Float> {
     @Override
     public void deProcess(Float data, ByteBuf dest, FieldDeProcessContext processContext) {
         //值表达式处理
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         int newData;
-        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_int(data.intValue(),processContext.getLen())){
+        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_int(data.intValue(),processContext.len)){
             newData=data.intValue();
         }else{
             newData = (int) RpnUtil.deCalc_float(valExpr,data);
         }
-        int len=processContext.getLen();
+        int len=processContext.len;
         if (len==2){
             dest.writeShort((short)newData);
         }else if(len==4){

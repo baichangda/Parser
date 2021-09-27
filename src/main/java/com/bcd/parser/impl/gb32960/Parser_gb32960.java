@@ -22,22 +22,22 @@ public class Parser_gb32960 extends Parser{
 
     static Logger logger= LoggerFactory.getLogger(Parser_gb32960.class);
 
-    public Parser_gb32960() {
-        super();
+    public Parser_gb32960(boolean printStack) {
+        super(printStack);
     }
 
     @Override
     protected List<Class> getParsableClass() {
-        return ParserUtil.getParsableClassByScanPackage("com.bcd");
+        return ParserUtil.getParsableClassByScanPackage("com.bcd.parser.impl.gb32960");
     }
 
     @Override
     protected List<FieldProcessor> initExtProcessor() {
-        return super.initProcessorByScanClass("com.bcd");
+        return super.initProcessorByScanPackage("com.bcd.parser.impl.gb32960");
     }
 
     public static void main(String[] args){
-        Parser parser= new Parser_gb32960();
+        Parser parser= new Parser_gb32960(false);
         parser.init();
 
         String data="232303FE4C534A4132343033304853313932393639010135" +
@@ -47,8 +47,8 @@ public class Parser_gb32960 extends Parser{
             threadNum=Integer.parseInt(args[0]);
         }
         logger.info("param threadNum[{}]",threadNum);
-        int num=1000000000;
-        PerformanceUtil.testMultiThreadPerformance(data,parser,Packet.class,threadNum,num,false);
+        int num=100000000;
+        PerformanceUtil.testMultiThreadPerformance(data,parser,Packet.class,threadNum,num,true);
 //        testMultiThreadPerformance(data,threadNum,num);
 //        PerformanceUtil.testDeParse(data,parser,Packet.class,1,new LongAdder());
 //        PerformanceUtil.testParse(data,parser,Packet.class,1,new LongAdder());

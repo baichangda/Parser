@@ -48,7 +48,7 @@ import java.util.*;
  * 以gb32960协议为例子
  * cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
  * 单线程、在cpu使用率90%+ 的情况下
- * 解析速度约为 49-51w/s、多个线程成倍数增长
+ * 解析速度约为 51-53w/s、多个线程成倍数增长
  * 反解析速度约为 38-40w/s、多个线程成倍数增长
  * 具体查看{@link com.bcd.parser.impl.gb32960.Parser_gb32960#main(String[])}
  * 注意:
@@ -67,12 +67,11 @@ import java.util.*;
 public abstract class Parser {
     public final Logger logger = LoggerFactory.getLogger(this.getClass());
     public final Map<Class, PacketInfo> packetInfoCache = new HashMap<>();
-
+    protected final boolean printStack;
     /**
      * 处理器数组
      */
     public FieldProcessor[] fieldProcessors;
-
     /**
      * 基础处理器,内置
      */
@@ -96,14 +95,12 @@ public abstract class Parser {
     protected FieldProcessor<Object> parsableObjectArrayProcessor = new ParsableObjectArrayProcessor();
     protected FieldProcessor<Object> parsableObjectProcessor = new ParsableObjectProcessor();
 
-    protected final boolean printStack;
-
     public Parser(boolean printStack) {
         this.printStack = printStack;
     }
 
     public Parser() {
-        this.printStack=false;
+        this.printStack = false;
     }
 
     public void init() {
@@ -118,7 +115,7 @@ public abstract class Parser {
     private void afterInit() {
         //为每个处理器绑定当前解析器
         for (FieldProcessor processor : fieldProcessors) {
-            processor.setParser(this);
+            processor.parser = this;
         }
     }
 
@@ -187,7 +184,7 @@ public abstract class Parser {
      * @param pkg
      * @return
      */
-    protected List<FieldProcessor> initProcessorByScanClass(String pkg) {
+    protected List<FieldProcessor> initProcessorByScanPackage(String pkg) {
         List<FieldProcessor> processorList = new ArrayList<>();
         try {
             A:
@@ -215,7 +212,7 @@ public abstract class Parser {
             packetInfoCache.put(clazz, ParserUtil.toPacketInfo(clazz, fieldProcessors, processorCount));
         }
         if (logger.isInfoEnabled()) {
-            logger.info("=======================init packetInfo succeed,follow list:\n{}", packetInfoCache.values().stream().map(e -> e.getClazz().getName()).reduce((e1, e2) -> e1 + "\n" + e2).orElse(""));
+            logger.info("=======================init packetInfo succeed,follow list:\n{}", packetInfoCache.values().stream().map(e -> e.clazz.getName()).reduce((e1, e2) -> e1 + "\n" + e2).orElse(""));
         }
         //打印processor处理数量
         logger.info("=======================processor info:");
@@ -228,6 +225,19 @@ public abstract class Parser {
      * 加载所有 {@link Parsable} 注解的类
      */
     protected abstract List<Class> getParsableClass();
+
+    /**
+     * 扫描包下面的所有 {@link Parsable} 注解的类
+     * @param pkg
+     * @return
+     */
+    protected List<Class> getParsableClassByScanPackage(String pkg){
+        try {
+            return ClassUtil.getClassesWithAnno(Parsable.class, pkg);
+        } catch (IOException | ClassNotFoundException e) {
+            throw BaseRuntimeException.getException(e);
+        }
+    }
 
     /**
      * 解析对象
@@ -252,89 +262,57 @@ public abstract class Parser {
      */
     private void parsePacketField(PacketInfo packetInfo, ByteBuf data, Object instance, FieldProcessContext parentContext) {
         //进行解析
-        int varValArrLen = packetInfo.getVarValArrLen();
+        int varValArrLen = packetInfo.varValArrLen;
         int[] vals = varValArrLen == 0 ? null : new int[varValArrLen];
-        FieldProcessContext processContext = new FieldProcessContext(instance,parentContext);
-        FieldInfo[] fieldInfos = packetInfo.getFieldInfos();
+        FieldProcessContext processContext = new FieldProcessContext(instance, parentContext);
+        FieldInfo[] fieldInfos = packetInfo.fieldInfos;
         for (int i = 0, end = fieldInfos.length; i < end; i++) {
             FieldInfo fieldInfo = fieldInfos[i];
 
             /**
              * 代表 {@link PacketField#lenExpr()}
              */
-            Object[] lenRpn = fieldInfo.getLenRpn();
+            RpnUtil.Ele_int[] lenRpn = fieldInfo.lenRpn;
 
             int len;
             if (lenRpn == null) {
-                len = fieldInfo.getPacketField_len();
+                len = fieldInfo.packetField_len;
             } else {
-                if (lenRpn.length == 1) {
-                    len = vals[(char) lenRpn[0]];
-                } else {
-                    len = RpnUtil.calcRPN_char_int(lenRpn, vals);
-                }
+                len = RpnUtil.calc_int(lenRpn, vals);
             }
 
             /**
              * 检查是否跳过解析
-             * {@link PacketField#skip()}
+             * {@link PacketField#skipParse()}
              */
-            if (fieldInfo.isPacketField_skip()) {
+            if (fieldInfo.packetField_skipParse) {
                 data.skipBytes(len);
                 continue;
             }
 
-            processContext.setLen(len);
-            processContext.setFieldInfo(fieldInfo);
+            processContext.len = len;
+            processContext.fieldInfo = fieldInfo;
 
             /**
              * 代表 {@link PacketField#listLenExpr()}
              */
-            Object[] listLenRpn = fieldInfo.getListLenRpn();
+            RpnUtil.Ele_int[] listLenRpn = fieldInfo.listLenRpn;
 
             if (listLenRpn != null) {
-                int listLen;
-                if (listLenRpn.length == 1) {
-                    listLen = vals[(char) listLenRpn[0]];
-                } else {
-                    listLen = RpnUtil.calcRPN_char_int(listLenRpn, vals);
-                }
-                processContext.setListLen(listLen);
+                processContext.listLen = RpnUtil.calc_int(listLenRpn, vals);
             }
 
             Object val;
             //过滤掉对象的日志
-            if (printStack
-//                    &&fieldInfo.getProcessorIndex()!=17
-            ) {
-                int startIndex = data.readerIndex();
-                val = fieldProcessors[fieldInfo.getProcessorIndex()].process(data, processContext);
-                int endIndex = data.readerIndex();
-                byte[] arr = new byte[endIndex - startIndex];
-                data.getBytes(startIndex, arr);
-                if (fieldInfo.getPacketField_valExpr().isEmpty()) {
-                    logger.info("parse class[{}] field[{}] hex[{}] val[{}] parser[{}]",
-                            packetInfo.getClazz().getName(),
-                            fieldInfo.getField().getName(),
-                            ByteBufUtil.hexDump(arr),
-                            val,
-                            fieldProcessors[fieldInfo.getProcessorIndex()].getClass().getName());
-                } else {
-                    logger.info("parse class[{}] field[{}] hex[{}] val[{}] valExpr[{}] parser[{}]",
-                            packetInfo.getClazz().getName(),
-                            fieldInfo.getField().getName(),
-                            ByteBufUtil.hexDump(arr),
-                            val,
-                            fieldInfo.getPacketField_valExpr(),
-                            fieldProcessors[fieldInfo.getProcessorIndex()].getClass().getName());
-                }
+            if (printStack) {
+                val = fieldProcessors[fieldInfo.processorIndex].process_print(data, processContext);
             } else {
-                val = fieldProcessors[fieldInfo.getProcessorIndex()].process(data, processContext);
+                val = fieldProcessors[fieldInfo.processorIndex].process(data, processContext);
             }
-            if (fieldInfo.isVar()) {
-                vals[fieldInfo.getPacketField_var_int()] = ((Number) val).intValue();
+            if (fieldInfo.isVar) {
+                vals[fieldInfo.packetField_var_int] = ((Number) val).intValue();
             }
-            UnsafeUtil.setValue(instance, val, fieldInfo.getUnsafeOffset(), fieldInfo.getUnsafeType());
+            UnsafeUtil.setValue(instance, val, fieldInfo.unsafeOffset, fieldInfo.unsafeType);
         }
     }
 
@@ -357,7 +335,7 @@ public abstract class Parser {
         }
         try {
             //构造实例
-            T instance = (T) packetInfo.getConstructor().newInstance();
+            T instance = (T) packetInfo.constructor.newInstance();
             /**
              * 解析{@link com.bcd.parser.anno.PacketField}字段
              */
@@ -395,76 +373,47 @@ public abstract class Parser {
         Class clazz = t.getClass();
         PacketInfo packetInfo = packetInfoCache.get(clazz);
         //进行解析
-        int varValArrLen = packetInfo.getVarValArrLen();
+        int varValArrLen = packetInfo.varValArrLen;
         int[] vals = varValArrLen == 0 ? null : new int[varValArrLen];
-        FieldDeProcessContext processContext = new FieldDeProcessContext(t,parentContext);
-        FieldInfo[] fieldInfos = packetInfo.getFieldInfos();
+        FieldDeProcessContext processContext = new FieldDeProcessContext(t, parentContext);
+        FieldInfo[] fieldInfos = packetInfo.fieldInfos;
         for (int i = 0, end = fieldInfos.length; i < end; i++) {
-            FieldInfo fieldInfo=fieldInfos[i];
-            int processorIndex = fieldInfo.getProcessorIndex();
+            FieldInfo fieldInfo = fieldInfos[i];
+            int processorIndex = fieldInfo.processorIndex;
 
             /**
              * 代表 {@link PacketField#lenExpr()}
              */
-            Object[] lenRpn = fieldInfo.getLenRpn();
-            /**
-             * 代表 {@link PacketField#listLenExpr()}
-             */
-            Object[] lisLlenRpn = fieldInfo.getListLenRpn();
+            RpnUtil.Ele_int[] lenRpn = fieldInfo.lenRpn;
             int len;
             int listLen = 0;
             if (lenRpn == null) {
-                len = fieldInfo.getPacketField_len();
+                len = fieldInfo.packetField_len;
             } else {
-                if (lenRpn.length == 1) {
-                    len = vals[(char) lenRpn[0]];
-                } else {
-                    len = RpnUtil.calcRPN_char_int(lenRpn, vals);
-                }
+                len = RpnUtil.calc_int(lenRpn, vals);
             }
-            if (lisLlenRpn != null) {
-                if (lisLlenRpn.length == 1) {
-                    listLen = vals[(char) lisLlenRpn[0]];
-                } else {
-                    listLen = RpnUtil.calcRPN_char_int(lisLlenRpn, vals);
-                }
+
+            /**
+             * 代表 {@link PacketField#listLenExpr()}
+             */
+            RpnUtil.Ele_int[] listlenRpn = fieldInfo.listLenRpn;
+            if (listlenRpn != null) {
+                listLen = RpnUtil.calc_int(listlenRpn, vals);
             }
-            processContext.setFieldInfo(fieldInfo);
-            processContext.setLen(len);
-            processContext.setListLen(listLen);
+            processContext.fieldInfo = fieldInfo;
+            processContext.len = len;
+            processContext.listLen = listLen;
 
-            Object data = UnsafeUtil.getValue(t, fieldInfo.getUnsafeOffset(), fieldInfo.getUnsafeType());
+            Object data = UnsafeUtil.getValue(t, fieldInfo.unsafeOffset, fieldInfo.unsafeType);
 
-            if (printStack
-//                        &&fieldInfo.getProcessorIndex()!=17
-            ) {
-                int startIndex = res.writerIndex();
-                fieldProcessors[processorIndex].deProcess(data, res, processContext);
-                int endIndex = res.writerIndex();
-                byte[] arr = new byte[endIndex - startIndex];
-                res.getBytes(startIndex, arr);
-                if (fieldInfo.getPacketField_valExpr().isEmpty()) {
-                    logger.info("deParse class[{}] field[{}] hex[{}] val[{}] parser[{}]",
-                            packetInfo.getClazz().getName(),
-                            fieldInfo.getField().getName(),
-                            ByteBufUtil.hexDump(arr),
-                            data,
-                            fieldProcessors[processorIndex].getClass().getName());
-                } else {
-                    logger.info("deParse class[{}] field[{}] hex[{}] val[{}] valExpr[{}] parser[{}]",
-                            packetInfo.getClazz().getName(),
-                            fieldInfo.getField().getName(),
-                            ByteBufUtil.hexDump(arr),
-                            data,
-                            fieldInfo.getPacketField_valExpr(),
-                            fieldProcessors[processorIndex].getClass().getName());
-                }
+            if (printStack) {
+                fieldProcessors[processorIndex].deProcess_print(data, res, processContext);
             } else {
                 fieldProcessors[processorIndex].deProcess(data, res, processContext);
             }
 
-            if (fieldInfo.isVar()) {
-                vals[fieldInfo.getPacketField_var_int()] = ((Number) data).intValue();
+            if (fieldInfo.isVar) {
+                vals[fieldInfo.packetField_var_int] = ((Number) data).intValue();
             }
         }
         return res;

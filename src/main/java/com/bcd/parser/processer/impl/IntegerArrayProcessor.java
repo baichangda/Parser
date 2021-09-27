@@ -14,12 +14,12 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
 
     @Override
     public int[] process(ByteBuf data, FieldProcessContext processContext) {
-        int len = processContext.getLen();
+        int len = processContext.len;
         if (len == 0) {
             return new int[0];
         }
-        int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int singleLen = processContext.fieldInfo.packetField_singleLen;
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         //优化处理 short->int
         if(singleLen==2){
             int[] res = new int[len >>>1];
@@ -56,9 +56,9 @@ public class IntegerArrayProcessor extends FieldProcessor<int[]> {
         if (len == 0) {
             return;
         }
-        int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
+        int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         int[] newData;
         if (valExpr == null) {
             newData = data;

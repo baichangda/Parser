@@ -73,9 +73,8 @@ public @interface PacketField {
      * <p>
      * 原理为解析到当前字段时候会得到当前字段所占字节长度、然后{@link io.netty.buffer.ByteBuf#skipBytes(int)}跳过
      * <p>
-     * 需要注意的是在deParse时候、会忽略此属性
      */
-    boolean skip() default false;
+    boolean skipParse() default false;
 
     /**
      * {@link Parsable}对象集合/数组长度表达式

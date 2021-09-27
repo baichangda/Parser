@@ -18,8 +18,8 @@ import java.util.List;
 public class ParsableObjectArrayProcessor extends FieldProcessor<Object> {
     @Override
     public Object process(ByteBuf data, FieldProcessContext processContext) {
-        int listLen=processContext.getListLen();
-        Class arrayType= processContext.getFieldInfo().getClazz();
+        int listLen=processContext.listLen;
+        Class arrayType= processContext.fieldInfo.clazz;
         Object arr= Array.newInstance(arrayType,listLen);
         for (int i = 0; i < listLen; i++) {
             Array.set(arr,i,parser.parse(arrayType,data,processContext));

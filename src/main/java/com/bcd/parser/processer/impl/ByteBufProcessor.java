@@ -15,7 +15,7 @@ public class ByteBufProcessor extends FieldProcessor<ByteBuf> {
 
     @Override
     public ByteBuf process(ByteBuf data, FieldProcessContext processContext) {
-        int len=processContext.getLen();
+        int len=processContext.len;
         ByteBuf byteBuf= Unpooled.buffer(len,len);
         byteBuf.writeBytes(data,len);
         return byteBuf;

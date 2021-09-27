@@ -15,12 +15,12 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
 
     @Override
     public float[] process(ByteBuf data, FieldProcessContext processContext) {
-        int len = processContext.getLen();
+        int len = processContext.len;
         if (len == 0) {
             return new float[0];
         }
-        int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int singleLen = processContext.fieldInfo.packetField_singleLen;
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         //优化处理 short->int
         if (singleLen == 2) {
             float[] res = new float[len >>> 1];
@@ -57,9 +57,9 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
         if (len == 0) {
             return;
         }
-        int singleLen = processContext.getFieldInfo().getPacketField_singleLen();
+        int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
-        int[] valExpr = processContext.getFieldInfo().getValExpr_int();
+        int[] valExpr = processContext.fieldInfo.valExpr_int;
         float[] newData;
         if (valExpr == null) {
             newData = data;

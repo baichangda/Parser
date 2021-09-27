@@ -14,7 +14,7 @@ import io.netty.buffer.ByteBuf;
 public class ParsableObjectProcessor  extends FieldProcessor<Object> {
     @Override
     public Object process(ByteBuf data, FieldProcessContext processContext) {
-        return parser.parse(processContext.getFieldInfo().getClazz(),data);
+        return parser.parse(processContext.fieldInfo.clazz,data);
     }
 
     @Override
