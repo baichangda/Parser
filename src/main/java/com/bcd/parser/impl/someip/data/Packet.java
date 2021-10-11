@@ -1,13 +1,15 @@
 package com.bcd.parser.impl.someip.data;
 
 import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.anno.Parsable;
+import com.bcd.parser.impl.someip.javassist.builder.MessageTypeBuilder;
+import com.bcd.parser.impl.someip.javassist.builder.MethodIdOrEventIdBuilder;
+import com.bcd.parser.impl.someip.javassist.builder.OffsetBuilder;
+import com.bcd.parser.impl.someip.javassist.builder.ReturnCodeBuilder;
 import com.bcd.parser.impl.someip.javassist.processor.MessageTypeProcessor;
 import com.bcd.parser.impl.someip.javassist.processor.MethodIdOrEventIdProcessor;
 import com.bcd.parser.impl.someip.javassist.processor.OffsetProcessor;
 import com.bcd.parser.impl.someip.javassist.processor.ReturnCodeProcessor;
 
-@Parsable
 public class Packet {
     @PacketField(index = 1, len = 2)
     int serviceId;
@@ -17,7 +19,10 @@ public class Packet {
      */
     byte flag;
 
-    @PacketField(index = 3, processorClass = MethodIdOrEventIdProcessor.class)
+    @PacketField(index = 3
+//            , processorClass = MethodIdOrEventIdProcessor.class
+            , builderClass = MethodIdOrEventIdBuilder.class
+    )
     short methodIdOrEventId;
 
     @PacketField(index = 4, len = 4)
@@ -35,16 +40,22 @@ public class Packet {
     @PacketField(index = 8, len = 1)
     short interfaceVersion;
 
-    @PacketField(index = 9, len = 1, processorClass = MessageTypeProcessor.class)
+    @PacketField(index = 9, len = 1
+//            , processorClass = MessageTypeProcessor.class
+            , builderClass = MessageTypeBuilder.class)
     MessageType messageType;
 
-    @PacketField(index = 10, len = 1, processorClass = ReturnCodeProcessor.class)
+    @PacketField(index = 10, len = 1
+//            , processorClass = ReturnCodeProcessor.class
+            , builderClass = ReturnCodeBuilder.class)
     ReturnCode returnCode;
 
-    @PacketField(index = 11,len = 4,processorClass = OffsetProcessor.class,var = 'a')
+    @PacketField(index = 11, len = 4
+//            ,processorClass = OffsetProcessor.class
+            , builderClass = OffsetBuilder.class, var = 'a')
     int offset;
 
-    @PacketField(index = 12,lenExpr = "a*16")
+    @PacketField(index = 12, lenExpr = "a*16")
     byte[] payload;
 
     public int getServiceId() {

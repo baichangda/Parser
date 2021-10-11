@@ -1,11 +1,8 @@
 package com.bcd.parser.impl.gb32960.data;
 
-import com.bcd.parser.anno.Parsable;
-
 /**
  * 车辆运行通用数据
  */
-@Parsable
 public class VehicleCommonData {
     //整车数据
     VehicleBaseData vehicleBaseData;

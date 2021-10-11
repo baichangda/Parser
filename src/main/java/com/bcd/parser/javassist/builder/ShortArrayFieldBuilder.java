@@ -14,7 +14,7 @@ public class ShortArrayFieldBuilder extends FieldBuilder {
         final Field field = context.field;
         final String fieldVarName = JavassistUtil.getFieldVarName(context);
         final String setMethodName = JavassistUtil.getSetMethodName(context.field);
-        final String instance_var_name = context.instance_var_name;
+        final String instanceVarName = context.instanceVarName;
         String lenRes=context.lenRes;
         switch (packetField.singleLen()) {
             case 1: {
@@ -25,24 +25,24 @@ public class ShortArrayFieldBuilder extends FieldBuilder {
                 break;
             }
             default: {
-                JavassistUtil.packetField_singleLen_notSupport(field);
+                JavassistUtil.packetFieldSingleLenNotSupport(field);
             }
         }
-        String arr_var_name = fieldVarName + "_arr";
-        JavassistUtil.append(body,"short[] {}=new short[{}];\n",arr_var_name, lenRes);
-        JavassistUtil.append(body,"for(int i=0;i<{}.length;i++){\n",arr_var_name);
+        String arrVarName = fieldVarName + "_arr";
+        JavassistUtil.append(body,"short[] {}=new short[{}];\n",arrVarName, lenRes);
+        JavassistUtil.append(body,"for(int i=0;i<{}.length;i++){\n",arrVarName);
         switch (packetField.singleLen()) {
             case 1: {
-                JavassistUtil.append(body,"{}[i]={}.readUnsignedByte();\n",arr_var_name,byteBuf_var_name);
+                JavassistUtil.append(body,"{}[i]={}.readUnsignedByte();\n",arrVarName,byteBuf_var_name);
                 break;
             }
             case 2: {
-                JavassistUtil.append(body,"{}[i]={}.readShort();\n",arr_var_name,byteBuf_var_name);
+                JavassistUtil.append(body,"{}[i]={}.readShort();\n",arrVarName,byteBuf_var_name);
                 break;
             }
         }
         body.append("}\n");
 
-        JavassistUtil.append(body,"{}.{}({});\n", instance_var_name, setMethodName, arr_var_name);
+        JavassistUtil.append(body,"{}.{}({});\n", instanceVarName, setMethodName, arrVarName);
     }
 }

@@ -1,9 +1,7 @@
 package com.bcd.parser.impl.someip.javassist;
 
 
-import com.bcd.parser.impl.someip.data.MessageType;
 import com.bcd.parser.impl.someip.data.Packet;
-import com.bcd.parser.impl.someip.data.ReturnCode;
 import com.bcd.parser.javassist.Parser;
 import com.bcd.parser.javassist.util.PerformanceUtil;
 import org.slf4j.Logger;

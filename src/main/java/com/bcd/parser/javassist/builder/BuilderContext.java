@@ -29,7 +29,7 @@ public class BuilderContext {
     /**
      * 字段所属类实例变量名称
      */
-    public final String instance_var_name;
+    public final String instanceVarName;
     /**
      * 父构造环境
      */
@@ -38,7 +38,7 @@ public class BuilderContext {
     /**
      * 当前字段所属class中的变量名称对应字段名称
      */
-    public final Map<Character, String> var_to_fieldName = new HashMap<>();
+    public final Map<Character, String> varToFieldName = new HashMap<>();
 
 
 
@@ -66,7 +66,7 @@ public class BuilderContext {
         this.body = body;
         this.parser = parser;
         this.implCc = implCc;
-        this.instance_var_name = instance_var_name;
+        this.instanceVarName = instance_var_name;
         this.parentContext = parentContext;
     }
 }

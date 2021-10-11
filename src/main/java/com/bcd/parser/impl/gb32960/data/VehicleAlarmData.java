@@ -1,12 +1,10 @@
 package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.anno.Parsable;
 
 /**
  * 报警数据
  */
-@Parsable
 public class VehicleAlarmData {
     //最高报警等级
     @PacketField(index = 1,len = 1)

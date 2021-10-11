@@ -13,7 +13,7 @@ public class DoubleFieldBuilder extends FieldBuilder{
         final PacketField packetField = context.packetField;
         final Field field = context.field;
         final String setMethodName = JavassistUtil.getSetMethodName(field);
-        final String instance_var_name = context.instance_var_name;
+        final String instanceVarName = context.instanceVarName;
         String valExpr=null;
         switch (packetField.len()) {
             case 4: {
@@ -25,9 +25,9 @@ public class DoubleFieldBuilder extends FieldBuilder{
                 break;
             }
             default: {
-                JavassistUtil.packetField_len_notSupport(field);
+                JavassistUtil.packetFieldLenNotSupport(field);
             }
         }
-        JavassistUtil.append(body, "{}.{}({});\n", instance_var_name, setMethodName, JavassistUtil.replace_var_to_valExpr(packetField.valExpr(),valExpr));
+        JavassistUtil.append(body, "{}.{}({});\n", instanceVarName, setMethodName, JavassistUtil.replaceVarToValExpr(packetField.valExpr(),valExpr));
     }
 }

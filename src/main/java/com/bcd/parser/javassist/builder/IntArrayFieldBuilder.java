@@ -14,7 +14,7 @@ public class IntArrayFieldBuilder extends FieldBuilder {
         final Field field = context.field;
         final String fieldVarName = JavassistUtil.getFieldVarName(context);
         final String setMethodName = JavassistUtil.getSetMethodName(field);
-        final String instance_var_name = context.instance_var_name;
+        final String instanceVarName = context.instanceVarName;
         String lenRes=context.lenRes;
         switch (packetField.singleLen()) {
             case 2: {
@@ -26,7 +26,7 @@ public class IntArrayFieldBuilder extends FieldBuilder {
                 break;
             }
             default: {
-                JavassistUtil.packetField_singleLen_notSupport(field);
+                JavassistUtil.packetFieldSingleLenNotSupport(field);
             }
         }
         String arr_var_name = fieldVarName + "_arr";
@@ -44,6 +44,6 @@ public class IntArrayFieldBuilder extends FieldBuilder {
         }
         body.append("}\n");
 
-        JavassistUtil.append(body,"{}.{}({});\n", instance_var_name, setMethodName, arr_var_name);
+        JavassistUtil.append(body,"{}.{}({});\n", instanceVarName, setMethodName, arr_var_name);
     }
 }

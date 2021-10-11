@@ -14,11 +14,11 @@ public class StringFieldBuilder extends FieldBuilder{
         final Field field = context.field;
         final String fieldVarName = JavassistUtil.getFieldVarName(context);
         final String setMethodName = JavassistUtil.getSetMethodName(context.field);
-        final String instance_var_name = context.instance_var_name;
+        final String instanceVarName = context.instanceVarName;
         String lenRes;
         final int len = packetField.len();
         if (len == 0) {
-            lenRes = JavassistUtil.replace_var_to_fieldName(packetField.lenExpr(), context.var_to_fieldName, field);
+            lenRes = JavassistUtil.replaceVarToFieldName(packetField.lenExpr(), context.varToFieldName, field);
         } else {
             lenRes = len + "";
         }
@@ -34,6 +34,6 @@ public class StringFieldBuilder extends FieldBuilder{
         JavassistUtil.append(body,"break;\n",discardLen_var_name);
         JavassistUtil.append(body,"}\n",discardLen_var_name);
         JavassistUtil.append(body,"}\n",discardLen_var_name);
-        JavassistUtil.append(body,"{}.{}(new String({},0,{}.length-{}));\n",instance_var_name,setMethodName,arr_var_name,arr_var_name,discardLen_var_name);
+        JavassistUtil.append(body,"{}.{}(new String({},0,{}.length-{}));\n",instanceVarName,setMethodName,arr_var_name,arr_var_name,discardLen_var_name);
     }
 }

@@ -1,12 +1,10 @@
 package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.anno.Parsable;
 
 /**
  * 整车数据
  */
-@Parsable
 public class VehicleBaseData {
     //车辆状态
     @PacketField(index = 1, len = 1)

@@ -13,11 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 public class JavassistUtil {
-    public static void packetField_len_notSupport(Field field) {
+    public static void packetFieldLenNotSupport(Field field) {
         throw BaseRuntimeException.getException("class[{}] field[{}] @PacketField[len={}] not support", field.getDeclaringClass().getName(), field.getName(), field.getAnnotation(PacketField.class).len());
     }
 
-    public static void packetField_singleLen_notSupport(Field field) {
+    public static void packetFieldSingleLenNotSupport(Field field) {
         throw BaseRuntimeException.getException("class[{}] field[{}] @PacketField[singleLen={}] not support", field.getDeclaringClass().getName(), field.getName(), field.getAnnotation(PacketField.class).singleLen());
     }
 
@@ -50,7 +50,7 @@ public class JavassistUtil {
         return setMethodName;
     }
 
-    public static String replace_var_to_valExpr(String expr, String valExpr) {
+    public static String replaceVarToValExpr(String expr, String valExpr) {
         StringBuilder sb = new StringBuilder();
         final char[] chars = expr.toCharArray();
         for (char c : chars) {
@@ -83,7 +83,7 @@ public class JavassistUtil {
     }
 
 
-    public static String replace_var_to_fieldName(String expr, Map<Character, String> map, Field field) {
+    public static String replaceVarToFieldName(String expr, Map<Character, String> map, Field field) {
         StringBuilder sb = new StringBuilder();
         final char[] chars = expr.toCharArray();
         for (char c : chars) {

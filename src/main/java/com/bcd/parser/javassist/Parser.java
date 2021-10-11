@@ -1,7 +1,6 @@
 package com.bcd.parser.javassist;
 
 import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.anno.Parsable;
 import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.javassist.builder.*;
 import com.bcd.parser.javassist.processor.FieldProcessContext;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
  * 协议解析器
  * 主要功能如下:
  * 1、解析
- * 从{@link ByteBuf}中获取二进制数据、解析成{@link Parsable}的class对象实例
+ * 从{@link ByteBuf}中获取二进制数据、解析成class对象实例
  * 解析规则参照{@link com.bcd.parser.anno.PacketField}
  * <p>
  * 原理简介
@@ -141,7 +140,7 @@ public class Parser {
                 if (packetField.lenExpr().isEmpty()) {
                     lenRes = null;
                 } else {
-                    lenRes = JavassistUtil.replace_var_to_fieldName(packetField.lenExpr(), context.var_to_fieldName, field);
+                    lenRes = JavassistUtil.replaceVarToFieldName(packetField.lenExpr(), context.varToFieldName, field);
                 }
             } else {
                 lenRes = packetField.len() + "";
@@ -159,12 +158,21 @@ public class Parser {
                 }
             }
 
+            final Class builderClass = packetField.builderClass();
             final Class processorClass = packetField.processorClass();
             context.field = field;
             context.packetField = packetField;
             context.lenRes = lenRes;
-
-            if (processorClass == void.class) {
+            if(builderClass!=void.class){
+                try {
+                    final FieldBuilder builder = (FieldBuilder) builderClass.newInstance();
+                    builder.build(context);
+                } catch (InstantiationException |IllegalAccessException e) {
+                    throw BaseRuntimeException.getException(e);
+                }
+            }else if (processorClass != void.class) {
+                processorClassFieldBuilder.build(context);
+            } else {
                 final Class<?> type = field.getType();
                 if (type.isAssignableFrom(byte[].class)) {
                     byteArrayFieldBuilder.build(context);
@@ -199,14 +207,8 @@ public class Parser {
                 } else if (type.isArray()) {
                     parseableObjectArrayFieldBuilder.build(context);
                 } else {
-                    if (type.isAnnotationPresent(Parsable.class)) {
-                        parseableObjectFieldBuilder.build(context);
-                    } else {
-                        System.err.println("field[" + field.getName() + "] not support");
-                    }
+                    parseableObjectFieldBuilder.build(context);
                 }
-            } else {
-                processorClassFieldBuilder.build(context);
             }
         }
     }

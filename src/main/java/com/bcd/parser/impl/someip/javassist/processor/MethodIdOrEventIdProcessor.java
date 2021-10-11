@@ -10,7 +10,7 @@ public class MethodIdOrEventIdProcessor extends FieldProcessor<Short> {
     public Short process(ByteBuf data, FieldProcessContext context) {
         short s = data.readShort();
         //解析flag
-        ((Packet) context.instance).setFlag((byte) ((s >> 7) & 0b01));
+        ((Packet) context.instance).setFlag((byte) ((s >> 7) & 0x01));
         return (short) (s & (0xff >> 1));
     }
 }

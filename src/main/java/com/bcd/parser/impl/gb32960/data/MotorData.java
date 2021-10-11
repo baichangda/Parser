@@ -1,12 +1,10 @@
 package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.anno.Parsable;
 
 /**
  * 每个驱动电机数据格式
  */
-@Parsable
 public class MotorData {
     //驱动电机序号
     @PacketField(index = 1,len = 1)

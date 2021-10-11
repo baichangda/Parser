@@ -1,12 +1,10 @@
 package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.anno.Parsable;
 
 /**
  * 燃料电池数据
  */
-@Parsable
 public class VehicleFuelBatteryData {
     //燃料电池电压
     @PacketField(index = 1,len = 2,valExpr = "x/10")

@@ -1,7 +1,6 @@
 package com.bcd.parser.javassist.builder;
 
 import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.javassist.util.JavassistUtil;
 
 import java.lang.reflect.Field;
@@ -16,17 +15,17 @@ public class DateFieldBuilder extends FieldBuilder{
         final PacketField packetField = context.packetField;
         final Field field = context.field;
         final String setMethodName = JavassistUtil.getSetMethodName(field);
-        final String instance_var_name = context.instance_var_name;
+        final String instanceVarName = context.instanceVarName;
         if(packetField.len()==6){
-            final String date_class_name = Date.class.getName();
-            final String localDateTime_class_name = LocalDateTime.class.getName();
-            final String zoneOffset_class_name = ZoneOffset.class.getName();
+            final String dateClassName = Date.class.getName();
+            final String localDateTimeClassName = LocalDateTime.class.getName();
+            final String zoneOffsetClassName = ZoneOffset.class.getName();
             JavassistUtil.append(body,"{}.{}({}.from({}.of(2000+{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte()).toInstant({}.of(\"+8\"))));\n",
-                    instance_var_name,setMethodName,date_class_name,localDateTime_class_name
+                    instanceVarName,setMethodName,dateClassName,localDateTimeClassName
                     ,byteBuf_var_name,byteBuf_var_name,byteBuf_var_name,byteBuf_var_name
-            ,byteBuf_var_name,byteBuf_var_name,zoneOffset_class_name);
+            ,byteBuf_var_name,byteBuf_var_name,zoneOffsetClassName);
         }else{
-            JavassistUtil.packetField_len_notSupport(field);
+            JavassistUtil.packetFieldLenNotSupport(field);
         }
 
 

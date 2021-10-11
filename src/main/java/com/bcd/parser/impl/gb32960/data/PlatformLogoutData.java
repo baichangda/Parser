@@ -1,11 +1,9 @@
 package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.anno.Parsable;
 
 import java.util.Date;
 
-@Parsable
 public class PlatformLogoutData implements PacketData{
     //登出时间
     @PacketField(index = 1,len = 6)

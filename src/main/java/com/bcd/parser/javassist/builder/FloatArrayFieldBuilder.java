@@ -14,7 +14,7 @@ public class FloatArrayFieldBuilder extends FieldBuilder {
         final Field field = context.field;
         final String fieldVarName = JavassistUtil.getFieldVarName(context);
         final String setMethodName = JavassistUtil.getSetMethodName(field);
-        final String instance_var_name = context.instance_var_name;
+        final String instanceVarName = context.instanceVarName;
         String lenRes=context.lenRes;
         switch (packetField.singleLen()) {
             case 2: {
@@ -26,12 +26,12 @@ public class FloatArrayFieldBuilder extends FieldBuilder {
                 break;
             }
             default: {
-                JavassistUtil.packetField_singleLen_notSupport(field);
+                JavassistUtil.packetFieldSingleLenNotSupport(field);
             }
         }
-        String arr_var_name = fieldVarName + "_arr";
-        JavassistUtil.append(body,"float[] {}=new float[{}];\n",arr_var_name, lenRes);
-        JavassistUtil.append(body,"for(int i=0;i<{}.length;i++){\n",arr_var_name);
+        String arrVarName = fieldVarName + "_arr";
+        JavassistUtil.append(body,"float[] {}=new float[{}];\n",arrVarName, lenRes);
+        JavassistUtil.append(body,"for(int i=0;i<{}.length;i++){\n",arrVarName);
 
         String valExpr=null;
         switch (packetField.singleLen()) {
@@ -45,9 +45,9 @@ public class FloatArrayFieldBuilder extends FieldBuilder {
                 break;
             }
         }
-        JavassistUtil.append(body,"{}[i]={};\n",arr_var_name,JavassistUtil.replace_var_to_valExpr(packetField.valExpr(),valExpr));
+        JavassistUtil.append(body,"{}[i]={};\n",arrVarName,JavassistUtil.replaceVarToValExpr(packetField.valExpr(),valExpr));
         body.append("}\n");
 
-        JavassistUtil.append(body,"{}.{}({});\n", instance_var_name, setMethodName, arr_var_name);
+        JavassistUtil.append(body,"{}.{}({});\n", instanceVarName, setMethodName, arrVarName);
     }
 }
