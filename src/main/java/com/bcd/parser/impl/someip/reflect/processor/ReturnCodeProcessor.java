@@ -1,9 +1,9 @@
 package com.bcd.parser.impl.someip.processor;
 
 import com.bcd.parser.impl.someip.data.ReturnCode;
-import com.bcd.parser.processer.FieldDeProcessContext;
-import com.bcd.parser.processer.FieldProcessContext;
-import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.reflect.processer.FieldDeProcessContext;
+import com.bcd.parser.reflect.processer.FieldProcessContext;
+import com.bcd.parser.reflect.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
 
 public class ReturnCodeProcessor extends FieldProcessor<ReturnCode> {

@@ -1,11 +1,11 @@
 package com.bcd.parser.impl.someip.processor;
 
 import com.bcd.parser.impl.someip.data.Packet;
-import com.bcd.parser.info.FieldInfo;
-import com.bcd.parser.info.PacketInfo;
-import com.bcd.parser.processer.FieldDeProcessContext;
-import com.bcd.parser.processer.FieldProcessContext;
-import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.reflect.info.FieldInfo;
+import com.bcd.parser.reflect.info.PacketInfo;
+import com.bcd.parser.reflect.processer.FieldDeProcessContext;
+import com.bcd.parser.reflect.processer.FieldProcessContext;
+import com.bcd.parser.reflect.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 

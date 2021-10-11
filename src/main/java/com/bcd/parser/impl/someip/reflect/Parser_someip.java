@@ -1,13 +1,13 @@
 package com.bcd.parser.impl.someip;
 
 
-import com.bcd.parser.Parser;
+import com.bcd.parser.reflect.Parser;
 import com.bcd.parser.impl.someip.data.MessageType;
 import com.bcd.parser.impl.someip.data.Packet;
 import com.bcd.parser.impl.someip.data.ReturnCode;
-import com.bcd.parser.processer.FieldProcessor;
-import com.bcd.parser.util.ParserUtil;
-import com.bcd.parser.util.PerformanceUtil;
+import com.bcd.parser.reflect.processer.FieldProcessor;
+import com.bcd.parser.reflect.util.ParserUtil;
+import com.bcd.parser.reflect.util.PerformanceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
