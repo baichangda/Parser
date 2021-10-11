@@ -1,7 +1,6 @@
 package com.bcd.parser.javassist;
 
 import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.anno.Parsable;
 import com.bcd.parser.exception.BaseRuntimeException;
 import com.bcd.parser.javassist.builder.*;
 import com.bcd.parser.javassist.processor.FieldProcessContext;
@@ -14,9 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 
@@ -24,7 +21,7 @@ import java.util.stream.Collectors;
  * 协议解析器
  * 主要功能如下:
  * 1、解析
- * 从{@link ByteBuf}中获取二进制数据、解析成{@link Parsable}的class对象实例
+ * 从{@link ByteBuf}中获取二进制数据、解析成class对象实例
  * 解析规则参照{@link com.bcd.parser.anno.PacketField}
  * <p>
  * 原理简介
@@ -62,7 +59,8 @@ import java.util.stream.Collectors;
  * <p>
  * 注意事项:
  * 1、不支持基础类型的包装类型、因为在字节码层面需要进行boxing、unBoxing处理、过于复杂
- * 2、在使用时候需要定义字段类型 能完全 容纳下协议文档中所占用字节数
+ * 2、此解析器对应实体类不需要添加{@link com.bcd.parser.anno.Parsable}注解
+ * 3、在使用时候需要定义字段类型 能完全 容纳下协议文档中所占用字节数
  * (包括容纳下异常值、无效值,这两种值一般是0xfe、0xff结尾; 例如两个字节即为0xfffe、0xffff、此时需要用int存储才能正确表示其值)
  */
 public class Parser {
@@ -201,11 +199,7 @@ public class Parser {
                 } else if (type.isArray()) {
                     parseableObjectArrayFieldBuilder.build(context);
                 } else {
-                    if (type.isAnnotationPresent(Parsable.class)) {
-                        parseableObjectFieldBuilder.build(context);
-                    } else {
-                        System.err.println("field[" + field.getName() + "] not support");
-                    }
+                    parseableObjectFieldBuilder.build(context);
                 }
             } else {
                 processorClassFieldBuilder.build(context);
