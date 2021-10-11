@@ -29,6 +29,12 @@ dependencies {
 
     implementation group: 'org.slf4j', name: 'slf4j-api', version: "${slf4jVersion}"
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${log4j2Version}"
+
+    // https://mvnrepository.com/artifact/org.javassist/javassist
+    implementation group: 'org.javassist', name: 'javassist', version: '3.28.0-GA'
+
+
+
 }
 
 //生成jar时打包源码

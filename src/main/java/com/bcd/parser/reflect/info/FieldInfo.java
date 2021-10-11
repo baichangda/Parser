@@ -1,8 +1,9 @@
-package com.bcd.parser.info;
+package com.bcd.parser.reflect.info;
 
 import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.Parser;
-import com.bcd.parser.util.RpnUtil;
+import com.bcd.parser.reflect.Parser;
+import com.bcd.parser.reflect.util.UnsafeUtil;
+import com.bcd.parser.reflect.util.RpnUtil;
 
 import java.lang.reflect.Field;
 
@@ -95,7 +96,7 @@ public class FieldInfo {
     public long unsafeOffset;
 
     /**
-     * {@link com.bcd.parser.util.UnsafeUtil#fieldType(Field)} 得出类型
+     * {@link UnsafeUtil#fieldType(Field)} 得出类型
      *  字段基础类型、如果不属于java基础类型、则为0
      *  1:byte
      *  2:short

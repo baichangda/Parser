@@ -1,10 +1,10 @@
-package com.bcd.parser.impl.gb32960;
+package com.bcd.parser.impl.gb32960.reflect;
 
-import com.bcd.parser.Parser;
+import com.bcd.parser.reflect.Parser;
 import com.bcd.parser.impl.gb32960.data.Packet;
-import com.bcd.parser.processer.FieldProcessor;
-import com.bcd.parser.util.ParserUtil;
-import com.bcd.parser.util.PerformanceUtil;
+import com.bcd.parser.reflect.processer.FieldProcessor;
+import com.bcd.parser.reflect.util.ParserUtil;
+import com.bcd.parser.reflect.util.PerformanceUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;

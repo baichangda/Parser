@@ -30,15 +30,15 @@ public class VehicleAlarmData {
 
     //驱动电机故障代码列表
     @PacketField(index = 6,lenExpr = "b*4",singleLen = 4)
-    long[] driverBadCodes;
+    int[] driverBadCodes;
 
     //驱动电机故障总数
     @PacketField(index = 7,len = 1,var = 'c')
     short engineBadNum;
 
     //驱动电机故障代码列表
-    @PacketField(index = 8,lenExpr = "c*4",singleLen = 4)
-    long[] engineBadCodes;
+    @PacketField(index = 8,lenExpr = "c*4",singleLen = 1)
+    short[] engineBadCodes;
 
     //其他故障总数
     @PacketField(index = 9,len = 1,var = 'd')
@@ -88,11 +88,11 @@ public class VehicleAlarmData {
         this.driverBadNum = driverBadNum;
     }
 
-    public long[] getDriverBadCodes() {
+    public int[] getDriverBadCodes() {
         return driverBadCodes;
     }
 
-    public void setDriverBadCodes(long[] driverBadCodes) {
+    public void setDriverBadCodes(int[] driverBadCodes) {
         this.driverBadCodes = driverBadCodes;
     }
 
@@ -104,11 +104,11 @@ public class VehicleAlarmData {
         this.engineBadNum = engineBadNum;
     }
 
-    public long[] getEngineBadCodes() {
+    public short[] getEngineBadCodes() {
         return engineBadCodes;
     }
 
-    public void setEngineBadCodes(long[] engineBadCodes) {
+    public void setEngineBadCodes(short[] engineBadCodes) {
         this.engineBadCodes = engineBadCodes;
     }
 

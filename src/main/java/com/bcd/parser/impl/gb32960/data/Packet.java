@@ -2,7 +2,7 @@ package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
-import com.bcd.parser.impl.gb32960.processor.PacketDataFieldProcessor;
+import com.bcd.parser.impl.gb32960.javassist.processor.PacketDataFieldProcessor;
 
 
 @Parsable
@@ -105,4 +105,5 @@ public class Packet {
     public void setCode(byte code) {
         this.code = code;
     }
+
 }

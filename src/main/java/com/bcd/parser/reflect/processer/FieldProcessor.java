@@ -1,10 +1,10 @@
-package com.bcd.parser.processer;
+package com.bcd.parser.reflect.processer;
 
 
-import com.bcd.parser.Parser;
+import com.bcd.parser.reflect.Parser;
 import com.bcd.parser.exception.BaseRuntimeException;
-import com.bcd.parser.info.FieldInfo;
-import com.bcd.parser.info.PacketInfo;
+import com.bcd.parser.reflect.info.FieldInfo;
+import com.bcd.parser.reflect.info.PacketInfo;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import org.slf4j.Logger;

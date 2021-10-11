@@ -1,4 +1,4 @@
-package com.bcd.parser.util;
+package com.bcd.parser.reflect.util;
 
 
 

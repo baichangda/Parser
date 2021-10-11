@@ -1,4 +1,4 @@
-package com.bcd.parser.impl.someip;
+package com.bcd.parser.impl.someip.reflect;
 
 
 import com.bcd.parser.reflect.Parser;
@@ -42,6 +42,8 @@ public class Parser_someip extends Parser {
         parser.init();
 
         String hex = parser.toHex(sample);
+
+        logger.info("hex[{}]",hex);
 
         int threadNum=1;
         if(args.length>=1){

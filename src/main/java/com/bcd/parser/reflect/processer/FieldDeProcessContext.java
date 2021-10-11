@@ -1,7 +1,7 @@
-package com.bcd.parser.processer;
+package com.bcd.parser.reflect.processer;
 
 import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.info.FieldInfo;
+import com.bcd.parser.reflect.info.FieldInfo;
 
 public class FieldDeProcessContext {
     /**

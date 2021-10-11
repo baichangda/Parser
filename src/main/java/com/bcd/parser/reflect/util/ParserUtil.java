@@ -1,13 +1,13 @@
-package com.bcd.parser.util;
+package com.bcd.parser.reflect.util;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
 import com.bcd.parser.exception.BaseRuntimeException;
-import com.bcd.parser.info.FieldInfo;
-import com.bcd.parser.info.PacketInfo;
-import com.bcd.parser.processer.FieldDeProcessContext;
-import com.bcd.parser.processer.FieldProcessContext;
-import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.reflect.info.FieldInfo;
+import com.bcd.parser.reflect.info.PacketInfo;
+import com.bcd.parser.reflect.processer.FieldDeProcessContext;
+import com.bcd.parser.reflect.processer.FieldProcessContext;
+import com.bcd.parser.reflect.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -293,7 +293,7 @@ public class ParserUtil {
              processorList.add(this.parsableObjectProcessor);
              */
             //判断是否特殊处理
-            if (packetField.processorClass() == Void.class) {
+            if (packetField.processorClass() == void.class) {
                 //判断是否是List<Bean>(Bean代表自定义实体类型,不包括Byte、Short、Integer、Long)
                 if (packetField.listLenExpr().isEmpty()) {
                     if (Byte.class.isAssignableFrom(fieldType) || Byte.TYPE.isAssignableFrom(fieldType)) {

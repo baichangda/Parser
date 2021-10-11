@@ -1,18 +1,19 @@
-package com.bcd.parser;
+package com.bcd.parser.reflect;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
 import com.bcd.parser.exception.BaseRuntimeException;
-import com.bcd.parser.info.FieldInfo;
-import com.bcd.parser.info.PacketInfo;
-import com.bcd.parser.processer.FieldDeProcessContext;
-import com.bcd.parser.processer.FieldProcessContext;
-import com.bcd.parser.processer.FieldProcessor;
-import com.bcd.parser.processer.impl.*;
-import com.bcd.parser.util.ClassUtil;
-import com.bcd.parser.util.ParserUtil;
-import com.bcd.parser.util.RpnUtil;
-import com.bcd.parser.util.UnsafeUtil;
+import com.bcd.parser.impl.gb32960.reflect.Parser_gb32960;
+import com.bcd.parser.reflect.info.FieldInfo;
+import com.bcd.parser.reflect.info.PacketInfo;
+import com.bcd.parser.reflect.processer.FieldDeProcessContext;
+import com.bcd.parser.reflect.processer.FieldProcessContext;
+import com.bcd.parser.reflect.processer.FieldProcessor;
+import com.bcd.parser.reflect.processer.impl.*;
+import com.bcd.parser.reflect.util.ClassUtil;
+import com.bcd.parser.reflect.util.ParserUtil;
+import com.bcd.parser.reflect.util.RpnUtil;
+import com.bcd.parser.reflect.util.UnsafeUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
@@ -50,7 +51,7 @@ import java.util.*;
  * 单线程、在cpu使用率90%+ 的情况下
  * 解析速度约为 51-53w/s、多个线程成倍数增长
  * 反解析速度约为 38-40w/s、多个线程成倍数增长
- * 具体查看{@link com.bcd.parser.impl.gb32960.Parser_gb32960#main(String[])}
+ * 具体查看{@link Parser_gb32960#main(String[])}
  * 注意:
  * 因为是cpu密集型运算、所以性能达到计算机物理核心个数后已经达到上限、不能以逻辑核心为准、此时虽然整体cpu使用率没有满、但这只是top使用率显示问题
  * 例如 2核4线程 、物理核心2个、逻辑核心4个、此时使用2个线程就能用尽cpu资源、即使指标显示cpu使用率50%、其实再加线程已经没有提升

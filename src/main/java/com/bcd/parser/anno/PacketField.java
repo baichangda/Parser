@@ -1,5 +1,8 @@
 package com.bcd.parser.anno;
 
+import com.bcd.parser.javassist.processor.FieldProcessor;
+import com.bcd.parser.reflect.Parser;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -107,7 +110,8 @@ public @interface PacketField {
 
     /**
      * 处理类
-     * 用于处理特殊情况,class类型必须是{@link com.bcd.parser.processer.FieldProcessor}子类
+     * 如果是{@link Parser}、则必须是{@link com.bcd.parser.reflect.processer.FieldProcessor}子类
+     * 如果是{@link com.bcd.parser.javassist.Parser}、则必须是{@link FieldProcessor}子类
      */
-    Class processorClass() default Void.class;
+    Class processorClass() default void.class;
 }

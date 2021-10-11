@@ -1,9 +1,9 @@
-package com.bcd.parser.impl.gb32960.processor;
+package com.bcd.parser.impl.gb32960.reflect.processor;
 
 import com.bcd.parser.impl.gb32960.data.*;
-import com.bcd.parser.processer.FieldDeProcessContext;
-import com.bcd.parser.processer.FieldProcessContext;
-import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.reflect.processer.FieldDeProcessContext;
+import com.bcd.parser.reflect.processer.FieldProcessContext;
+import com.bcd.parser.reflect.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
 
 
