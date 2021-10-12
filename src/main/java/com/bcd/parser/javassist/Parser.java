@@ -2,6 +2,7 @@ package com.bcd.parser.javassist;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.exception.BaseRuntimeException;
+import com.bcd.parser.impl.gb32960.data.Packet;
 import com.bcd.parser.javassist.builder.*;
 import com.bcd.parser.javassist.processor.FieldProcessContext;
 import com.bcd.parser.javassist.util.JavassistUtil;
@@ -296,6 +297,7 @@ public class Parser {
         }
         return cc.toClass();
     }
+
 
     public final <T> T parse(Class<T> clazz, ByteBuf data) {
         return parse(clazz, data, null);

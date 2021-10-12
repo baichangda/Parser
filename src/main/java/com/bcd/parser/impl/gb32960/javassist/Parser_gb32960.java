@@ -33,6 +33,11 @@ public class Parser_gb32960 extends Parser {
         }
         logger.info("param threadNum[{}]",threadNum);
         int num=100000000;
+
+//        byte [] bytes= ByteBufUtil.decodeHexDump(data);
+//        ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
+//        parser.parse(Packet.class,byteBuf);
+
         PerformanceUtil.testMultiThreadPerformance(data,parser, Packet.class,threadNum,num);
     }
 
