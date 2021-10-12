@@ -1,6 +1,7 @@
 package com.bcd.parser.impl.gb32960.data;
 
 import com.bcd.parser.anno.PacketField;
+import com.bcd.parser.impl.gb32960.javassist.builder.PacketDataFieldBuilder;
 import com.bcd.parser.impl.gb32960.javassist.processor.PacketDataFieldProcessor;
 
 
@@ -26,7 +27,10 @@ public class Packet {
     //数据单元
 //    @PacketField(index = 7,lenExpr = "a")
     byte[] dataContent;
-    @PacketField(index = 7,lenExpr = "a", processorClass = PacketDataFieldProcessor.class)
+    @PacketField(index = 7,lenExpr = "a"
+            , processorClass = PacketDataFieldProcessor.class
+//            ,builderClass = PacketDataFieldBuilder.class
+    )
     PacketData data;
     //异或校验位
     @PacketField(index = 8,len = 1)

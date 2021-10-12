@@ -1,6 +1,5 @@
 package com.bcd.parser.impl.someip.javassist.builder;
 
-import com.bcd.parser.impl.someip.data.MessageType;
 import com.bcd.parser.impl.someip.data.ReturnCode;
 import com.bcd.parser.javassist.builder.BuilderContext;
 import com.bcd.parser.javassist.builder.FieldBuilder;
@@ -15,8 +14,8 @@ public class ReturnCodeBuilder extends FieldBuilder{
         final StringBuilder body = context.body;
         final Field field = context.field;
         final String setMethodName = JavassistUtil.getSetMethodName(field);
-        final String instanceVarName = context.instanceVarName;
+        final String varNameInstance = context.varNameInstance;
         final String returnCodeClassName = ReturnCode.class.getName();
-        JavassistUtil.append(body, "{}.{}({}.valueOf({}.readByte()));\n", instanceVarName, setMethodName,returnCodeClassName, byteBuf_var_name);
+        JavassistUtil.append(body, "{}.{}({}.valueOf({}.readByte()));\n", varNameInstance, setMethodName,returnCodeClassName, FieldBuilder.varNameByteBuf);
     }
 }

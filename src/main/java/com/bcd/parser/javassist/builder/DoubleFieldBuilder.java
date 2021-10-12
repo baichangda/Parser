@@ -13,21 +13,21 @@ public class DoubleFieldBuilder extends FieldBuilder{
         final PacketField packetField = context.packetField;
         final Field field = context.field;
         final String setMethodName = JavassistUtil.getSetMethodName(field);
-        final String instanceVarName = context.instanceVarName;
+        final String varNameInstance = context.varNameInstance;
         String valExpr=null;
         switch (packetField.len()) {
             case 4: {
-                valExpr=JavassistUtil.format("(double){}.readUnsignedInt()",byteBuf_var_name);
+                valExpr=JavassistUtil.format("(double){}.readUnsignedInt()", FieldBuilder.varNameByteBuf);
                 break;
             }
             case 8: {
-                valExpr=JavassistUtil.format("(double){}.readLong()",byteBuf_var_name);
+                valExpr=JavassistUtil.format("(double){}.readLong()", FieldBuilder.varNameByteBuf);
                 break;
             }
             default: {
                 JavassistUtil.packetFieldLenNotSupport(field);
             }
         }
-        JavassistUtil.append(body, "{}.{}({});\n", instanceVarName, setMethodName, JavassistUtil.replaceVarToValExpr(packetField.valExpr(),valExpr));
+        JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, JavassistUtil.replaceVarToValExpr(packetField.valExpr(),valExpr));
     }
 }

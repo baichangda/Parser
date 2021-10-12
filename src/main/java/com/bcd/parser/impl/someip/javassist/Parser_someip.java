@@ -12,7 +12,7 @@ public class Parser_someip extends Parser {
     static Logger logger= LoggerFactory.getLogger(Parser_someip.class);
 
     public Parser_someip() {
-
+        this.allInOne=true;
     }
 
     public static void main(String[] args) {
@@ -29,5 +29,7 @@ public class Parser_someip extends Parser {
         int num=1000000000;
 
         PerformanceUtil.testMultiThreadPerformance(hex,parser,Packet.class,threadNum,num);
+
+
     }
 }

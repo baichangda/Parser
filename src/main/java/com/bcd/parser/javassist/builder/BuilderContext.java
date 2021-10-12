@@ -3,6 +3,7 @@ package com.bcd.parser.javassist.builder;
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.javassist.Parser;
 import com.bcd.parser.javassist.processor.FieldProcessContext;
+import com.bcd.parser.javassist.util.JavassistUtil;
 import io.netty.buffer.ByteBuf;
 import javassist.CtClass;
 
@@ -29,7 +30,7 @@ public class BuilderContext {
     /**
      * 字段所属类实例变量名称
      */
-    public final String instanceVarName;
+    public final String varNameInstance;
     /**
      * 父构造环境
      */
@@ -60,13 +61,28 @@ public class BuilderContext {
      * {@link com.bcd.parser.javassist.processor.FieldProcessor#process(ByteBuf, FieldProcessContext)}
      * 的参数对象、对象复用、避免构造多个
      */
-    public String processorBuildContextVarName;
+    private String processorBuildContextVarName;
 
     public BuilderContext(StringBuilder body, Parser parser, CtClass implCc, String instance_var_name, BuilderContext parentContext) {
         this.body = body;
         this.parser = parser;
         this.implCc = implCc;
-        this.instanceVarName = instance_var_name;
+        this.varNameInstance = instance_var_name;
         this.parentContext = parentContext;
+    }
+
+    public String getProcessorBuildContextVarName(){
+        if(processorBuildContextVarName ==null){
+            processorBuildContextVarName = JavassistUtil.getVarName(this,"processContext");
+            final String processContextClassName = FieldProcessContext.class.getName();
+            JavassistUtil.append(body, "{} {}=new {}({},{},{});\n",
+                    processContextClassName,
+                    processorBuildContextVarName,
+                    processContextClassName,
+                    FieldBuilder.varNameParser,
+                    varNameInstance,
+                    FieldBuilder.varNameParentProcessContext);
+        }
+        return processorBuildContextVarName;
     }
 }

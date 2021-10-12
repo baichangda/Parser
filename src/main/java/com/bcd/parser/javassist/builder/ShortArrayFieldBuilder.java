@@ -12,9 +12,9 @@ public class ShortArrayFieldBuilder extends FieldBuilder {
         final StringBuilder body = context.body;
         final PacketField packetField = context.packetField;
         final Field field = context.field;
-        final String fieldVarName = JavassistUtil.getFieldVarName(context);
+        final String varNameField = JavassistUtil.getFieldVarName(context);
         final String setMethodName = JavassistUtil.getSetMethodName(context.field);
-        final String instanceVarName = context.instanceVarName;
+        final String varNameInstance = context.varNameInstance;
         String lenRes=context.lenRes;
         switch (packetField.singleLen()) {
             case 1: {
@@ -28,21 +28,21 @@ public class ShortArrayFieldBuilder extends FieldBuilder {
                 JavassistUtil.packetFieldSingleLenNotSupport(field);
             }
         }
-        String arrVarName = fieldVarName + "_arr";
+        String arrVarName = varNameField + "_arr";
         JavassistUtil.append(body,"short[] {}=new short[{}];\n",arrVarName, lenRes);
         JavassistUtil.append(body,"for(int i=0;i<{}.length;i++){\n",arrVarName);
         switch (packetField.singleLen()) {
             case 1: {
-                JavassistUtil.append(body,"{}[i]={}.readUnsignedByte();\n",arrVarName,byteBuf_var_name);
+                JavassistUtil.append(body,"{}[i]={}.readUnsignedByte();\n",arrVarName, FieldBuilder.varNameByteBuf);
                 break;
             }
             case 2: {
-                JavassistUtil.append(body,"{}[i]={}.readShort();\n",arrVarName,byteBuf_var_name);
+                JavassistUtil.append(body,"{}[i]={}.readShort();\n",arrVarName, FieldBuilder.varNameByteBuf);
                 break;
             }
         }
         body.append("}\n");
 
-        JavassistUtil.append(body,"{}.{}({});\n", instanceVarName, setMethodName, arrVarName);
+        JavassistUtil.append(body,"{}.{}({});\n", varNameInstance, setMethodName, arrVarName);
     }
 }

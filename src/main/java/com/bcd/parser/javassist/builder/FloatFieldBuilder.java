@@ -13,21 +13,21 @@ public class FloatFieldBuilder extends FieldBuilder{
         final PacketField packetField = context.packetField;
         final Field field = context.field;
         final String setMethodName = JavassistUtil.getSetMethodName(field);
-        final String instanceVarName = context.instanceVarName;
+        final String varNameInstance = context.varNameInstance;
         String valExpr=null;
         switch (packetField.len()) {
             case 2: {
-                valExpr=JavassistUtil.format("(float){}.readUnsignedShort()",byteBuf_var_name);
+                valExpr=JavassistUtil.format("(float){}.readUnsignedShort()", FieldBuilder.varNameByteBuf);
                 break;
             }
             case 4: {
-                valExpr=JavassistUtil.format("(float){}.readInt()",byteBuf_var_name);
+                valExpr=JavassistUtil.format("(float){}.readInt()", FieldBuilder.varNameByteBuf);
                 break;
             }
             default: {
                 JavassistUtil.packetFieldLenNotSupport(field);
             }
         }
-        JavassistUtil.append(body, "{}.{}({});\n", instanceVarName, setMethodName, JavassistUtil.replaceVarToValExpr(packetField.valExpr(),valExpr));
+        JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, JavassistUtil.replaceVarToValExpr(packetField.valExpr(),valExpr));
     }
 }

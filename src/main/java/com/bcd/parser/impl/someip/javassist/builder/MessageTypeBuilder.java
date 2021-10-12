@@ -14,8 +14,8 @@ public class MessageTypeBuilder extends FieldBuilder{
         final StringBuilder body = context.body;
         final Field field = context.field;
         final String setMethodName = JavassistUtil.getSetMethodName(field);
-        final String instanceVarName = context.instanceVarName;
+        final String varNameInstance = context.varNameInstance;
         final String messageTypeClassName = MessageType.class.getName();
-        JavassistUtil.append(body, "{}.{}({}.valueOf({}.readByte()));\n", instanceVarName, setMethodName,messageTypeClassName, byteBuf_var_name);
+        JavassistUtil.append(body, "{}.{}({}.valueOf({}.readByte()));\n", varNameInstance, setMethodName,messageTypeClassName, FieldBuilder.varNameByteBuf);
     }
 }

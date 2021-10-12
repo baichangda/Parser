@@ -12,12 +12,12 @@ public class MethodIdOrEventIdBuilder extends FieldBuilder {
     public void build(BuilderContext context) {
         final StringBuilder body = context.body;
         final Field field = context.field;
-        final String fieldVarName = JavassistUtil.getFieldVarName(context);
+        final String varNameField = JavassistUtil.getFieldVarName(context);
         final String setMethodName = JavassistUtil.getSetMethodName(field);
-        final String instanceVarName = context.instanceVarName;
-        JavassistUtil.append(body, "short {} = {}.readShort();\n", fieldVarName, byteBuf_var_name);
-        JavassistUtil.append(body, "{}.setFlag((byte)(({}>>7)&0x01));\n", instanceVarName, fieldVarName);
-        JavassistUtil.append(body, "{}.{}((short)({}&(0xff>>1)));\n", instanceVarName, setMethodName, fieldVarName);
+        final String varNameInstance = context.varNameInstance;
+        JavassistUtil.append(body, "short {} = {}.readShort();\n", varNameField, FieldBuilder.varNameByteBuf);
+        JavassistUtil.append(body, "{}.setFlag((byte)(({}>>7)&0x01));\n", varNameInstance, varNameField);
+        JavassistUtil.append(body, "{}.{}((short)({}&(0xff>>1)));\n", varNameInstance, setMethodName, varNameField);
     }
 
 }

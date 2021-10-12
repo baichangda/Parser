@@ -14,12 +14,12 @@ public class OffsetBuilder extends FieldBuilder{
         final StringBuilder body = context.body;
         final PacketField packetField = context.packetField;
         final Field field = context.field;
-        final String fieldVarName = JavassistUtil.getFieldVarName(context);
+        final String varNameField = JavassistUtil.getFieldVarName(context);
         final String setMethodName = JavassistUtil.getSetMethodName(field);
-        final String instanceVarName = context.instanceVarName;
+        final String varNameInstance = context.varNameInstance;
         final String fieldTypeClassName = field.getType().getName();
-        JavassistUtil.append(body,"{} {}={}.readInt()>>4;\n", fieldTypeClassName,fieldVarName,byteBuf_var_name);
-        JavassistUtil.append(body, "{}.{}({});\n", instanceVarName, setMethodName, fieldVarName);
-        context.varToFieldName.put(packetField.var(),fieldVarName);
+        JavassistUtil.append(body,"{} {}={}.readInt()>>4;\n", fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
+        JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);
+        context.varToFieldName.put(packetField.var(),varNameField);
     }
 }

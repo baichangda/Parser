@@ -12,9 +12,9 @@ public class LongArrayFieldBuilder extends FieldBuilder {
         final StringBuilder body = context.body;
         final PacketField packetField = context.packetField;
         final Field field = context.field;
-        final String fieldVarName = JavassistUtil.getFieldVarName(context);
+        final String varNameField = JavassistUtil.getFieldVarName(context);
         final String setMethodName = JavassistUtil.getSetMethodName(field);
-        final String instanceVarName = context.instanceVarName;
+        final String varNameInstance = context.varNameInstance;
         String lenRes=context.lenRes;
         switch (packetField.singleLen()) {
             case 4: {
@@ -29,21 +29,21 @@ public class LongArrayFieldBuilder extends FieldBuilder {
                 JavassistUtil.packetFieldSingleLenNotSupport(field);
             }
         }
-        String arr_var_name = fieldVarName + "_arr";
+        String arr_var_name = varNameField + "_arr";
         JavassistUtil.append(body,"long[] {}=new long[{}];\n",arr_var_name, lenRes);
         JavassistUtil.append(body,"for(int i=0;i<{}.length;i++){\n",arr_var_name);
         switch (packetField.singleLen()) {
             case 4: {
-                JavassistUtil.append(body,"{}[i]={}.readUnsignedInt();\n",arr_var_name,byteBuf_var_name);
+                JavassistUtil.append(body,"{}[i]={}.readUnsignedInt();\n",arr_var_name, FieldBuilder.varNameByteBuf);
                 break;
             }
             case 8: {
-                JavassistUtil.append(body,"{}[i]={}.readLong();\n",arr_var_name,byteBuf_var_name);
+                JavassistUtil.append(body,"{}[i]={}.readLong();\n",arr_var_name, FieldBuilder.varNameByteBuf);
                 break;
             }
         }
         body.append("}\n");
 
-        JavassistUtil.append(body,"{}.{}({});\n", instanceVarName, setMethodName, arr_var_name);
+        JavassistUtil.append(body,"{}.{}({});\n", varNameInstance, setMethodName, arr_var_name);
     }
 }
