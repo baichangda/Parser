@@ -305,8 +305,10 @@ public class Parser {
         JavassistParser<T> javassistParser = beanClass_to_javassistParser.get(clazz);
         if(javassistParser==null){
             synchronized (beanClass_to_javassistParser) {
+                javassistParser = beanClass_to_javassistParser.get(clazz);
                 if(javassistParser==null) {
                     try {
+                        logger.info("build start");
                         final Class impl = buildClass(clazz);
                         logger.info("build Impl [{}] succeed", impl.getName());
                         javassistParser = (JavassistParser<T>) (impl.getConstructor(Parser.class).newInstance(this));

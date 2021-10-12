@@ -6,6 +6,7 @@ import com.bcd.parser.javassist.util.PerformanceUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
+import javassist.CodeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
