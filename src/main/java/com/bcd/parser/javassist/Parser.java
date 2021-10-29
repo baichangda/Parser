@@ -164,14 +164,14 @@ public class Parser {
             context.field = field;
             context.packetField = packetField;
             context.lenRes = lenRes;
-            if(builderClass!=void.class){
+            if (builderClass != void.class) {
                 try {
                     final FieldBuilder builder = (FieldBuilder) builderClass.newInstance();
                     builder.build(context);
-                } catch (InstantiationException |IllegalAccessException e) {
+                } catch (InstantiationException | IllegalAccessException e) {
                     throw BaseRuntimeException.getException(e);
                 }
-            }else if (processorClass != void.class) {
+            } else if (processorClass != void.class) {
                 processorClassFieldBuilder.build(context);
             } else {
                 final Class<?> type = field.getType();
@@ -257,8 +257,8 @@ public class Parser {
             final String processorClassName = processorClass.getName();
             final String processorVarName = JavassistUtil.toFirstLowerCase(processorClass.getSimpleName());
             cc.addField(CtField.make("public " + processorClassName + " " + processorVarName + ";", cc));
-            initBody.append(JavassistUtil.format("this.{}=new {}();\n",processorVarName,processorClassName));
-            initBody.append(JavassistUtil.format("this.{}.parser=$1;\n",processorVarName));
+            initBody.append(JavassistUtil.format("this.{}=new {}();\n", processorVarName, processorClassName));
+            initBody.append(JavassistUtil.format("this.{}.parser=$1;\n", processorVarName));
         }
         initBody.append("}\n");
         constructor.setBody(initBody.toString());
@@ -299,21 +299,17 @@ public class Parser {
     }
 
 
-    public final <T> T parse(Class<T> clazz, ByteBuf data) {
-        return parse(clazz, data, null);
-    }
-
     public final <T> T parse(Class<T> clazz, ByteBuf data, FieldProcessContext processContext) {
         JavassistParser<T> javassistParser = beanClass_to_javassistParser.get(clazz);
-        if(javassistParser==null){
+        if (javassistParser == null) {
             synchronized (beanClass_to_javassistParser) {
                 javassistParser = beanClass_to_javassistParser.get(clazz);
-                if(javassistParser==null) {
+                if (javassistParser == null) {
                     try {
                         final Class impl = buildClass(clazz);
                         logger.info("build Impl [{}] succeed", impl.getName());
                         javassistParser = (JavassistParser<T>) (impl.getConstructor(Parser.class).newInstance(this));
-                        beanClass_to_javassistParser.put(clazz,javassistParser);
+                        beanClass_to_javassistParser.put(clazz, javassistParser);
                     } catch (Exception e) {
                         throw BaseRuntimeException.getException(e);
                     }
@@ -322,5 +318,4 @@ public class Parser {
         }
         return javassistParser.parse(data, processContext);
     }
-
 }

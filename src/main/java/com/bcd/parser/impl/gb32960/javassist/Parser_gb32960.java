@@ -6,7 +6,6 @@ import com.bcd.parser.javassist.util.PerformanceUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
-import javassist.CodeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,9 +37,9 @@ public class Parser_gb32960 extends Parser {
 //        ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
 //        parser.parse(Packet.class,byteBuf);
 
-//        PerformanceUtil.testMultiThreadPerformance(data,parser, Packet.class,threadNum,num);
-//
-        testMultiThreadPerformance(data,threadNum,num);
+        PerformanceUtil.testMultiThreadPerformance(data,parser, Packet.class,threadNum,num);
+
+//        testMultiThreadPerformance(data,threadNum,num);
     }
 
     private static void parseToPacket(String data,int num,AtomicInteger count){
