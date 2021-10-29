@@ -1,6 +1,5 @@
 package com.bcd.parser.anno;
 
-import com.bcd.parser.javassist.builder.FieldBuilder;
 import com.bcd.parser.javassist.processor.FieldProcessor;
 
 import java.lang.annotation.ElementType;
@@ -25,9 +24,9 @@ import java.lang.annotation.Target;
  * String
  * Date
  * ByteBuf
- * List<{@link Parsable}>
- * Array[{@link Parsable}]
- * {@link Parsable}注解标注的自定义类型
+ * List<T>
+ * Array[T]
+ * 自定义类型
  * <p>
  * 如果以上类型不满足解析需求,可以自行设置{@link #processorClass()}属性定义自定义解析器
  */
@@ -80,7 +79,7 @@ public @interface PacketField {
     boolean skipParse() default false;
 
     /**
-     * {@link Parsable}对象集合/数组长度表达式
+     * 对象集合/数组长度表达式
      * 用于对象集合字段不定长度的解析,配合var参数使用,代表的是当前集合元素的个数
      * 适用于 List<TestBean> 字段类型
      * 例如:
