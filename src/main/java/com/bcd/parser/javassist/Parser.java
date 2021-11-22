@@ -2,8 +2,8 @@ package com.bcd.parser.javassist;
 
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.exception.BaseRuntimeException;
-import com.bcd.parser.impl.gb32960.data.Packet;
 import com.bcd.parser.javassist.builder.*;
+import com.bcd.parser.javassist.parser.JavassistParser;
 import com.bcd.parser.javassist.processor.FieldProcessContext;
 import com.bcd.parser.javassist.util.JavassistUtil;
 import io.netty.buffer.ByteBuf;
@@ -232,7 +232,7 @@ public class Parser {
         final String clazzName = clazz.getName();
 
         final int lastIndexOf = javassistParser_class_name.lastIndexOf(".");
-        String implJavassistParser_class_name = javassistParser_class_name.substring(0, lastIndexOf) + ".impl." + javassistParser_class_name.substring(lastIndexOf + 1) + "_" + clazz.getSimpleName();
+        String implJavassistParser_class_name = javassistParser_class_name.substring(0, lastIndexOf) + "." + javassistParser_class_name.substring(lastIndexOf + 1) + "_" + clazz.getSimpleName();
         final CtClass cc = ClassPool.getDefault().makeClass(implJavassistParser_class_name);
         //添加泛型
         SignatureAttribute.ClassSignature class_cs = new SignatureAttribute.ClassSignature(null, null, new SignatureAttribute.ClassType[]{
@@ -295,7 +295,7 @@ public class Parser {
         if (generateClassField) {
             cc.writeFile("src/main/java");
         }
-        return cc.toClass();
+        return cc.toClass(JavassistParser.class);
     }
 
 
