@@ -86,7 +86,7 @@ public class Parser {
     public ParseableObjectListFieldBuilder parseableObjectListFieldBuilder = new ParseableObjectListFieldBuilder();
     public ParseableObjectArrayFieldBuilder parseableObjectArrayFieldBuilder = new ParseableObjectArrayFieldBuilder();
 
-    public final Map<Class, JavassistParser> beanClass_to_javassistParser = new HashMap<>();
+    private final Map<Class, JavassistParser> beanClass_to_javassistParser = new HashMap<>();
 
     /**
      * 当处理字段类型为(Bean 或 Bean[] 或 List<Bean>)时候、其中Bean为自定义对象
