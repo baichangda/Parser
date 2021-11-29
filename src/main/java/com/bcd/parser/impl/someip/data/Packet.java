@@ -20,8 +20,8 @@ public class Packet {
     byte flag;
 
     @PacketField(index = 3
-//            , processorClass = MethodIdOrEventIdProcessor.class
-            , builderClass = MethodIdOrEventIdBuilder.class
+            , processorClass = MethodIdOrEventIdProcessor.class
+//            , builderClass = MethodIdOrEventIdBuilder.class
     )
     short methodIdOrEventId;
 
@@ -41,18 +41,22 @@ public class Packet {
     short interfaceVersion;
 
     @PacketField(index = 9, len = 1
-//            , processorClass = MessageTypeProcessor.class
-            , builderClass = MessageTypeBuilder.class)
+            , processorClass = MessageTypeProcessor.class
+//            , builderClass = MessageTypeBuilder.class
+    )
     MessageType messageType;
 
     @PacketField(index = 10, len = 1
-//            , processorClass = ReturnCodeProcessor.class
-            , builderClass = ReturnCodeBuilder.class)
+            , processorClass = ReturnCodeProcessor.class
+//            , builderClass = ReturnCodeBuilder.class
+    )
     ReturnCode returnCode;
 
-    @PacketField(index = 11, len = 4
-//            ,processorClass = OffsetProcessor.class
-            , builderClass = OffsetBuilder.class, var = 'a')
+    @PacketField(index = 11, len = 4,
+            processorClass = OffsetProcessor.class,
+//            builderClass = OffsetBuilder.class,
+            var = 'a'
+    )
     int offset;
 
     @PacketField(index = 12, lenExpr = "a*16")

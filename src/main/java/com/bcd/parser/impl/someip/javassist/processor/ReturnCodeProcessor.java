@@ -9,8 +9,7 @@ public class ReturnCodeProcessor extends FieldProcessor<ReturnCode> {
 
     @Override
     public ReturnCode process(final ByteBuf data, final FieldProcessContext context) {
-        byte b = data.readByte();
-        return ReturnCode.valueOf(b);
+        return ReturnCode.valueOf(data.readByte());
     }
 
 }

@@ -8,8 +8,7 @@ public class OffsetProcessor extends FieldProcessor<Integer> {
 
     @Override
     public Integer process(final ByteBuf data, final FieldProcessContext context) {
-        int i = data.readInt();
         //解析flag
-        return i >> 4;
+        return data.readInt() >> 4;
     }
 }
