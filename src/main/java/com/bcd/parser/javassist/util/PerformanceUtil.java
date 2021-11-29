@@ -15,7 +15,7 @@ import java.util.concurrent.atomic.LongAdder;
 
 public class PerformanceUtil {
 
-    static Logger logger= LoggerFactory.getLogger(PerformanceUtil.class);
+    private final static Logger logger= LoggerFactory.getLogger(PerformanceUtil.class);
 
     /**
      * 测试多线程

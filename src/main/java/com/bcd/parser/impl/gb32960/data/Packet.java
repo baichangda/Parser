@@ -25,12 +25,12 @@ public class Packet {
     @PacketField(index = 6,len = 2,var = 'a')
     int contentLength;
     //数据单元
-    @PacketField(index = 7,lenExpr = "a")
+//    @PacketField(index = 7,lenExpr = "a")
     byte[] dataContent;
-//    @PacketField(index = 7,lenExpr = "a"
-//            , processorClass = PacketDataFieldProcessor.class
-//            ,builderClass = PacketDataFieldBuilder.class
-//    )
+    @PacketField(index = 7,lenExpr = "a"
+            , processorClass = PacketDataFieldProcessor.class
+            ,builderClass = PacketDataFieldBuilder.class
+    )
     PacketData data;
     //异或校验位
     @PacketField(index = 8,len = 1)

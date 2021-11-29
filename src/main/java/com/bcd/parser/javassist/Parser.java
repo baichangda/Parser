@@ -65,7 +65,7 @@ import java.util.stream.Collectors;
  */
 public class Parser {
 
-    Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public ShortFieldBuilder shortFieldBuilder = new ShortFieldBuilder();
     public ByteFieldBuilder byteFieldBuilder = new ByteFieldBuilder();
@@ -124,7 +124,7 @@ public class Parser {
         }
     }
 
-    public void buildParseMethodBody(Class clazz, BuilderContext context) {
+    public final void buildParseMethodBody(Class clazz, BuilderContext context) {
         final Field[] declaredFields = clazz.getDeclaredFields();
         final List<Object[]> collect = Arrays.stream(declaredFields).map(f -> new Object[]{f, f.getAnnotation(PacketField.class)}).filter(e -> e[1] != null)
                 .sorted(Comparator.comparing(e -> ((PacketField) e[1]).index())).collect(Collectors.toList());
@@ -214,19 +214,19 @@ public class Parser {
         }
     }
 
-    public void buildAppend(StringBuilder body, Class clazz, String fieldVarName, Parser parser, BuilderContext fieldBuilderContext) {
+    public final void buildAppend(StringBuilder body, Class clazz, String fieldVarName, Parser parser, BuilderContext fieldBuilderContext) {
         BuilderContext builderContext = new BuilderContext(body, parser, fieldBuilderContext.implCc, fieldVarName, fieldBuilderContext);
         buildParseMethodBody(clazz, builderContext);
     }
 
-    public void buildAppend(BuilderContext fieldBuilderContext) {
+    public final void buildAppend(BuilderContext fieldBuilderContext) {
         final Class clazz = fieldBuilderContext.field.getType().getClass();
         String fieldVarName = JavassistUtil.getFieldVarName(fieldBuilderContext);
         BuilderContext builderContext = new BuilderContext(fieldBuilderContext.body, fieldBuilderContext.parser, fieldBuilderContext.implCc, fieldVarName, fieldBuilderContext);
         buildParseMethodBody(clazz, builderContext);
     }
 
-    public Class buildClass(Class clazz) throws CannotCompileException, NotFoundException, IOException {
+    public final Class buildClass(Class clazz) throws CannotCompileException, NotFoundException, IOException {
         final String javassistParser_class_name = JavassistParser.class.getName();
         final String byteBufClassName = ByteBuf.class.getName();
         final String clazzName = clazz.getName();
@@ -245,7 +245,7 @@ public class Parser {
         StringBuilder initBody = new StringBuilder();
         //加parser字段
         final String parserClassName = Parser.class.getName();
-        cc.addField(CtField.make("public " + parserClassName + " parser;", cc));
+        cc.addField(CtField.make("public final " + parserClassName + " parser;", cc));
         //初始化parser字段
         final CtClass parser_cc = ClassPool.getDefault().get(parserClassName);
         final CtConstructor constructor = CtNewConstructor.make(new CtClass[]{parser_cc}, null, cc);
@@ -256,7 +256,7 @@ public class Parser {
         for (Class processorClass : processorClassList) {
             final String processorClassName = processorClass.getName();
             final String processorVarName = JavassistUtil.toFirstLowerCase(processorClass.getSimpleName());
-            cc.addField(CtField.make("public " + processorClassName + " " + processorVarName + ";", cc));
+            cc.addField(CtField.make("public final " + processorClassName + " " + processorVarName + ";", cc));
             initBody.append(JavassistUtil.format("this.{}=new {}();\n", processorVarName, processorClassName));
             initBody.append(JavassistUtil.format("this.{}.parser=$1;\n", processorVarName));
         }
