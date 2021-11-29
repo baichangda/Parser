@@ -42,6 +42,12 @@ public class BuilderContext {
      */
     public final Map<Character, String> varToFieldName = new HashMap<>();
 
+    /**
+     * 用于给
+     * {@link com.bcd.parser.javassist.processor.FieldProcessor#process(ByteBuf, FieldProcessContext)}
+     * 的参数对象、对象复用、避免构造多个
+     */
+    private String classProcessContextVarName;
 
 
     /**
@@ -57,12 +63,7 @@ public class BuilderContext {
      */
     public String lenRes;
 
-    /**
-     * 用于给
-     * {@link com.bcd.parser.javassist.processor.FieldProcessor#process(ByteBuf, FieldProcessContext)}
-     * 的参数对象、对象复用、避免构造多个
-     */
-    private String processorBuildContextVarName;
+
 
     public BuilderContext(StringBuilder body, Parser parser, CtClass implCc, String instance_var_name, BuilderContext parentContext) {
         this.body = body;
@@ -73,17 +74,17 @@ public class BuilderContext {
     }
 
     public String getClassProcessContextVarName(){
-        if(processorBuildContextVarName ==null){
-            processorBuildContextVarName = JavassistUtil.getVarName(this,"processContext");
+        if(classProcessContextVarName ==null){
+            classProcessContextVarName = JavassistUtil.getVarName(this,"processContext");
             final String processContextClassName = FieldProcessContext.class.getName();
             JavassistUtil.append(body, "final {} {}=new {}({},{},{});\n",
                     processContextClassName,
-                    processorBuildContextVarName,
+                    classProcessContextVarName,
                     processContextClassName,
                     FieldBuilder.varNameParser,
                     varNameInstance,
                     FieldBuilder.varNameParentProcessContext);
         }
-        return processorBuildContextVarName;
+        return classProcessContextVarName;
     }
 }
