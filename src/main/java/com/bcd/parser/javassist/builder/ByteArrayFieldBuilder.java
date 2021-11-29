@@ -25,7 +25,7 @@ public class ByteArrayFieldBuilder extends FieldBuilder {
             }
         }
         String arr_var_name = varNameField + "_arr";
-        JavassistUtil.append(body, "byte[] {}=new byte[{}];\n", arr_var_name, lenRes);
+        JavassistUtil.append(body, "final byte[] {}=new byte[{}];\n", arr_var_name, lenRes);
         JavassistUtil.append(body, "{}.readBytes({});\n", FieldBuilder.varNameByteBuf, arr_var_name);
         JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, arr_var_name);
     }

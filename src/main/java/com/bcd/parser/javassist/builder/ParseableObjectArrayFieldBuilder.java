@@ -18,17 +18,17 @@ public class ParseableObjectArrayFieldBuilder extends FieldBuilder{
         String listLenRes = JavassistUtil.replaceVarToFieldName(packetField.listLenExpr(), context.varToFieldName, field);
         final Class typeClass = field.getType().getComponentType();
         String typeClassName = typeClass.getName();
-        JavassistUtil.append(body,"{}[] {}=new {}[{}];\n",typeClassName,varNameField,typeClassName,listLenRes);
+        JavassistUtil.append(body,"final {}[] {}=new {}[{}];\n",typeClassName,varNameField,typeClassName,listLenRes);
         if(parser.allInOne) {
             final String fieldVarNameTemp = varNameField + "_temp";
             JavassistUtil.append(body, "for(int i=0;i<{};i++){\n", listLenRes);
-            JavassistUtil.append(body, "{} {}=new {}();\n",typeClassName,fieldVarNameTemp,typeClassName);
+            JavassistUtil.append(body, "final {} {}=new {}();\n",typeClassName,fieldVarNameTemp,typeClassName);
             parser.buildAppend(body,typeClass,fieldVarNameTemp,context.parser,context);
             JavassistUtil.append(body, "{}[i]={};\n", varNameField, fieldVarNameTemp);
         }else{
             String processContextVarName = varNameField + "_processContext";
             final String processContextClassName = FieldProcessContext.class.getName();
-            JavassistUtil.append(body, "{} {}=new {}({},{},{});\n", processContextClassName, processContextVarName, processContextClassName, FieldBuilder.varNameParser, varNameInstance, FieldBuilder.varNameParentProcessContext);
+            JavassistUtil.append(body, "final {} {}=new {}({},{},{});\n", processContextClassName, processContextVarName, processContextClassName, FieldBuilder.varNameParser, varNameInstance, FieldBuilder.varNameParentProcessContext);
 
             JavassistUtil.append(body, "for(int i=0;i<{};i++){\n", listLenRes);
             JavassistUtil.append(body,"{}[i]={}.parse({}.class,{},{});\n",varNameField, FieldBuilder.varNameParser,typeClassName, FieldBuilder.varNameByteBuf,processContextVarName);

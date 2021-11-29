@@ -18,7 +18,7 @@ public class ProcessorClassFieldBuilder extends FieldBuilder {
         if(packetField.var()=='0'){
             JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName,unBoxing);
         }else {
-            JavassistUtil.append(body, "{} {}={};\n",fieldTypeClassName,varNameField, unBoxing);
+            JavassistUtil.append(body, "final {} {}={};\n",fieldTypeClassName,varNameField, unBoxing);
             JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);
             context.varToFieldName.put(packetField.var(), varNameField);
         }

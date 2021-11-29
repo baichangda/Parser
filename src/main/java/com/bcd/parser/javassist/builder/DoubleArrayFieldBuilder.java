@@ -30,7 +30,7 @@ public class DoubleArrayFieldBuilder extends FieldBuilder {
             }
         }
         String arrVarName = varNameField + "_arr";
-        JavassistUtil.append(body,"double[] {}=new double[{}];\n",arrVarName, lenRes);
+        JavassistUtil.append(body,"final double[] {}=new double[{}];\n",arrVarName, lenRes);
         JavassistUtil.append(body,"for(int i=0;i<{}.length;i++){\n",arrVarName);
 
         String valExpr=null;

@@ -33,12 +33,12 @@ public class IntFieldBuilder extends FieldBuilder{
         }else {
             switch (packetField.len()) {
                 case 2: {
-                    JavassistUtil.append(body,"{} {}={}.readUnsignedShort();\n", fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
+                    JavassistUtil.append(body,"final {} {}={}.readUnsignedShort();\n", fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
                     JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);
                     break;
                 }
                 case 4: {
-                    JavassistUtil.append(body,"{} {}={}.readInt();\n", fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
+                    JavassistUtil.append(body,"final {} {}={}.readInt();\n", fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
                     JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);
                     break;
                 }

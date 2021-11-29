@@ -284,7 +284,7 @@ public class Parser {
         String instanceVarName = "$3";
         StringBuilder body = new StringBuilder();
         body.append("{\n");
-        JavassistUtil.append(body, "{} {}=new {}();\n", clazzName, instanceVarName, clazzName);
+        JavassistUtil.append(body, "final {} {}=new {}();\n", clazzName, instanceVarName, clazzName);
         BuilderContext context = new BuilderContext(body, this, cc, instanceVarName, null);
         //根据字段构造代码
         buildParseMethodBody(clazz, context);

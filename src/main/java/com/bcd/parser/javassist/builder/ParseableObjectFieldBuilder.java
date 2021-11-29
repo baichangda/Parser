@@ -17,7 +17,7 @@ public class ParseableObjectFieldBuilder extends FieldBuilder{
         }else{
             String processContextVarName=varNameField+"_processContext";
             final String processContextClassName = FieldProcessContext.class.getName();
-            JavassistUtil.append(body,"{} {}=new {}({},{},{});\n",processContextClassName,processContextVarName,processContextClassName, FieldBuilder.varNameParser,varNameInstance, FieldBuilder.varNameParentProcessContext);
+            JavassistUtil.append(body,"final {} {}=new {}({},{},{});\n",processContextClassName,processContextVarName,processContextClassName, FieldBuilder.varNameParser,varNameInstance, FieldBuilder.varNameParentProcessContext);
             JavassistUtil.append(body,"{}.{}({}.parse({}.class,{},{}));\n",varNameInstance,setMethodName, FieldBuilder.varNameParser,fieldTypeClassName, FieldBuilder.varNameByteBuf,processContextVarName);
         }
     }

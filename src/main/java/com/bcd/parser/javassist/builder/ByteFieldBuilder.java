@@ -29,7 +29,7 @@ public class ByteFieldBuilder extends FieldBuilder{
         }else{
             switch (packetField.len()) {
                 case 1: {
-                    JavassistUtil.append(body,"{} {}={}.readByte();\n",fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
+                    JavassistUtil.append(body,"final {} {}={}.readByte();\n",fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
                     JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);
                     break;
                 }

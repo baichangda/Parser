@@ -30,7 +30,7 @@ public class IntArrayFieldBuilder extends FieldBuilder {
             }
         }
         String arr_var_name = varNameField + "_arr";
-        JavassistUtil.append(body,"int[] {}=new int[{}];\n",arr_var_name, lenRes);
+        JavassistUtil.append(body,"final int[] {}=new int[{}];\n",arr_var_name, lenRes);
         JavassistUtil.append(body,"for(int i=0;i<{}.length;i++){\n",arr_var_name);
         switch (packetField.singleLen()) {
             case 2: {

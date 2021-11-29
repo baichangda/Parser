@@ -13,7 +13,7 @@ public class VehicleCommonDataFieldProcessor extends FieldProcessor<VehicleCommo
 
     @Override
     public VehicleCommonData process(final ByteBuf byteBuf, final FieldProcessContext context) {
-        VehicleCommonData vehicleCommonData=new VehicleCommonData();
+        final VehicleCommonData vehicleCommonData=new VehicleCommonData();
         final Parser parser = context.parser;
         int allLen= ((Packet)context.parentContext.instance).getContentLength()-6;
         int beginLeave=byteBuf.readableBytes();

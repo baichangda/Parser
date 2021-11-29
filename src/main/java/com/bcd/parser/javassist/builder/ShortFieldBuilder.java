@@ -33,12 +33,12 @@ public class ShortFieldBuilder extends FieldBuilder{
         }else {
             switch (packetField.len()) {
                 case 1: {
-                    JavassistUtil.append(body,"{} {}={}.readUnsignedByte();\n",fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
+                    JavassistUtil.append(body,"final {} {}={}.readUnsignedByte();\n",fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
                     JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);
                     break;
                 }
                 case 2: {
-                    JavassistUtil.append(body,"{} {}={}.readShort();\n",fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
+                    JavassistUtil.append(body,"final {} {}={}.readShort();\n",fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
                     JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);
                     break;
                 }

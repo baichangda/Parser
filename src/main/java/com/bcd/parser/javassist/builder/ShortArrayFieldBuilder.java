@@ -29,7 +29,7 @@ public class ShortArrayFieldBuilder extends FieldBuilder {
             }
         }
         String arrVarName = varNameField + "_arr";
-        JavassistUtil.append(body,"short[] {}=new short[{}];\n",arrVarName, lenRes);
+        JavassistUtil.append(body,"final short[] {}=new short[{}];\n",arrVarName, lenRes);
         JavassistUtil.append(body,"for(int i=0;i<{}.length;i++){\n",arrVarName);
         switch (packetField.singleLen()) {
             case 1: {

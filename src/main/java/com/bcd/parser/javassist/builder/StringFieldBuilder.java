@@ -24,9 +24,9 @@ public class StringFieldBuilder extends FieldBuilder{
         }
         String arrVarName=varNameField+"_arr";
         String discardLenVarName=varNameField+"_discardLen";
-        JavassistUtil.append(body,"byte[] {}=new byte[{}];\n",arrVarName,lenRes);
+        JavassistUtil.append(body,"final byte[] {}=new byte[{}];\n",arrVarName,lenRes);
         JavassistUtil.append(body,"{}.readBytes({});\n", FieldBuilder.varNameByteBuf,arrVarName);
-        JavassistUtil.append(body,"int {}=0;\n",discardLenVarName);
+        JavassistUtil.append(body,"final int {}=0;\n",discardLenVarName);
         JavassistUtil.append(body,"for(int i={}.length-1;i>=0;i--){\n",arrVarName);
         JavassistUtil.append(body,"if({}[i]==0){\n",arrVarName);
         JavassistUtil.append(body,"{}++;\n",discardLenVarName);

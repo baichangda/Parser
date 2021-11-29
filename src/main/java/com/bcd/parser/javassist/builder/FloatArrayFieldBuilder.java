@@ -30,7 +30,7 @@ public class FloatArrayFieldBuilder extends FieldBuilder {
             }
         }
         String arrVarName = varNameField + "_arr";
-        JavassistUtil.append(body,"float[] {}=new float[{}];\n",arrVarName, lenRes);
+        JavassistUtil.append(body,"final float[] {}=new float[{}];\n",arrVarName, lenRes);
         JavassistUtil.append(body,"for(int i=0;i<{}.length;i++){\n",arrVarName);
 
         String valExpr=null;
