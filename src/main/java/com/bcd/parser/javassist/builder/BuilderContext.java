@@ -73,7 +73,7 @@ public class BuilderContext {
         this.parentContext = parentContext;
     }
 
-    public String getClassProcessContextVarName(){
+    public final String getClassProcessContextVarName(){
         if(classProcessContextVarName ==null){
             classProcessContextVarName = JavassistUtil.getVarName(this,"processContext");
             final String processContextClassName = FieldProcessContext.class.getName();
