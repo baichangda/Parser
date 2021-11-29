@@ -6,7 +6,7 @@ import com.bcd.parser.javassist.util.JavassistUtil;
 
 public class ParseableObjectFieldBuilder extends FieldBuilder{
     @Override
-    public void build(BuilderContext context){
+    public void build(final BuilderContext context){
         final StringBuilder body = context.body;
         final String varNameField = JavassistUtil.getFieldVarName(context);
         final String setMethodName = JavassistUtil.getSetMethodName(context.field);

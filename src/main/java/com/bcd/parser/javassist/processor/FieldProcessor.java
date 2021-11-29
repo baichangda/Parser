@@ -9,5 +9,5 @@ public abstract class FieldProcessor<T> {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
     public Parser parser;
 
-    public abstract T process(ByteBuf data, FieldProcessContext context);
+    public abstract T process(final ByteBuf data, final FieldProcessContext context);
 }

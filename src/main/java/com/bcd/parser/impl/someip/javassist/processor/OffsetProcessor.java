@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
 public class OffsetProcessor extends FieldProcessor<Integer> {
 
     @Override
-    public Integer process(ByteBuf data, FieldProcessContext context) {
+    public Integer process(final ByteBuf data, final FieldProcessContext context) {
         int i = data.readInt();
         //解析flag
         return i >> 4;

@@ -245,7 +245,7 @@ public class Parser {
         StringBuilder initBody = new StringBuilder();
         //加parser字段
         final String parserClassName = Parser.class.getName();
-        cc.addField(CtField.make("public final " + parserClassName + " parser;", cc));
+        cc.addField(CtField.make("private final " + parserClassName + " parser;", cc));
         //初始化parser字段
         final CtClass parser_cc = ClassPool.getDefault().get(parserClassName);
         final CtConstructor constructor = CtNewConstructor.make(new CtClass[]{parser_cc}, null, cc);
@@ -256,7 +256,7 @@ public class Parser {
         for (Class processorClass : processorClassList) {
             final String processorClassName = processorClass.getName();
             final String processorVarName = JavassistUtil.toFirstLowerCase(processorClass.getSimpleName());
-            cc.addField(CtField.make("public final " + processorClassName + " " + processorVarName + ";", cc));
+            cc.addField(CtField.make("private final " + processorClassName + " " + processorVarName + ";", cc));
             initBody.append(JavassistUtil.format("this.{}=new {}();\n", processorVarName, processorClassName));
             initBody.append(JavassistUtil.format("this.{}.parser=$1;\n", processorVarName));
         }

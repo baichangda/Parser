@@ -10,7 +10,7 @@ import io.netty.buffer.ByteBuf;
 public class PacketDataFieldProcessor extends FieldProcessor<PacketData> {
 
     @Override
-    public PacketData process(ByteBuf data, FieldProcessContext context) {
+    public PacketData process(final ByteBuf data, final FieldProcessContext context) {
         Packet packet=(Packet)context.instance;
         final Parser parser = context.parser;
         PacketData packetData=null;

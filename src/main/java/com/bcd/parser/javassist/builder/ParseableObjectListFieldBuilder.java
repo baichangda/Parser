@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ParseableObjectListFieldBuilder extends FieldBuilder{
     @Override
-    public void build(BuilderContext context) {
+    public void build(final BuilderContext context) {
         final StringBuilder body = context.body;
         final Field field = context.field;
         final String varNameField = JavassistUtil.getFieldVarName(context);

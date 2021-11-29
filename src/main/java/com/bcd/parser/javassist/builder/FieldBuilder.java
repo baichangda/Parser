@@ -11,6 +11,6 @@ public abstract class FieldBuilder {
     public static String varNameParser = "parser";
     public Parser parser;
 
-    public abstract void build(BuilderContext context);
+    public abstract void build(final BuilderContext context);
 
 }

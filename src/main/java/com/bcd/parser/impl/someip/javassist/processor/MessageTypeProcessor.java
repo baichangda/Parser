@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
 
 public class MessageTypeProcessor extends FieldProcessor<MessageType> {
     @Override
-    public MessageType process(ByteBuf data, FieldProcessContext context) {
+    public MessageType process(final ByteBuf data, final FieldProcessContext context) {
         byte b = data.readByte();
         return MessageType.valueOf(b);
     }

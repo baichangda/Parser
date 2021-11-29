@@ -6,7 +6,7 @@ import com.bcd.parser.javassist.util.JavassistUtil;
 
 public class ProcessorClassFieldBuilder extends FieldBuilder {
     @Override
-    public void build(BuilderContext context) {
+    public void build(final BuilderContext context) {
         final StringBuilder body = context.body;
         final PacketField packetField = context.packetField;
         final String varNameField = JavassistUtil.getFieldVarName(context);

@@ -7,7 +7,7 @@ import io.netty.buffer.ByteBuf;
 
 public class MethodIdOrEventIdProcessor extends FieldProcessor<Short> {
     @Override
-    public Short process(ByteBuf data, FieldProcessContext context) {
+    public Short process(final ByteBuf data, final FieldProcessContext context) {
         short s = data.readShort();
         //解析flag
         ((Packet) context.instance).setFlag((byte) ((s >> 7) & 0x01));

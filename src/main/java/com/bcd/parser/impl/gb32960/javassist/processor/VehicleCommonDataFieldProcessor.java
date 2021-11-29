@@ -12,7 +12,7 @@ public class VehicleCommonDataFieldProcessor extends FieldProcessor<VehicleCommo
     Logger logger= LoggerFactory.getLogger(VehicleCommonDataFieldProcessor.class);
 
     @Override
-    public VehicleCommonData process(ByteBuf byteBuf, FieldProcessContext context) {
+    public VehicleCommonData process(final ByteBuf byteBuf, final FieldProcessContext context) {
         VehicleCommonData vehicleCommonData=new VehicleCommonData();
         final Parser parser = context.parser;
         int allLen= ((Packet)context.parentContext.instance).getContentLength()-6;
