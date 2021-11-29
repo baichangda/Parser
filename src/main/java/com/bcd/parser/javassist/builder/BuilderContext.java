@@ -72,11 +72,11 @@ public class BuilderContext {
         this.parentContext = parentContext;
     }
 
-    public String getProcessorBuildContextVarName(){
+    public String getClassProcessContextVarName(){
         if(processorBuildContextVarName ==null){
             processorBuildContextVarName = JavassistUtil.getVarName(this,"processContext");
             final String processContextClassName = FieldProcessContext.class.getName();
-            JavassistUtil.append(body, "{} {}=new {}({},{},{});\n",
+            JavassistUtil.append(body, "final {} {}=new {}({},{},{});\n",
                     processContextClassName,
                     processorBuildContextVarName,
                     processContextClassName,

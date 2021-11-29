@@ -283,13 +283,13 @@ public class Parser {
         //添加方法体
         String instanceVarName = "$3";
         StringBuilder body = new StringBuilder();
-        body.append("{\n");
-        JavassistUtil.append(body, "final {} {}=new {}();\n", clazzName, instanceVarName, clazzName);
+        body.append("\n{\n");
+        JavassistUtil.append(body, "  final {} {}=new {}();\n", clazzName, instanceVarName, clazzName);
         BuilderContext context = new BuilderContext(body, this, cc, instanceVarName, null);
         //根据字段构造代码
         buildParseMethodBody(clazz, context);
-        JavassistUtil.append(body, "return {};\n", instanceVarName);
-        body.append("}\n");
+        JavassistUtil.append(body, "  return {};\n", instanceVarName);
+        body.append("}");
         logger.info(body.toString());
         parse_cm.setBody(body.toString());
         if (generateClassField) {
@@ -307,7 +307,7 @@ public class Parser {
                 if (javassistParser == null) {
                     try {
                         final Class impl = buildClass(clazz);
-                        logger.info("build Impl [{}] succeed", impl.getName());
+                        logger.info("build Impl [{}] succeed\n\n", impl.getName());
                         javassistParser = (JavassistParser<T>) (impl.getConstructor(Parser.class).newInstance(this));
                         beanClass_to_javassistParser.put(clazz, javassistParser);
                     } catch (Exception e) {

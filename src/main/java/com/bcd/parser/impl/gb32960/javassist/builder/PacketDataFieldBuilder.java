@@ -21,7 +21,7 @@ public class PacketDataFieldBuilder extends FieldBuilder {
 
         JavassistUtil.append(body, "{} {}=null;\n", fieldTypeClassName, varNameField);
 
-        final String processorBuildContextVarName = context.getProcessorBuildContextVarName();
+        final String processorBuildContextVarName = context.getClassProcessContextVarName();
 
         JavassistUtil.append(body, "switch ({}.getFlag()){\n", varNameInstance);
         JavassistUtil.append(body, "case 1:{\n", varNameInstance);

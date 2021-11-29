@@ -14,7 +14,7 @@ public class ProcessorClassFieldBuilder extends FieldBuilder {
         final String processorClassVarName = JavassistUtil.toFirstLowerCase(packetField.processorClass().getSimpleName());
         final String varNameInstance = context.varNameInstance;
         final String fieldTypeClassName = context.field.getType().getName();
-        final String unBoxing = JavassistUtil.unBoxing(JavassistUtil.format("{}.process({},{})", processorClassVarName, FieldBuilder.varNameByteBuf, context.getProcessorBuildContextVarName()), context.field.getType());
+        final String unBoxing = JavassistUtil.unBoxing(JavassistUtil.format("{}.process({},{})", processorClassVarName, FieldBuilder.varNameByteBuf, context.getClassProcessContextVarName()), context.field.getType());
         if(packetField.var()=='0'){
             JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName,unBoxing);
         }else {

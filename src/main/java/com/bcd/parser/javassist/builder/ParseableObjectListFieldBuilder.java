@@ -1,7 +1,6 @@
 package com.bcd.parser.javassist.builder;
 
 import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.javassist.processor.FieldProcessContext;
 import com.bcd.parser.javassist.util.JavassistUtil;
 
 import java.lang.reflect.Field;
@@ -31,12 +30,9 @@ public class ParseableObjectListFieldBuilder extends FieldBuilder{
             parser.buildAppend(body,typeClass,fieldVarNameTemp,context.parser,context);
             JavassistUtil.append(body, "{}.add({});\n", varNameField, fieldVarNameTemp);
         }else{
-            String processContextVarName = varNameField + "_processContext";
-            final String processContextClassName = FieldProcessContext.class.getName();
-            JavassistUtil.append(body, "final {} {}=new {}({},{},{});\n", processContextClassName, processContextVarName, processContextClassName, FieldBuilder.varNameParser, varNameInstance, FieldBuilder.varNameParentProcessContext);
-
+            final String classProcessContextVarName = context.getClassProcessContextVarName();
             JavassistUtil.append(body, "for(int i=0;i<{};i++){\n", listLenRes);
-            JavassistUtil.append(body, "{}.add({}.parse({}.class,{},{}));\n", varNameField, FieldBuilder.varNameParser, typeClassName, FieldBuilder.varNameByteBuf, processContextVarName);
+            JavassistUtil.append(body, "{}.add({}.parse({}.class,{},{}));\n", varNameField, FieldBuilder.varNameParser, typeClassName, FieldBuilder.varNameByteBuf, classProcessContextVarName);
         }
         JavassistUtil.append(body, "}\n");
         JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);

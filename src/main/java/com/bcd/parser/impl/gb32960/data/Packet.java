@@ -28,8 +28,8 @@ public class Packet {
 //    @PacketField(index = 7,lenExpr = "a")
     byte[] dataContent;
     @PacketField(index = 7,lenExpr = "a"
-            , processorClass = PacketDataFieldProcessor.class
-            ,builderClass = PacketDataFieldBuilder.class
+            ,processorClass = PacketDataFieldProcessor.class
+//            ,builderClass = PacketDataFieldBuilder.class
     )
     PacketData data;
     //异或校验位
