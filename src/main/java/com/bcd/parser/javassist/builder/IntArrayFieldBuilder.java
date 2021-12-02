@@ -17,15 +17,13 @@ public class IntArrayFieldBuilder extends FieldBuilder {
         final String varNameInstance = context.varNameInstance;
         String lenRes=context.lenRes;
         switch (packetField.singleLen()) {
-            case 2: {
+            case 2 -> {
                 lenRes = "(" + lenRes + ")/2";
-                break;
             }
-            case 4: {
+            case 4 -> {
                 lenRes = "(" + lenRes + ")/4";
-                break;
             }
-            default: {
+            default -> {
                 JavassistUtil.packetFieldSingleLenNotSupport(field);
             }
         }
@@ -33,13 +31,11 @@ public class IntArrayFieldBuilder extends FieldBuilder {
         JavassistUtil.append(body,"final int[] {}=new int[{}];\n",arr_var_name, lenRes);
         JavassistUtil.append(body,"for(int i=0;i<{}.length;i++){\n",arr_var_name);
         switch (packetField.singleLen()) {
-            case 2: {
-                JavassistUtil.append(body,"{}[i]={}.readUnsignedShort();\n",arr_var_name, FieldBuilder.varNameByteBuf);
-                break;
+            case 2 -> {
+                JavassistUtil.append(body, "{}[i]={}.readUnsignedShort();\n", arr_var_name, FieldBuilder.varNameByteBuf);
             }
-            case 4: {
-                JavassistUtil.append(body,"{}[i]={}.readInt();\n",arr_var_name, FieldBuilder.varNameByteBuf);
-                break;
+            case 4 -> {
+                JavassistUtil.append(body, "{}[i]={}.readInt();\n", arr_var_name, FieldBuilder.varNameByteBuf);
             }
         }
         body.append("}\n");

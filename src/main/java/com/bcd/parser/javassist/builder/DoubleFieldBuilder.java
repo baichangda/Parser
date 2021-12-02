@@ -16,15 +16,13 @@ public class DoubleFieldBuilder extends FieldBuilder{
         final String varNameInstance = context.varNameInstance;
         String valExpr=null;
         switch (packetField.len()) {
-            case 4: {
-                valExpr=JavassistUtil.format("(double){}.readUnsignedInt()", FieldBuilder.varNameByteBuf);
-                break;
+            case 4 -> {
+                valExpr = JavassistUtil.format("(double){}.readUnsignedInt()", FieldBuilder.varNameByteBuf);
             }
-            case 8: {
-                valExpr=JavassistUtil.format("(double){}.readLong()", FieldBuilder.varNameByteBuf);
-                break;
+            case 8 -> {
+                valExpr = JavassistUtil.format("(double){}.readLong()", FieldBuilder.varNameByteBuf);
             }
-            default: {
+            default -> {
                 JavassistUtil.packetFieldLenNotSupport(field);
             }
         }

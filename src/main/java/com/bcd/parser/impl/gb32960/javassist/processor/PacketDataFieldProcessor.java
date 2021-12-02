@@ -14,44 +14,43 @@ public class PacketDataFieldProcessor extends FieldProcessor<PacketData> {
         Packet packet=(Packet)context.instance;
         final Parser parser = context.parser;
         PacketData packetData=null;
-        switch (packet.getFlag()){
+        switch (packet.getFlag()) {
             //车辆登入
-            case 1:{
-                packetData= parser.parse(VehicleLoginData.class, data,context);
-                break;
+            case 1 -> {
+                packetData = parser.parse(VehicleLoginData.class, data, context);
             }
+
             //车辆实时信息
-            case 2:{
-                packetData= parser.parse(VehicleRealData.class,data,context);
-                break;
+            case 2 -> {
+                packetData = parser.parse(VehicleRealData.class, data, context);
             }
+
             //补发信息上报
-            case 3:{
-                packetData= parser.parse(VehicleSupplementData.class,data,context);
-                break;
+            case 3 -> {
+                packetData = parser.parse(VehicleSupplementData.class, data, context);
             }
+
             //车辆登出
-            case 4:{
-                packetData= parser.parse(VehicleLogoutData.class,data,context);
-                break;
+            case 4 -> {
+                packetData = parser.parse(VehicleLogoutData.class, data, context);
             }
+
             //平台登入
-            case 5:{
-                packetData= parser.parse(PlatformLoginData.class,data,context);
-                break;
+            case 5 -> {
+                packetData = parser.parse(PlatformLoginData.class, data, context);
             }
+
             //平台登出
-            case 6:{
-                packetData= parser.parse(PlatformLogoutData.class,data,context);
-                break;
+            case 6 -> {
+                packetData = parser.parse(PlatformLogoutData.class, data, context);
             }
+
             //心跳
-            case 7:{
-                break;
+            case 7 -> {
             }
+
             //终端校时
-            case 8:{
-                break;
+            case 8 -> {
             }
         }
         return packetData;

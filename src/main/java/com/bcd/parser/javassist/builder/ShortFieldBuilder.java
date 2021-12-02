@@ -18,31 +18,27 @@ public class ShortFieldBuilder extends FieldBuilder{
         final String fieldTypeClassName = field.getType().getName();
         if(packetField.var()=='0'){
             switch (packetField.len()) {
-                case 1: {
+                case 1 -> {
                     JavassistUtil.append(body, "{}.{}({}.readUnsignedByte());\n", varNameInstance, setMethodName, FieldBuilder.varNameByteBuf);
-                    return;
                 }
-                case 2: {
+                case 2 -> {
                     JavassistUtil.append(body, "{}.{}({}.readShort());\n", varNameInstance, setMethodName, FieldBuilder.varNameByteBuf);
-                    return;
                 }
-                default: {
+                default -> {
                     JavassistUtil.packetFieldLenNotSupport(field);
                 }
             }
         }else {
             switch (packetField.len()) {
-                case 1: {
-                    JavassistUtil.append(body,"final {} {}={}.readUnsignedByte();\n",fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
+                case 1 -> {
+                    JavassistUtil.append(body, "final {} {}={}.readUnsignedByte();\n", fieldTypeClassName, varNameField, FieldBuilder.varNameByteBuf);
                     JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);
-                    break;
                 }
-                case 2: {
-                    JavassistUtil.append(body,"final {} {}={}.readShort();\n",fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
+                case 2 -> {
+                    JavassistUtil.append(body, "final {} {}={}.readShort();\n", fieldTypeClassName, varNameField, FieldBuilder.varNameByteBuf);
                     JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);
-                    break;
                 }
-                default: {
+                default -> {
                     JavassistUtil.packetFieldLenNotSupport(field);
                 }
             }

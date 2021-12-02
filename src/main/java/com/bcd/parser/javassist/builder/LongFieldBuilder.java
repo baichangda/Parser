@@ -18,31 +18,27 @@ public class LongFieldBuilder extends FieldBuilder{
         final String fieldTypeClassName = field.getType().getName();
         if(packetField.var()=='0'){
             switch (packetField.len()) {
-                case 4: {
+                case 4 -> {
                     JavassistUtil.append(body, "{}.{}({}.readUnsignedInt());\n", varNameInstance, setMethodName, FieldBuilder.varNameByteBuf);
-                    return;
                 }
-                case 8: {
+                case 8 -> {
                     JavassistUtil.append(body, "{}.{}({}.readLong());\n", varNameInstance, setMethodName, FieldBuilder.varNameByteBuf);
-                    return;
                 }
-                default: {
+                default -> {
                     JavassistUtil.packetFieldLenNotSupport(field);
                 }
             }
         }else {
             switch (packetField.len()) {
-                case 4: {
-                    JavassistUtil.append(body,"final {} {}={}.readUnsignedInt();\n",fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
+                case 4 -> {
+                    JavassistUtil.append(body, "final {} {}={}.readUnsignedInt();\n", fieldTypeClassName, varNameField, FieldBuilder.varNameByteBuf);
                     JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);
-                    break;
                 }
-                case 8: {
-                    JavassistUtil.append(body,"final {} {}={}.readLong();\n",fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
+                case 8 -> {
+                    JavassistUtil.append(body, "final {} {}={}.readLong();\n", fieldTypeClassName, varNameField, FieldBuilder.varNameByteBuf);
                     JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);
-                    break;
                 }
-                default: {
+                default -> {
                     JavassistUtil.packetFieldLenNotSupport(field);
                 }
             }

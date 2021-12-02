@@ -17,14 +17,12 @@ public class ShortArrayFieldBuilder extends FieldBuilder {
         final String varNameInstance = context.varNameInstance;
         String lenRes=context.lenRes;
         switch (packetField.singleLen()) {
-            case 1: {
-                break;
+            case 1 -> {
             }
-            case 2: {
+            case 2 -> {
                 lenRes = "(" + lenRes + ")/2";
-                break;
             }
-            default: {
+            default -> {
                 JavassistUtil.packetFieldSingleLenNotSupport(field);
             }
         }
@@ -32,13 +30,11 @@ public class ShortArrayFieldBuilder extends FieldBuilder {
         JavassistUtil.append(body,"final short[] {}=new short[{}];\n",arrVarName, lenRes);
         JavassistUtil.append(body,"for(int i=0;i<{}.length;i++){\n",arrVarName);
         switch (packetField.singleLen()) {
-            case 1: {
-                JavassistUtil.append(body,"{}[i]={}.readUnsignedByte();\n",arrVarName, FieldBuilder.varNameByteBuf);
-                break;
+            case 1 -> {
+                JavassistUtil.append(body, "{}[i]={}.readUnsignedByte();\n", arrVarName, FieldBuilder.varNameByteBuf);
             }
-            case 2: {
-                JavassistUtil.append(body,"{}[i]={}.readShort();\n",arrVarName, FieldBuilder.varNameByteBuf);
-                break;
+            case 2 -> {
+                JavassistUtil.append(body, "{}[i]={}.readShort();\n", arrVarName, FieldBuilder.varNameByteBuf);
             }
         }
         body.append("}\n");

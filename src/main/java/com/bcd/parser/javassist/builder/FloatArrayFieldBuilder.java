@@ -17,15 +17,13 @@ public class FloatArrayFieldBuilder extends FieldBuilder {
         final String varNameInstance = context.varNameInstance;
         String lenRes=context.lenRes;
         switch (packetField.singleLen()) {
-            case 2: {
+            case 2 -> {
                 lenRes = "(" + lenRes + ")/2";
-                break;
             }
-            case 4: {
+            case 4 -> {
                 lenRes = "(" + lenRes + ")/4";
-                break;
             }
-            default: {
+            default -> {
                 JavassistUtil.packetFieldSingleLenNotSupport(field);
             }
         }
@@ -35,14 +33,11 @@ public class FloatArrayFieldBuilder extends FieldBuilder {
 
         String valExpr=null;
         switch (packetField.singleLen()) {
-            case 2: {
-                valExpr=JavassistUtil.format("(float){}.readUnsignedShort()", FieldBuilder.varNameByteBuf);
-
-                break;
+            case 2 -> {
+                valExpr = JavassistUtil.format("(float){}.readUnsignedShort()", FieldBuilder.varNameByteBuf);
             }
-            case 4: {
-                valExpr=JavassistUtil.format("(float){}.readInt()", FieldBuilder.varNameByteBuf);
-                break;
+            case 4 -> {
+                valExpr = JavassistUtil.format("(float){}.readInt()", FieldBuilder.varNameByteBuf);
             }
         }
         JavassistUtil.append(body,"{}[i]={};\n",arrVarName,JavassistUtil.replaceVarToValExpr(packetField.valExpr(),valExpr));
