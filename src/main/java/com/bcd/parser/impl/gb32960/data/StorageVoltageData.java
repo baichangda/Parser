@@ -17,7 +17,7 @@ public class StorageVoltageData {
     float voltage;
 
     //可充电储能状态电流
-    @PacketField(index = 3, len = 2, valExpr = "x/10-1000")
+    @PacketField(index = 3, len = 2, valExpr = "(x-10000)/10")
     float current;
 
     //单体电池总数

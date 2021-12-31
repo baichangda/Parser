@@ -3,6 +3,7 @@ package com.bcd.parser.processer.impl;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.ExprCase;
 import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
@@ -20,17 +21,17 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
             return new float[0];
         }
         int singleLen = processContext.fieldInfo.packetField_singleLen;
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
         //优化处理 short->int
         if (singleLen == 2) {
             float[] res = new float[len >>> 1];
             for (int i = 0; i < res.length; i++) {
                 int cur = data.readUnsignedShort();
                 //验证异常、无效值
-                if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
+                if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
                     res[i] = (float) cur;
                 } else {
-                    res[i] = RpnUtil.calc_float(valExpr, res[i]);
+                    res[i] = (float) valExprCase.calc_double(cur);
                 }
             }
             return res;
@@ -39,10 +40,10 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
             for (int i = 0; i < res.length; i++) {
                 int cur = data.readInt();
                 //验证异常、无效值
-                if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
+                if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
                     res[i] = (float) cur;
                 } else {
-                    res[i] = RpnUtil.calc_float(valExpr, res[i]);
+                    res[i] = (float) valExprCase.calc_double(cur);
                 }
             }
             return res;
@@ -59,16 +60,16 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
         }
         int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
         float[] newData;
-        if (valExpr == null) {
+        if (valExprCase == null) {
             newData = data;
         } else {
             newData = new float[len];
             for (int i = 0; i < len; i++) {
                 //验证异常、无效值
                 if (ParserUtil.checkInvalidOrExceptionVal_int((int) data[i], singleLen)) {
-                    newData[i] = (float) RpnUtil.deCalc_float(valExpr, data[i]);
+                    newData[i] = (float) valExprCase.deCalc_double(data[i]);
                 } else {
                     newData[i] = data[i];
                 }

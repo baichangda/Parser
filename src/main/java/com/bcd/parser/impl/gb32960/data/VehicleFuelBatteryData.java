@@ -29,7 +29,7 @@ public class VehicleFuelBatteryData {
     short[] temperatures;
 
     //氢系统中最高温度
-    @PacketField(index = 6,len = 2,valExpr = "x/10-40")
+    @PacketField(index = 6,len = 2,valExpr = "(x-400)/10")
     float maxTemperature;
 
     //氢系统中最高温度探针代号

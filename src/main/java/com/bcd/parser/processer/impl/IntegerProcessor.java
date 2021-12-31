@@ -3,6 +3,7 @@ package com.bcd.parser.processer.impl;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.ExprCase;
 import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
@@ -24,23 +25,23 @@ public class IntegerProcessor extends FieldProcessor<Integer> {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
         //值表达式处理
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
-        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_int(res, len)) {
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
+        if (valExprCase == null||!ParserUtil.checkInvalidOrExceptionVal_int(res, len)) {
             return res;
         } else {
-            return RpnUtil.calc_int(valExpr, res);
+            return valExprCase.calc_int(res);
         }
     }
 
     @Override
     public void deProcess(Integer data, ByteBuf dest, FieldDeProcessContext processContext) {
         //值表达式处理
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
         int newData;
-        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_int(data, processContext.len)) {
+        if (valExprCase == null||!ParserUtil.checkInvalidOrExceptionVal_int(data, processContext.len)) {
             newData = data;
         } else {
-            newData = RpnUtil.deCalc_int(valExpr, data);
+            newData = valExprCase.deCalc_int(data);
         }
         int len = processContext.len;
         if (len==2){

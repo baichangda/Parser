@@ -3,6 +3,7 @@ package com.bcd.parser.processer.impl;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.ExprCase;
 import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
@@ -16,36 +17,36 @@ public class ShortProcessor extends FieldProcessor<Short> {
     public Short process(ByteBuf data, FieldProcessContext processContext) {
         short res;
         int len = processContext.len;
-        if (len==1){
+        if (len == 1) {
             res = data.readUnsignedByte();
-        }else if(len==2){
+        } else if (len == 2) {
             res = data.readShort();
-        }else{
+        } else {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
-        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_short(res, len)) {
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
+        if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_short(res, len)) {
             return res;
         } else {
-            return (short)RpnUtil.calc_int(valExpr, res);
+            return (short) valExprCase.calc_int(res);
         }
     }
 
     @Override
     public void deProcess(Short data, ByteBuf dest, FieldDeProcessContext processContext) {
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
         short newData;
-        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_short(data, processContext.len)) {
+        if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_short(data, processContext.len)) {
             newData = data;
         } else {
-            newData = (short) RpnUtil.deCalc_int(valExpr, data);
+            newData = (short) valExprCase.deCalc_int(data);
         }
         int len = processContext.len;
-        if (len==1){
+        if (len == 1) {
             dest.writeByte((byte) newData);
-        }else if(len==2){
+        } else if (len == 2) {
             dest.writeShort(newData);
-        }else{
+        } else {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
     }

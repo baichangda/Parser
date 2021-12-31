@@ -1,5 +1,6 @@
 package com.bcd.parser.impl.gb32960.data;
 
+
 import com.bcd.parser.anno.PacketField;
 import com.bcd.parser.anno.Parsable;
 
@@ -37,7 +38,7 @@ public class MotorData {
     float inputVoltage;
 
     //电机控制器直流母线电流
-    @PacketField(index = 8,len = 2,valExpr = "x/10-1000")
+    @PacketField(index = 8,len = 2,valExpr = "(x-10000)/10")
     float current;
 
     public short getNo() {

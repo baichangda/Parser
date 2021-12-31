@@ -66,20 +66,20 @@ public class RpnUtil {
             } catch (NumberFormatException ex) {
                 if (e.length() == 1) {
                     char c = e.charAt(0);
-                    switch (c){
-                        case '+':{
+                    switch (c) {
+                        case '+': {
                             return new Ele_double(4, 0);
                         }
-                        case '-':{
+                        case '-': {
                             return new Ele_double(5, 0);
                         }
-                        case '*':{
+                        case '*': {
                             return new Ele_double(6, 0);
                         }
-                        case '/':{
+                        case '/': {
                             return new Ele_double(7, 0);
                         }
-                        default:{
+                        default: {
                             return new Ele_double(2, c);
                         }
                     }
@@ -103,20 +103,20 @@ public class RpnUtil {
             } catch (NumberFormatException ex) {
                 if (e.length() == 1) {
                     char c = e.charAt(0);
-                    switch (c){
-                        case '+':{
+                    switch (c) {
+                        case '+': {
                             return new Ele_int(4, 0);
                         }
-                        case '-':{
+                        case '-': {
                             return new Ele_int(5, 0);
                         }
-                        case '*':{
+                        case '*': {
                             return new Ele_int(6, 0);
                         }
-                        case '/':{
+                        case '/': {
                             return new Ele_int(7, 0);
                         }
-                        default:{
+                        default: {
                             return new Ele_int(2, c);
                         }
                     }
@@ -267,26 +267,6 @@ public class RpnUtil {
         }
     }
 
-    public static void main(String[] args) {
-//        System.err.println(parseRPNToArithmetic(parseArithmeticToRPN("-(a-(b+(c)))")));
-//        System.err.println(Arrays.toString(parseArithmeticToRPN("-(a-(b+(c)))")));
-//        System.err.println(Arrays.toString(parseArithmeticToRPN(parseRPNToArithmetic(parseArithmeticToRPN("-(a-(b+(c)))")))));
-//        System.err.println(Arrays.toString(parseArithmeticToRPN("---4")));
-//        System.err.println(Arrays.toString(parseArithmeticToRPN("--(a/-3-4)--d")));
-//        System.err.println(Arrays.toString(parseArithmeticToRPN("1-4")));
-//        System.err.println(Arrays.toString(parseArithmeticToRPN("(a-(b+(c)))")));
-//        System.err.println(Arrays.toString(parseArithmeticToRPN("(a-(b+(c)))")));
-        System.out.println(Arrays.toString(toExprVar("x+3")));
-        System.out.println(Arrays.toString(toExprVar("3+x")));
-        System.out.println(Arrays.toString(toExprVar("x-3")));
-        System.out.println(Arrays.toString(toExprVar("3-x")));
-        System.out.println(Arrays.toString(toExprVar("-x+3")));
-        System.out.println(Arrays.toString(toExprVar("-x-3")));
-        System.out.println(Arrays.toString(toExprVar("-x*2+3")));
-        System.out.println(Arrays.toString(toExprVar("2*-x-3")));
-        System.out.println(Arrays.toString(toExprVar("-x")));
-        System.out.println(Arrays.toString(toExprVar("-3*-x-1")));
-    }
 
     /**
      * 将算数字符串转换成逆波兰表达式
@@ -461,6 +441,7 @@ public class RpnUtil {
 
     /**
      * 将rpn转换为数学表达式
+     *
      * @param rpn
      * @return
      */
@@ -504,300 +485,33 @@ public class RpnUtil {
         }
     }
 
-    /**
-     * 解析如下表达式
-     * y=a*x+b
-     * y=a/x+b
-     * 其中
-     * a、b没有限制
-     * <p>
-     * 例如:
-     * y=3*x+2
-     * y=2-x*4
-     * y=-3*-x-1
-     * y=-x
-     * y=1
-     *
-     * @param expr
-     * @return [a, b]
-     */
-    public static double[] toExprVar(String expr) {
-        double a = 0;
-        double b = 0;
-        String[] rpn = toRpn(expr);
-        int index1 = -1;
-        int index2 = -1;
-        for (int i = 0; i < rpn.length; i++) {
-            switch (rpn[i]) {
-                case "*":
-                case "/": {
-                    index1 = i;
-                    break;
-                }
-                case "+":
-                case "-": {
-                    index2 = i;
-                    break;
-                }
-            }
-        }
 
-        if (index1 == -1 && index2 == -1) {
-            try {
-                b = Double.parseDouble(rpn[0]);
-            } catch (NumberFormatException ex) {
-                if (rpn[0].charAt(0) == '-') {
-                    a = -1;
-                } else {
-                    a = 1;
-                }
-            }
-        } else if (index1 != -1 && index2 != -1) {
-            //求a
-            String s1 = rpn[index1 - 2];
-            String s2 = rpn[index1 - 1];
-            try {
-                double d1 = Double.parseDouble(s1);
-                if (s2.charAt(0) == '-') {
-                    a = -d1;
-                } else {
-                    a = d1;
-                }
-            } catch (NumberFormatException ex) {
-                double d2 = Double.parseDouble(s2);
-                if (s1.charAt(0) == '-') {
-                    a = -d2;
-                } else {
-                    a = d2;
-                }
-            }
-            //求b
-            if (index2 == index1 + 1) {
-                b = Double.parseDouble(rpn[0]);
-                if (rpn[index2].equals("-")) {
-                    a = -a;
-                }
-            } else {
-                b = Double.parseDouble(rpn[index2 - 1]);
-                if (rpn[index2].equals("-")) {
-                    b = -b;
-                }
-            }
 
-        } else if (index1 != -1 && index2 == -1) {
-            String s1 = rpn[index1 - 2];
-            String s2 = rpn[index1 - 1];
-            try {
-                double d1 = Double.parseDouble(s1);
-                if (s2.charAt(0) == '-') {
-                    a = -d1;
-                } else {
-                    a = d1;
-                }
-            } catch (NumberFormatException ex) {
-                double d2 = Double.parseDouble(s2);
-                if (s1.charAt(0) == '-') {
-                    a = -d2;
-                } else {
-                    a = d2;
-                }
-            }
-        } else {
-            String s1 = rpn[index2 - 2];
-            String s2 = rpn[index2 - 1];
-            try {
-                b = Double.parseDouble(s1);
-                if (s2.charAt(0) == '-') {
-                    a = -1;
-                } else {
-                    a = 1;
-                }
-                if (rpn[index2].equals("-")) {
-                    a = -a;
-                }
-            } catch (NumberFormatException ex) {
-                b = Double.parseDouble(s2);
-                if (s1.charAt(0) == '-') {
-                    a = -1;
-                } else {
-                    a = 1;
-                }
-                if (rpn[index2].equals("-")) {
-                    b = -b;
-                }
-            }
-        }
-        return new double[]{a, b};
+    public static void main(String[] args) {
+//        System.err.println(parseRPNToArithmetic(parseArithmeticToRPN("-(a-(b+(c)))")));
+//        System.err.println(Arrays.toString(parseArithmeticToRPN("-(a-(b+(c)))")));
+//        System.err.println(Arrays.toString(parseArithmeticToRPN(parseRPNToArithmetic(parseArithmeticToRPN("-(a-(b+(c)))")))));
+//        System.err.println(Arrays.toString(parseArithmeticToRPN("---4")));
+//        System.err.println(Arrays.toString(parseArithmeticToRPN("--(a/-3-4)--d")));
+//        System.err.println(Arrays.toString(parseArithmeticToRPN("1-4")));
+//        System.err.println(Arrays.toString(parseArithmeticToRPN("(a-(b+(c)))")));
+//        System.err.println(Arrays.toString(parseArithmeticToRPN("(a-(b+(c)))")));
+        System.out.println(ExprCase.from("(x+100)/1000"));
+        System.out.println(ExprCase.from("(-x+100)/1000"));
+        System.out.println(ExprCase.from("(x-100)/1000"));
+        System.out.println(ExprCase.from("(100+x)*1000"));
+        System.out.println(ExprCase.from("(100-x)*1000"));
+        System.out.println(ExprCase.from("x+100"));
+        System.out.println(ExprCase.from("x-100"));
+        System.out.println(ExprCase.from("x*100"));
+        System.out.println(ExprCase.from("x/100"));
+        System.out.println(ExprCase.from("-x"));
+        System.out.println(ExprCase.from("x"));
+        System.out.println(ExprCase.from("100"));
+        System.out.println(ExprCase.from("-100"));
+        System.out.println(ExprCase.from("(100-x)*-1000"));
+        System.out.println(ExprCase.from("-1-x"));
     }
-
-    /**
-     * 计算 y=x/a+b
-     *
-     * @param arr
-     * @param x
-     * @return
-     */
-    public static long calc_long(int[] arr, long x) {
-        switch (arr[0]) {
-            case 0: {
-                return arr[1];
-            }
-            case 1: {
-                return x + arr[1];
-            }
-            default: {
-                return x / arr[0] + arr[1];
-            }
-        }
-    }
-
-    /**
-     * 计算 y=x/a+b
-     *
-     * @param arr
-     * @param x
-     * @return
-     */
-    public static int calc_int(int[] arr, int x) {
-        switch (arr[0]) {
-            case 0: {
-                return arr[1];
-            }
-            case 1: {
-                return x + arr[1];
-            }
-            default: {
-                return x / arr[0] + arr[1];
-            }
-        }
-    }
-
-    /**
-     * 计算 y=x/a+b
-     *
-     * @param arr
-     * @param x
-     * @return
-     */
-    public static double calc_double(int[] arr, double x) {
-        switch (arr[0]) {
-            case 0: {
-                return arr[1];
-            }
-            case 1: {
-                return x + arr[1];
-            }
-            default: {
-                return x / arr[0] + arr[1];
-            }
-        }
-    }
-
-    /**
-     * 计算 y=x/a+b
-     *
-     * @param arr
-     * @param x
-     * @return
-     */
-    public static float calc_float(int[] arr, float x) {
-        switch (arr[0]) {
-            case 0: {
-                return arr[1];
-            }
-            case 1: {
-                return x + arr[1];
-            }
-            default: {
-                return x / arr[0] + arr[1];
-            }
-        }
-    }
-
-    /**
-     * 计算x=(y-b)*a
-     *
-     * @param arr
-     * @param y
-     * @return
-     */
-    public static long deCalc_long(int[] arr, long y) {
-        switch (arr[0]) {
-            case 0: {
-                return arr[1];
-            }
-            case 1: {
-                return y - arr[1];
-            }
-            default: {
-                return (y - arr[1]) * arr[0];
-            }
-        }
-    }
-
-    /**
-     * 计算x=(y-b)*a
-     *
-     * @param arr
-     * @param y
-     * @return
-     */
-    public static int deCalc_int(int[] arr, int y) {
-        switch (arr[0]) {
-            case 0: {
-                return arr[1];
-            }
-            case 1: {
-                return y - arr[1];
-            }
-            default: {
-                return (y - arr[1]) * arr[0];
-            }
-        }
-    }
-
-    /**
-     * 计算x=(y-b)*a
-     *
-     * @param arr
-     * @param y
-     * @return
-     */
-    public static double deCalc_double(int[] arr, double y) {
-        switch (arr[0]) {
-            case 0: {
-                return arr[1];
-            }
-            case 1: {
-                return y - arr[1];
-            }
-            default: {
-                return (y - arr[1]) * arr[0];
-            }
-        }
-    }
-
-    /**
-     * 计算x=(y-b)*a
-     *
-     * @param arr
-     * @param y
-     * @return
-     */
-    public static double deCalc_float(int[] arr, float y) {
-        switch (arr[0]) {
-            case 0: {
-                return arr[1];
-            }
-            case 1: {
-                return y - arr[1];
-            }
-            default: {
-                return (y - arr[1]) * arr[0];
-            }
-        }
-    }
-
 
 
 }

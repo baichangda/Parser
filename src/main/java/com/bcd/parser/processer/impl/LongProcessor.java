@@ -3,6 +3,7 @@ package com.bcd.parser.processer.impl;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.ExprCase;
 import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
@@ -23,22 +24,22 @@ public class LongProcessor extends FieldProcessor<Long> {
         }else{
             throw ParserUtil.newLenNotSupportException(processContext);
         }
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
-        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_long(res,len)){
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
+        if(valExprCase==null||!ParserUtil.checkInvalidOrExceptionVal_long(res,len)){
             return res;
         }else{
-            return RpnUtil.calc_long(valExpr,res);
+            return valExprCase.calc_long(res);
         }
     }
 
     @Override
     public void deProcess(Long data, ByteBuf dest, FieldDeProcessContext processContext) {
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
         long newData;
-        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_long(data,processContext.len)){
+        if(valExprCase==null||!ParserUtil.checkInvalidOrExceptionVal_long(data,processContext.len)){
             newData=data;
         }else{
-            newData = RpnUtil.deCalc_long(valExpr,data);
+            newData = valExprCase.deCalc_long(data);
         }
         int len=processContext.len;
         if (len==4){

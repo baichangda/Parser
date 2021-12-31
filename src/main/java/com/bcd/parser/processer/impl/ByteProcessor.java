@@ -4,6 +4,7 @@ package com.bcd.parser.processer.impl;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.ExprCase;
 import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
@@ -24,22 +25,22 @@ public class ByteProcessor extends FieldProcessor<Byte> {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
         //值表达式处理
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
-        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_byte(res)){
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
+        if(valExprCase==null||!ParserUtil.checkInvalidOrExceptionVal_byte(res)){
             return res;
         }else{
-            return (byte)RpnUtil.calc_int(valExpr,res);
+            return (byte) valExprCase.calc_int(res);
         }
     }
 
     @Override
     public void deProcess(Byte data, ByteBuf dest, FieldDeProcessContext processContext) {
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
         byte newData;
-        if(valExpr==null||!ParserUtil.checkInvalidOrExceptionVal_byte(data)){
+        if(valExprCase==null||!ParserUtil.checkInvalidOrExceptionVal_byte(data)){
             newData=data;
         }else{
-            newData = (byte) RpnUtil.deCalc_int(valExpr,data);
+            newData = (byte) valExprCase.deCalc_int(data);
         }
         int len=processContext.len;
         if(len==1){

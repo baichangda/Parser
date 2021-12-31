@@ -3,6 +3,7 @@ package com.bcd.parser.processer.impl;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.ExprCase;
 import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
@@ -17,39 +18,39 @@ public class DoubleProcessor extends FieldProcessor<Double> {
     public Double process(ByteBuf data, FieldProcessContext processContext) {
         long res;
         int len = processContext.len;
-        if(len==4){
+        if (len == 4) {
             res = data.readUnsignedInt();
-        }else if(len==8){
+        } else if (len == 8) {
             res = data.readLong();
-        }else{
+        } else {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
         //值表达式处理
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
-        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_long(res, len)) {
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
+        if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_long(res, len)) {
             return (double) res;
         } else {
-            return RpnUtil.calc_double(valExpr, res);
+            return valExprCase.calc_double(res);
         }
     }
 
     @Override
     public void deProcess(Double data, ByteBuf dest, FieldDeProcessContext processContext) {
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
         long newData;
         //值表达式处理
-        if (valExpr == null||!ParserUtil.checkInvalidOrExceptionVal_long(data.longValue(), processContext.len)) {
+        if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_long(data.longValue(), processContext.len)) {
             newData = data.longValue();
         } else {
-            newData = (long) RpnUtil.deCalc_double(valExpr, data);
+            newData = (long) valExprCase.deCalc_double(data);
         }
         //写入原始值
         int len = processContext.len;
-        if(len==4){
+        if (len == 4) {
             dest.writeInt((int) newData);
-        }else if(len==8){
+        } else if (len == 8) {
             dest.writeLong(newData);
-        }else{
+        } else {
             throw ParserUtil.newLenNotSupportException(processContext);
         }
     }

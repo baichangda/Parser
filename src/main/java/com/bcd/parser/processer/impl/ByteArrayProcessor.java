@@ -3,6 +3,7 @@ package com.bcd.parser.processer.impl;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.ExprCase;
 import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
@@ -21,13 +22,13 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
         int singleLen = processContext.fieldInfo.packetField_singleLen;
         //读取原始值
         if (singleLen == 1) {
-            int[] valExpr = processContext.fieldInfo.valExpr_int;
+            final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
             byte[] res = new byte[len];
             data.readBytes(res);
-            if (valExpr != null) {
+            if (valExprCase != null) {
                 for (int i = 0; i < len; i++) {
                     if(ParserUtil.checkInvalidOrExceptionVal_byte(res[i])){
-                        res[i] = (byte) RpnUtil.calc_int(valExpr, res[i]);
+                        res[i] = (byte) valExprCase.calc_int(res[i]);
                     }
                 }
             }
@@ -46,16 +47,16 @@ public class ByteArrayProcessor extends FieldProcessor<byte[]> {
         }
         int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
         byte[] newData;
-        if (valExpr == null) {
+        if (valExprCase == null) {
             newData = data;
         } else {
             newData = new byte[len];
             for (int i = 0; i < len; i++) {
                 //验证异常、无效值
                 if (ParserUtil.checkInvalidOrExceptionVal_byte(data[i])) {
-                    newData[i] = (byte) RpnUtil.deCalc_int(valExpr, data[i]);
+                    newData[i] = (byte) valExprCase.deCalc_int(data[i]);
                 } else {
                     newData[i] = data[i];
                 }

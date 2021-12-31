@@ -96,7 +96,7 @@ public @interface PacketField {
     int singleLen() default 1;
 
     /**
-     * 值处理表达式 y=x/a+b
+     * 值处理表达式 y=(x-b)/a
      * 在解析出的原始值得基础上,进行偏移量运算,只对数字类型值有效
      * 公式中的x变量都代表字段原始的值
      * <p>

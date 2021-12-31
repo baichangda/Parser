@@ -375,17 +375,16 @@ public class ParserUtil {
             //转换逆波兰表达式
             RpnUtil.Ele_int[] lenRpn = null;
             RpnUtil.Ele_int[] listLenRpn = null;
-            int[] valExpr_int = null;
+            ExprCase valExprCase = null;
             if (!packetField.lenExpr().isEmpty()) {
-                lenRpn = RpnUtil.to_ele_int(RpnUtil.toRpn(packetField.lenExpr()));
+                lenRpn = RpnUtil.to_ele_int(com.bcd.parser.util.RpnUtil.toRpn(packetField.lenExpr()));
             }
             if (!packetField.listLenExpr().isEmpty()) {
-                listLenRpn = RpnUtil.to_ele_int(RpnUtil.toRpn(packetField.listLenExpr()));
+                listLenRpn = RpnUtil.to_ele_int(com.bcd.parser.util.RpnUtil.toRpn(packetField.listLenExpr()));
             }
             if (!packetField.valExpr().isEmpty()) {
                 try {
-                    double[] simpleExpr = RpnUtil.toExprVar(packetField.valExpr());
-                    valExpr_int = new int[]{(int) simpleExpr[0], (int) simpleExpr[1]};
+                    valExprCase = ExprCase.from(packetField.valExpr());
                 } catch (Exception ex) {
                     throw BaseRuntimeException.getException("class[{}] field[{}] valExpr[{}] ot support", clazz.getName(), field.getName(), packetField.valExpr());
                 }
@@ -398,7 +397,7 @@ public class ParserUtil {
 
             //求maxVarInt、minVarInt
             if (lenRpn != null) {
-                for (RpnUtil.Ele_int e : lenRpn) {
+                for (com.bcd.parser.util.RpnUtil.Ele_int e : lenRpn) {
                     switch (e.type) {
                         case 2:
                         case 3: {
@@ -413,7 +412,7 @@ public class ParserUtil {
                 }
             }
             if (listLenRpn != null) {
-                for (RpnUtil.Ele_int e : listLenRpn) {
+                for (com.bcd.parser.util.RpnUtil.Ele_int e : listLenRpn) {
                     switch (e.type) {
                         case 2:
                         case 3: {
@@ -436,7 +435,7 @@ public class ParserUtil {
             fieldInfo.processorIndex = processorIndex;
             fieldInfo.lenRpn = lenRpn;
             fieldInfo.listLenRpn = listLenRpn;
-            fieldInfo.valExpr_int = valExpr_int;
+            fieldInfo.valExprCase = valExprCase;
             fieldInfo.packetField_index = packetField.index();
             fieldInfo.packetField_len = packetField.len();
             fieldInfo.packetField_lenExpr = packetField.lenExpr();
@@ -468,9 +467,9 @@ public class ParserUtil {
             if (fieldInfo.isVar) {
                 fieldInfo.packetField_var_int=fieldInfo.packetField_var_int - varValArrOffset;
             }
-            RpnUtil.Ele_int[] lenRpn = fieldInfo.lenRpn;
+            com.bcd.parser.util.RpnUtil.Ele_int[] lenRpn = fieldInfo.lenRpn;
             if (lenRpn != null) {
-                for (RpnUtil.Ele_int cur : lenRpn) {
+                for (com.bcd.parser.util.RpnUtil.Ele_int cur : lenRpn) {
                     switch (cur.type) {
                         case 2:
                         case 3: {
@@ -479,9 +478,9 @@ public class ParserUtil {
                     }
                 }
             }
-            RpnUtil.Ele_int[] listLenRpn = fieldInfo.listLenRpn;
+            com.bcd.parser.util.RpnUtil.Ele_int[] listLenRpn = fieldInfo.listLenRpn;
             if (listLenRpn != null) {
-                for (RpnUtil.Ele_int cur : listLenRpn) {
+                for (com.bcd.parser.util.RpnUtil.Ele_int cur : listLenRpn) {
                     switch (cur.type) {
                         case 2:
                         case 3: {

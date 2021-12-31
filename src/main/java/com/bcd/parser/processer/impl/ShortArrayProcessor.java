@@ -3,6 +3,7 @@ package com.bcd.parser.processer.impl;
 import com.bcd.parser.processer.FieldDeProcessContext;
 import com.bcd.parser.processer.FieldProcessContext;
 import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.parser.util.ExprCase;
 import com.bcd.parser.util.ParserUtil;
 import com.bcd.parser.util.RpnUtil;
 import io.netty.buffer.ByteBuf;
@@ -20,16 +21,16 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
         }
         int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
         //优化处理 byte->short
         if (singleLen == 1) {
             short[] res = new short[len];
             for (int i = 0; i < len; i++) {
                 short cur = data.readUnsignedByte();
-                if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_short(cur, singleLen)) {
+                if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_short(cur, singleLen)) {
                     res[i] = cur;
                 } else {
-                    res[i] = (short) RpnUtil.calc_int(valExpr, cur);
+                    res[i] = (short) valExprCase.calc_int(cur);
                 }
             }
             return res;
@@ -38,10 +39,10 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
             for (int i = 0; i < res.length; i++) {
                 short cur = data.readShort();
                 //验证异常、无效值
-                if (valExpr == null || !ParserUtil.checkInvalidOrExceptionVal_short(cur, singleLen)) {
+                if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_short(cur, singleLen)) {
                     res[i] = cur;
                 } else {
-                    res[i] = (short) RpnUtil.calc_int(valExpr, cur);
+                    res[i] =(short) valExprCase.calc_int(cur);
                 }
             }
             return res;
@@ -58,15 +59,15 @@ public class ShortArrayProcessor extends FieldProcessor<short[]> {
         }
         int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
-        int[] valExpr = processContext.fieldInfo.valExpr_int;
+        final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
         short[] newData;
-        if (valExpr == null) {
+        if (valExprCase == null) {
             newData = data;
         } else {
             newData = new short[len];
             for (int i = 0; i < len; i++) {
                 if (ParserUtil.checkInvalidOrExceptionVal_short(data[i], singleLen)) {
-                    newData[i] = (short) RpnUtil.deCalc_int(valExpr, data[i]);
+                    newData[i] = (short) valExprCase.deCalc_int(data[i]);
                 } else {
                     newData[i] = data[i];
                 }

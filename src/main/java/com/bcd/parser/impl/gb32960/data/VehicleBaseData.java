@@ -33,7 +33,7 @@ public class VehicleBaseData {
     float totalVoltage;
 
     //总电流
-    @PacketField(index = 7, len = 2, valExpr = "x/10-1000")
+    @PacketField(index = 7, len = 2, valExpr = "(x-10000)/10")
     float totalCurrent;
 
     //soc
