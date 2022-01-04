@@ -32,7 +32,8 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
                 if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_long(cur, singleLen)) {
                     res[i] = (double) cur;
                 } else {
-                    res[i] = valExprCase.calc_double(cur);
+                    final int valPrecision = processContext.fieldInfo.packetField_valPrecision;
+                    res[i] = valExprCase.calc_double(cur, valPrecision);
                 }
             }
             return res;
@@ -44,7 +45,8 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
                 if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_long(cur, singleLen)) {
                     res[i] = (double) cur;
                 } else {
-                    res[i] = valExprCase.calc_double(cur);
+                    final int valPrecision = processContext.fieldInfo.packetField_valPrecision;
+                    res[i] = valExprCase.calc_double(cur, valPrecision);
                 }
             }
             return res;
@@ -62,31 +64,41 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
         int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
         final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
-        double[] newData;
         if (valExprCase == null) {
-            newData = data;
+            if (singleLen == 4) {
+                for (double num : data) {
+                    dest.writeInt((int) num);
+                }
+            } else if (singleLen == 8) {
+                for (double num : data) {
+                    dest.writeLong((long) num);
+                }
+            } else {
+                throw ParserUtil.newSingleLenNotSupportException(processContext);
+            }
         } else {
-            newData = new double[len];
-            for (int i = 0; i < len; i++) {
+            for (double v : data) {
                 //验证异常、无效值
-                if (ParserUtil.checkInvalidOrExceptionVal_long((long) data[i], singleLen)) {
-                    newData[i] = valExprCase.deCalc_double(data[i]);
+                if (ParserUtil.checkInvalidOrExceptionVal_long((long) v, singleLen)) {
+                    if (singleLen == 4) {
+                        dest.writeInt((int) valExprCase.deCalc_double(v));
+                    } else if (singleLen == 8) {
+                        dest.writeLong(valExprCase.deCalc_double(v));
+                    } else {
+                        throw ParserUtil.newSingleLenNotSupportException(processContext);
+                    }
                 } else {
-                    newData[i] = data[i];
+                    if (singleLen == 4) {
+                        dest.writeInt((int) v);
+                    } else if (singleLen == 8) {
+                        dest.writeLong((long) v);
+                    } else {
+                        throw ParserUtil.newSingleLenNotSupportException(processContext);
+                    }
                 }
             }
         }
-        if (singleLen == 4) {
-            for (double num : newData) {
-                dest.writeInt((int) num);
-            }
-        } else if (singleLen == 8) {
-            for (double num : newData) {
-                dest.writeLong((long) num);
-            }
-        } else {
-            throw ParserUtil.newSingleLenNotSupportException(processContext);
-        }
+
     }
 
 }

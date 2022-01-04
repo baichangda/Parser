@@ -87,6 +87,7 @@ public class PerformanceUtil {
             parser.deParse(packet,res);
 //            System.out.println(data.toLowerCase());
 //            System.out.println(ByteBufUtil.hexDump(res));
+//            System.out.println(data.toLowerCase().equals(ByteBufUtil.hexDump(res)));
             count.increment();
         }
     }

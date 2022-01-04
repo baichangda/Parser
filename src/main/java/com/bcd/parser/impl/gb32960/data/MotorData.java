@@ -26,7 +26,7 @@ public class MotorData {
     int rotateSpeed;
 
     //驱动电机转矩
-    @PacketField(index = 5,len = 2,valExpr = "x/10-2000")
+    @PacketField(index = 5,len = 2,valExpr = "(x-20000)/10",valPrecision = 1)
     float rotateRectangle;
 
     //驱动电机温度
@@ -34,11 +34,11 @@ public class MotorData {
     short temperature;
 
     //电机控制器输入电压
-    @PacketField(index = 7,len = 2,valExpr = "x/10")
+    @PacketField(index = 7,len = 2,valExpr = "x/10",valPrecision = 1)
     float inputVoltage;
 
     //电机控制器直流母线电流
-    @PacketField(index = 8,len = 2,valExpr = "(x-10000)/10")
+    @PacketField(index = 8,len = 2,valExpr = "(x-10000)/10",valPrecision = 1)
     float current;
 
     public short getNo() {

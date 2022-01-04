@@ -31,7 +31,8 @@ public class FloatProcessor extends FieldProcessor<Float> {
         if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_int(res, len)) {
             return (float) res;
         } else {
-            return (float) valExprCase.calc_double(res);
+            final int valPrecision = processContext.fieldInfo.packetField_valPrecision;
+            return valExprCase.calc_float(res,valPrecision);
         }
     }
 
@@ -43,7 +44,7 @@ public class FloatProcessor extends FieldProcessor<Float> {
         if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_int(data.intValue(), processContext.len)) {
             newData = data.intValue();
         } else {
-            newData = (int) valExprCase.deCalc_double(data);
+            newData = valExprCase.deCalc_float(data);
         }
         int len = processContext.len;
         if (len == 2) {

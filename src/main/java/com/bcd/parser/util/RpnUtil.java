@@ -9,6 +9,61 @@ import java.util.List;
 
 public class RpnUtil {
 
+    private final static double pows_double[] = new double[10];
+    private final static float pows_float[] = new float[10];
+
+    static {
+        for (int i = 0; i < pows_double.length; i++) {
+            pows_double[i] = Math.pow(10, i);
+            pows_float[i] = (float) pows_double[i];
+        }
+    }
+
+    public static long format_double_long(double v) {
+        if (v > 0) {
+            return Math.round(v);
+        } else if (v <= 0) {
+            return -Math.round(-v);
+        } else {
+            return 0L;
+        }
+    }
+
+    public static int format_float_int(float v) {
+        if (v > 0) {
+            return Math.round(v);
+        } else if (v <= 0) {
+            return -Math.round(-v);
+        } else {
+            return 0;
+        }
+    }
+
+
+    public static double format_double_double(double v, int precision) {
+        if (v > 0) {
+            final double pow = pows_double[precision];
+            return Math.round(v * pow) / pow;
+        } else if (v <= 0) {
+            final double pow = pows_double[precision];
+            return -Math.round(-v * pow) / pow;
+        } else {
+            return 0d;
+        }
+    }
+
+    public static float format_float_float(float v, int precision) {
+        if (v > 0) {
+            final float pow = pows_float[precision];
+            return Math.round(v * pow) / pow;
+        } else if (v <= 0) {
+            final float pow = pows_float[precision];
+            return -Math.round(-v * pow) / pow;
+        } else {
+            return 0f;
+        }
+    }
+
     public static class Ele_int {
         /**
          * 1: 数字常量
@@ -484,7 +539,6 @@ public class RpnUtil {
             return stack[0];
         }
     }
-
 
 
     public static void main(String[] args) {

@@ -25,6 +25,7 @@ public class FieldInfo {
     public int packetField_singleLen;
     public Class packetField_parserClass;
     public String packetField_valExpr;
+    public int packetField_valPrecision;
 
     /**
      * packetField_var对应的int、已经减去了{@link PacketInfo#varValArrOffset}
@@ -87,6 +88,7 @@ public class FieldInfo {
      * 对应 {@link PacketField#valExpr()}表达式
      */
     public ExprCase valExprCase;
+
 
     /**
      * {@link sun.misc.Unsafe#objectFieldOffset(Field)} 得出的偏移量

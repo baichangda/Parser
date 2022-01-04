@@ -30,7 +30,8 @@ public class DoubleProcessor extends FieldProcessor<Double> {
         if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_long(res, len)) {
             return (double) res;
         } else {
-            return valExprCase.calc_double(res);
+            final int valPrecision = processContext.fieldInfo.packetField_valPrecision;
+            return valExprCase.calc_double(res,valPrecision);
         }
     }
 
@@ -42,7 +43,7 @@ public class DoubleProcessor extends FieldProcessor<Double> {
         if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_long(data.longValue(), processContext.len)) {
             newData = data.longValue();
         } else {
-            newData = (long) valExprCase.deCalc_double(data);
+            newData = valExprCase.deCalc_double(data);
         }
         //写入原始值
         int len = processContext.len;

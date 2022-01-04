@@ -21,19 +21,19 @@ public class VehicleBaseData {
     short runMode;
 
     //车速
-    @PacketField(index = 4, len = 2, valExpr = "x/10")
+    @PacketField(index = 4, len = 2, valExpr = "x/10",valPrecision = 1)
     float vehicleSpeed;
 
     //累计里程
-    @PacketField(index = 5, len = 4, valExpr = "x/10")
+    @PacketField(index = 5, len = 4, valExpr = "x/10",valPrecision = 1)
     double totalMileage;
 
     //总电压
-    @PacketField(index = 6, len = 2, valExpr = "x/10")
+    @PacketField(index = 6, len = 2, valExpr = "x/10",valPrecision = 1)
     float totalVoltage;
 
     //总电流
-    @PacketField(index = 7, len = 2, valExpr = "(x-10000)/10")
+    @PacketField(index = 7, len = 2, valExpr = "(x-10000)/10",valPrecision = 1)
     float totalCurrent;
 
     //soc
@@ -163,5 +163,9 @@ public class VehicleBaseData {
 
     public void setPedalStatus(short pedalStatus) {
         this.pedalStatus = pedalStatus;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(381.3f*10);
     }
 }

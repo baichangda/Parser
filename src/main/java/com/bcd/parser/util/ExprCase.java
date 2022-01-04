@@ -97,34 +97,69 @@ public final class ExprCase {
         }
     }
 
-    public double calc_double(final double x) {
+    public float calc_float(final float x, final int precision) {
         switch (mode) {
             case 1: {
-                return xPositive ? x : -x;
+                return RpnUtil.format_float_float(xPositive ? x : -x, precision);
             }
             case 2: {
-                return b;
+                return RpnUtil.format_float_float(b, precision);
             }
             case 3: {
-                return xPositive ? x + b : -x + b;
+                return RpnUtil.format_float_float(xPositive ? x + b : -x + b, precision);
             }
             case 4: {
-                return x * a;
+                return RpnUtil.format_float_float(x * a, precision);
             }
             case 5: {
-                return x / a;
+                return RpnUtil.format_float_float(x / a, precision);
             }
             case 6: {
-                return xPositive ? (x + b) * a : (-x + b) * a;
+                return RpnUtil.format_float_float(xPositive ? (x + b) * a : (-x + b) * a, precision);
             }
             case 7: {
-                return xPositive ? (x + b) / a : (-x + b) / a;
+                return RpnUtil.format_float_float(xPositive ? (x + b) / a : (-x + b) / a, precision);
             }
             case 8: {
-                return x * a - b;
+                return RpnUtil.format_float_float(x * a - b, precision);
             }
             case 9: {
-                return x / a - b;
+                return RpnUtil.format_float_float(x / a - b, precision);
+            }
+            default: {
+                throw BaseRuntimeException.getException("calc_float mode[{}] not support", mode);
+            }
+        }
+    }
+
+    public double calc_double(final double x, final int precision) {
+        switch (mode) {
+            case 1: {
+                return RpnUtil.format_double_double(xPositive ? x : -x, precision);
+            }
+            case 2: {
+                return RpnUtil.format_double_double(b, precision);
+            }
+            case 3: {
+                return RpnUtil.format_double_double(xPositive ? x + b : -x + b, precision);
+            }
+            case 4: {
+                return RpnUtil.format_double_double(x * a, precision);
+            }
+            case 5: {
+                return RpnUtil.format_double_double(x / a, precision);
+            }
+            case 6: {
+                return RpnUtil.format_double_double(xPositive ? (x + b) * a : (-x + b) * a, precision);
+            }
+            case 7: {
+                return RpnUtil.format_double_double(xPositive ? (x + b) / a : (-x + b) / a, precision);
+            }
+            case 8: {
+                return RpnUtil.format_double_double(x * a - b, precision);
+            }
+            case 9: {
+                return RpnUtil.format_double_double(x / a - b, precision);
             }
             default: {
                 throw BaseRuntimeException.getException("calc_double mode[{}] not support", mode);
@@ -202,40 +237,77 @@ public final class ExprCase {
         }
     }
 
-    public double deCalc_double(final double y) {
+    public int deCalc_float(final float y) {
         switch (mode) {
             case 1: {
-                return xPositive ? y : -y;
+                return RpnUtil.format_float_int(xPositive ? y : -y);
             }
             case 2: {
-                return b;
+                return RpnUtil.format_float_int(b);
             }
             case 3: {
-                return xPositive ? y - b : b - y;
+                return RpnUtil.format_float_int(xPositive ? y - b : b - y);
             }
             case 4: {
-                return y / a;
+                return RpnUtil.format_float_int(y / a);
             }
             case 5: {
-                return y * a;
+                return RpnUtil.format_float_int(y * a);
             }
             case 6: {
-                return xPositive ? y / a - b : b - y / a;
+                return RpnUtil.format_float_int(xPositive ? y / a - b : b - y / a);
             }
             case 7: {
-                return xPositive ? y * a - b : b - y * a;
+                return RpnUtil.format_float_int(xPositive ? y * a - b : b - y * a);
             }
             case 8: {
-                return (y - b) / a;
+                return RpnUtil.format_float_int((y - b) / a);
             }
             case 9: {
-                return (y - b) * a;
+                return RpnUtil.format_float_int((y - b) * a);
             }
             default: {
                 throw BaseRuntimeException.getException("deCalc_int mode[{}] not support", mode);
             }
         }
     }
+
+    public long deCalc_double(final double y) {
+        switch (mode) {
+            case 1: {
+                return RpnUtil.format_double_long(xPositive ? y : -y);
+            }
+            case 2: {
+                return b;
+            }
+            case 3: {
+                return RpnUtil.format_double_long(xPositive ? y - b : b - y);
+            }
+            case 4: {
+                return RpnUtil.format_double_long(y / a);
+            }
+            case 5: {
+                return RpnUtil.format_double_long(y * a);
+            }
+            case 6: {
+                return RpnUtil.format_double_long(xPositive ? y / a - b : b - y / a);
+            }
+            case 7: {
+                return RpnUtil.format_double_long(xPositive ? y * a - b : b - y * a);
+            }
+            case 8: {
+                return RpnUtil.format_double_long((y - b) / a);
+            }
+            case 9: {
+                return RpnUtil.format_double_long((y - b) * a);
+            }
+            default: {
+                throw BaseRuntimeException.getException("deCalc_long mode[{}] not support", mode);
+            }
+        }
+    }
+
+
 
     private static ExprCase case1(boolean xPositive) {
         return new ExprCase(1, xPositive, 0, 0);
@@ -249,12 +321,12 @@ public final class ExprCase {
         return new ExprCase(3, xPositive, 0, b);
     }
 
-    private static ExprCase case4(boolean xPositive, int a) {
-        return new ExprCase(4, xPositive, a, 0);
+    private static ExprCase case4(int a) {
+        return new ExprCase(4, true, a, 0);
     }
 
-    private static ExprCase case5(boolean xPositive, int a) {
-        return new ExprCase(5, xPositive, a, 0);
+    private static ExprCase case5(int a) {
+        return new ExprCase(5, true, a, 0);
     }
 
     private static ExprCase case6(boolean xPositive, int a, int b) {
@@ -265,12 +337,12 @@ public final class ExprCase {
         return new ExprCase(7, xPositive, a, b);
     }
 
-    private static ExprCase case8(boolean xPositive, int a, int b) {
-        return new ExprCase(8, xPositive, a, b);
+    private static ExprCase case8(int a, int b) {
+        return new ExprCase(8, true, a, b);
     }
 
-    private static ExprCase case9(boolean xPositive, int a, int b) {
-        return new ExprCase(9, xPositive, a, b);
+    private static ExprCase case9(int a, int b) {
+        return new ExprCase(9, true, a, b);
     }
 
     public String toString() {
@@ -322,10 +394,10 @@ public final class ExprCase {
                         return ExprCase.case3(xPositive, num);
                     }
                     case "*": {
-                        return ExprCase.case4(true, xPositive ? num : -num);
+                        return ExprCase.case4(xPositive ? num : -num);
                     }
                     case "/": {
-                        return ExprCase.case5(true, xPositive ? num : -num);
+                        return ExprCase.case5(xPositive ? num : -num);
                     }
                     default: {
                         throw BaseRuntimeException.getException("toExprVar[{}] not support", expr);
@@ -378,7 +450,7 @@ public final class ExprCase {
                         if (rpn[4].equals("-")) {
                             b = -b;
                         }
-                        return ExprCase.case8(true, xPositive ? a : -a, b);
+                        return ExprCase.case8(xPositive ? a : -a, b);
                     }
                     case "/": {
                         String var = rpn[0];
@@ -388,7 +460,7 @@ public final class ExprCase {
                         if (rpn[4].equals("-")) {
                             b = -b;
                         }
-                        return ExprCase.case9(true, xPositive ? a : -a, b);
+                        return ExprCase.case9(xPositive ? a : -a, b);
                     }
                     default: {
                         throw BaseRuntimeException.getException("toExprVar[{}] not support", expr);
@@ -420,5 +492,6 @@ public final class ExprCase {
         System.out.println(ExprCase.from("x*100-1"));
         System.out.println(ExprCase.from("-x/100-1"));
         System.out.println(ExprCase.from("(-x/100)+10"));
+        System.out.println((int) ExprCase.from("(x/10)").deCalc_double(381.3d));
     }
 }

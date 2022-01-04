@@ -104,6 +104,7 @@ public @interface PacketField {
      * 表达式顺序可以调整、可以加上括号
      */
     String valExpr() default "";
+    int valPrecision() default 1;
 
     /**
      * 处理类

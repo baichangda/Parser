@@ -9,15 +9,15 @@ import com.bcd.parser.anno.Parsable;
 @Parsable
 public class VehicleEngineData {
     //发动机状态
-    @PacketField(index = 1,len = 1)
+    @PacketField(index = 1, len = 1)
     short status;
 
     //曲轴转速
-    @PacketField(index = 2,len = 2)
+    @PacketField(index = 2, len = 2)
     int speed;
 
     //燃料消耗率
-    @PacketField(index = 3,len = 2,valExpr = "x/100")
+    @PacketField(index = 3, len = 2, valExpr = "x/100", valPrecision = 2)
     float rate;
 
     public short getStatus() {

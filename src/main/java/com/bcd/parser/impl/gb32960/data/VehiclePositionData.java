@@ -13,11 +13,11 @@ public class VehiclePositionData {
     byte status;
 
     //经度
-    @PacketField(index = 2,len = 4,valExpr = "x/1000000")
+    @PacketField(index = 2,len = 4,valExpr = "x/1000000",valPrecision = 6)
     double lng;
 
     //纬度
-    @PacketField(index = 3,len = 4,valExpr = "x/1000000")
+    @PacketField(index = 3,len = 4,valExpr = "x/1000000",valPrecision = 6)
     double lat;
 
 

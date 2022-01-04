@@ -22,6 +22,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
         }
         int singleLen = processContext.fieldInfo.packetField_singleLen;
         final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
+
         //优化处理 short->int
         if (singleLen == 2) {
             float[] res = new float[len >>> 1];
@@ -31,7 +32,8 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
                 if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
                     res[i] = (float) cur;
                 } else {
-                    res[i] = (float) valExprCase.calc_double(cur);
+                    final int valPrecision = processContext.fieldInfo.packetField_valPrecision;
+                    res[i] = valExprCase.calc_float(cur, valPrecision);
                 }
             }
             return res;
@@ -43,7 +45,8 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
                 if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
                     res[i] = (float) cur;
                 } else {
-                    res[i] = (float) valExprCase.calc_double(cur);
+                    final int valPrecision = processContext.fieldInfo.packetField_valPrecision;
+                    res[i] = valExprCase.calc_float(cur, valPrecision);
                 }
             }
             return res;
@@ -61,31 +64,40 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
         int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
         final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
-        float[] newData;
+
         if (valExprCase == null) {
-            newData = data;
+            if (singleLen == 2) {
+                for (float num : data) {
+                    dest.writeShort((short) num);
+                }
+            } else if (singleLen == 4) {
+                for (float num : data) {
+                    dest.writeInt((int) num);
+                }
+            } else {
+                throw ParserUtil.newSingleLenNotSupportException(processContext);
+            }
         } else {
-            newData = new float[len];
-            for (int i = 0; i < len; i++) {
+            for (float v : data) {
                 //验证异常、无效值
-                if (ParserUtil.checkInvalidOrExceptionVal_int((int) data[i], singleLen)) {
-                    newData[i] = (float) valExprCase.deCalc_double(data[i]);
+                if (ParserUtil.checkInvalidOrExceptionVal_long((long) v, singleLen)) {
+                    if (singleLen == 2) {
+                        dest.writeShort((short) valExprCase.deCalc_double(v));
+                    } else if (singleLen == 4) {
+                        dest.writeInt(valExprCase.deCalc_float(v));
+                    } else {
+                        throw ParserUtil.newSingleLenNotSupportException(processContext);
+                    }
                 } else {
-                    newData[i] = data[i];
+                    if (singleLen == 2) {
+                        dest.writeShort((short) v);
+                    } else if (singleLen == 4) {
+                        dest.writeInt((int) v);
+                    } else {
+                        throw ParserUtil.newSingleLenNotSupportException(processContext);
+                    }
                 }
             }
-        }
-
-        if (singleLen == 2) {
-            for (float num : newData) {
-                dest.writeShort((short) num);
-            }
-        } else if (singleLen == 4) {
-            for (float num : newData) {
-                dest.writeInt((int) num);
-            }
-        } else {
-            throw ParserUtil.newSingleLenNotSupportException(processContext);
         }
     }
 
