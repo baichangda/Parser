@@ -175,16 +175,16 @@ public class ParserUtil {
     public static boolean checkInvalidOrExceptionVal_long(long val, int len) {
         switch (len) {
             case 1: {
-                return val != 0xff && val != 0xfe;
+                return val != 0xffL && val != 0xfeL;
             }
             case 2: {
-                return val != 0xffff && val != 0xfffe;
+                return val != 0xffffL && val != 0xfffeL;
             }
             case 3: {
-                return val != 0xffffff && val != 0xfffffe;
+                return val != 0xffffffL && val != 0xfffffeL;
             }
             case 4: {
-                return val != 0xffffffff && val != 0xfffffffe;
+                return val != 0xffffffffL && val != 0xfffffffeL;
             }
             case 5: {
                 return val != 0xffffffffffL && val != 0xfffffffffeL;
@@ -458,15 +458,15 @@ public class ParserUtil {
          * 将所有的变量减去最小的偏移、使得最小的变量存在数组的第一位
          */
         if (maxVarInt[0] != 0) {
-            packetInfo.varValArrLen=maxVarInt[0] - minVarInt[0] + 1;
-            packetInfo.varValArrOffset=minVarInt[0];
+            packetInfo.varValArrLen = maxVarInt[0] - minVarInt[0] + 1;
+            packetInfo.varValArrOffset = minVarInt[0];
         }
 
         //预先将var和表达式中的偏移量算出来、在解析时候不用重复计算
         for (FieldInfo fieldInfo : packetInfo.fieldInfos) {
             int varValArrOffset = fieldInfo.packetInfo.varValArrOffset;
             if (fieldInfo.isVar) {
-                fieldInfo.packetField_var_int=fieldInfo.packetField_var_int - varValArrOffset;
+                fieldInfo.packetField_var_int = fieldInfo.packetField_var_int - varValArrOffset;
             }
             com.bcd.parser.util.RpnUtil.Ele_int[] lenRpn = fieldInfo.lenRpn;
             if (lenRpn != null) {
