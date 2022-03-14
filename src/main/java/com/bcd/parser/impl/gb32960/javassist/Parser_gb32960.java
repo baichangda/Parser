@@ -31,19 +31,19 @@ public class Parser_gb32960 extends Parser {
             threadNum = Integer.parseInt(args[0]);
         }
         logger.info("param threadNum[{}]", threadNum);
-        int num = 100000000;
+        int num = 1000000000;
 
 //        byte [] bytes= ByteBufUtil.decodeHexDump(data);
 //        ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
 //        parser.parse(Packet.class,byteBuf);
 
-//        PerformanceUtil.testMultiThreadPerformance(data,parser, Packet.class,threadNum,num);
+        PerformanceUtil.testMultiThreadPerformance(data,parser, Packet.class,threadNum,num);
 
 //        testMultiThreadPerformance(data,threadNum,num);
 
-        long t1 = System.currentTimeMillis();
-        parseToPacket(data, num, new AtomicInteger());
-        System.out.println(System.currentTimeMillis() - t1);
+//        long t1 = System.currentTimeMillis();
+//        parseToPacket(data, num, new AtomicInteger());
+//        System.out.println(System.currentTimeMillis() - t1);
     }
 
     private static void parseToPacket(String data, int num, AtomicInteger count) {

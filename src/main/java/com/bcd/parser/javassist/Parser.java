@@ -234,6 +234,7 @@ public class Parser {
         final int lastIndexOf = javassistParser_class_name.lastIndexOf(".");
         String implJavassistParser_class_name = javassistParser_class_name.substring(0, lastIndexOf) + "." + javassistParser_class_name.substring(lastIndexOf + 1) + "_" + clazz.getSimpleName();
         final CtClass cc = ClassPool.getDefault().makeClass(implJavassistParser_class_name);
+
         //添加泛型
         SignatureAttribute.ClassSignature class_cs = new SignatureAttribute.ClassSignature(null, null, new SignatureAttribute.ClassType[]{
                 new SignatureAttribute.ClassType(javassistParser_class_name, new SignatureAttribute.TypeArgument[]{
@@ -241,6 +242,8 @@ public class Parser {
                 })
         });
         cc.setGenericSignature(class_cs.encode());
+
+        cc.setModifiers(Modifier.FINAL | Modifier.PUBLIC);
 
         StringBuilder initBody = new StringBuilder();
         //加parser字段
@@ -295,7 +298,8 @@ public class Parser {
         if (generateClassField) {
             cc.writeFile("src/main/java");
         }
-        return cc.toClass(JavassistParser.class);
+//        return cc.toClass(JavassistParser.class);
+        return cc.toClass();
     }
 
 

@@ -17,13 +17,15 @@ public class DoubleArrayFieldBuilder extends FieldBuilder {
         final String varNameInstance = context.varNameInstance;
         String lenRes = context.lenRes;
         switch (packetField.singleLen()) {
-            case 4 -> {
+            case 4 : {
                 lenRes = "(" + lenRes + ")/4";
+                break;
             }
-            case 8 -> {
+            case 8 : {
                 lenRes = "(" + lenRes + ")/8";
+                break;
             }
-            default -> {
+            default : {
                 JavassistUtil.packetFieldSingleLenNotSupport(field);
             }
         }
@@ -33,11 +35,13 @@ public class DoubleArrayFieldBuilder extends FieldBuilder {
 
         String valExpr = null;
         switch (packetField.singleLen()) {
-            case 2 -> {
+            case 2 : {
                 valExpr = JavassistUtil.format("(double){}.readUnsignedInt()", FieldBuilder.varNameByteBuf);
+                break;
             }
-            case 4 -> {
+            case 4 : {
                 valExpr = JavassistUtil.format("(double){}.readLong()", FieldBuilder.varNameByteBuf);
+                break;
             }
         }
         JavassistUtil.append(body, "{}[i]={};\n", arrVarName, JavassistUtil.replaceVarToValExpr(packetField.valExpr(), valExpr));

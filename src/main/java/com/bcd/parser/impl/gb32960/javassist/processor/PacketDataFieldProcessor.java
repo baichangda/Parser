@@ -16,41 +16,49 @@ public class PacketDataFieldProcessor extends FieldProcessor<PacketData> {
         PacketData packetData=null;
         switch (packet.getFlag()) {
             //车辆登入
-            case 1 -> {
+            case 1 : {
                 packetData = parser.parse(VehicleLoginData.class, data, context);
+                break;
             }
 
             //车辆实时信息
-            case 2 -> {
+            case 2 : {
                 packetData = parser.parse(VehicleRealData.class, data, context);
+                break;
             }
 
             //补发信息上报
-            case 3 -> {
+            case 3 : {
                 packetData = parser.parse(VehicleSupplementData.class, data, context);
+                break;
             }
 
             //车辆登出
-            case 4 -> {
+            case 4 : {
                 packetData = parser.parse(VehicleLogoutData.class, data, context);
+                break;
             }
 
             //平台登入
-            case 5 -> {
+            case 5 : {
                 packetData = parser.parse(PlatformLoginData.class, data, context);
+                break;
             }
 
             //平台登出
-            case 6 -> {
+            case 6 : {
                 packetData = parser.parse(PlatformLogoutData.class, data, context);
+                break;
             }
 
             //心跳
-            case 7 -> {
+            case 7 : {
+                break;
             }
 
             //终端校时
-            case 8 -> {
+            case 8 : {
+                break;
             }
         }
         return packetData;

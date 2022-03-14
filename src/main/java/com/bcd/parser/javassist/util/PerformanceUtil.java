@@ -28,8 +28,8 @@ public class PerformanceUtil {
      */
     public static <T>void testMultiThreadPerformance(String data, Parser parser, Class<T> clazz, int threadNum, int num){
         logger.info("threadNum:{}",threadNum);
-        LongAdder count=new LongAdder();
-        ExecutorService[]pools=new ExecutorService[threadNum];
+        final LongAdder count=new LongAdder();
+        final ExecutorService[]pools=new ExecutorService[threadNum];
         for(int i=0;i<pools.length;i++){
             pools[i] = Executors.newSingleThreadExecutor();
         }
@@ -39,7 +39,7 @@ public class PerformanceUtil {
             });
         }
 
-        ScheduledExecutorService monitor=Executors.newSingleThreadScheduledExecutor();
+        final ScheduledExecutorService monitor=Executors.newSingleThreadScheduledExecutor();
         monitor.scheduleAtFixedRate(()->{
             long sum=count.sumThenReset()/3;
             logger.info("{} , threadNum:{} , totalSpeed/s:{} , perThreadSpeed/s:{}","parse",threadNum,sum,sum/threadNum);
@@ -60,14 +60,14 @@ public class PerformanceUtil {
     }
 
     public static <T>void testParse(String data, Parser parser,Class<T> clazz, int num, LongAdder count){
-        byte [] bytes= ByteBufUtil.decodeHexDump(data);
+        final byte [] bytes= ByteBufUtil.decodeHexDump(data);
         ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
         byteBuf.markReaderIndex();
         byteBuf.markWriterIndex();
         for(int i=1;i<=num;i++) {
             byteBuf.resetReaderIndex();
             byteBuf.resetWriterIndex();
-            T t= parser.parse(clazz,byteBuf,null);
+            final T t= parser.parse(clazz,byteBuf,null);
             count.increment();
         }
     }
