@@ -468,24 +468,26 @@ public class ParserUtil {
             if (fieldInfo.isVar) {
                 fieldInfo.packetField_var_int = fieldInfo.packetField_var_int - varValArrOffset;
             }
-            com.bcd.parser.util.RpnUtil.Ele_int[] lenRpn = fieldInfo.lenRpn;
+            RpnUtil.Ele_int[] lenRpn = fieldInfo.lenRpn;
             if (lenRpn != null) {
-                for (com.bcd.parser.util.RpnUtil.Ele_int cur : lenRpn) {
+                for (int i = 0; i < lenRpn.length; i++) {
+                    final RpnUtil.Ele_int cur = lenRpn[i];
                     switch (cur.type) {
                         case 2:
                         case 3: {
-                            cur.val = (cur.val - varValArrOffset);
+                            lenRpn[i] = new RpnUtil.Ele_int(cur.type, cur.val - varValArrOffset);
                         }
                     }
                 }
             }
-            com.bcd.parser.util.RpnUtil.Ele_int[] listLenRpn = fieldInfo.listLenRpn;
+            RpnUtil.Ele_int[] listLenRpn = fieldInfo.listLenRpn;
             if (listLenRpn != null) {
-                for (com.bcd.parser.util.RpnUtil.Ele_int cur : listLenRpn) {
+                for (int i = 0; i < listLenRpn.length; i++) {
+                    final RpnUtil.Ele_int cur = listLenRpn[i];
                     switch (cur.type) {
                         case 2:
                         case 3: {
-                            cur.val = (cur.val - varValArrOffset);
+                            listLenRpn[i] = new RpnUtil.Ele_int(cur.type, cur.val - varValArrOffset);
                         }
                     }
                 }

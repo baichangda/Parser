@@ -19,7 +19,7 @@ public class RpnUtil {
         }
     }
 
-    public static long format_double_long(double v) {
+    public static long format_double_long(final double v) {
         if (v > 0) {
             return Math.round(v);
         } else if (v <= 0) {
@@ -29,7 +29,7 @@ public class RpnUtil {
         }
     }
 
-    public static int format_float_int(float v) {
+    public static int format_float_int(final float v) {
         if (v > 0) {
             return Math.round(v);
         } else if (v <= 0) {
@@ -40,7 +40,7 @@ public class RpnUtil {
     }
 
 
-    public static double format_double_double(double v, int precision) {
+    public static double format_double_double(final double v, final int precision) {
         if (v > 0) {
             final double pow = pows_double[precision];
             return Math.round(v * pow) / pow;
@@ -52,7 +52,7 @@ public class RpnUtil {
         }
     }
 
-    public static float format_float_float(float v, int precision) {
+    public static float format_float_float(final float v, final int precision) {
         if (v > 0) {
             final float pow = pows_float[precision];
             return Math.round(v * pow) / pow;
@@ -64,7 +64,7 @@ public class RpnUtil {
         }
     }
 
-    public static class Ele_int {
+    public final static class Ele_int {
         /**
          * 1: 数字常量
          * 2: 正数字变量
@@ -74,8 +74,8 @@ public class RpnUtil {
          * 6: *
          * 7: /
          */
-        public int type;
-        public int val;
+        public final int type;
+        public final int val;
 
         public Ele_int(int type, int val) {
             this.type = type;
@@ -83,7 +83,7 @@ public class RpnUtil {
         }
     }
 
-    public static class Ele_double {
+    public final static class Ele_double {
         /**
          * 1: 数字常量
          * 2: 正数字变量
@@ -93,18 +93,20 @@ public class RpnUtil {
          * 6: *
          * 7: /
          */
-        public int type;
-        public double val_double;
-        public int val_int;
+        public final int type;
+        public final double val_double;
+        public final int val_int;
 
         public Ele_double(int type, double val_double) {
             this.type = type;
             this.val_double = val_double;
+            this.val_int = (int) val_double;
         }
 
         public Ele_double(int type, int val_int) {
             this.type = type;
             this.val_int = val_int;
+            this.val_double = val_int;
         }
     }
 
@@ -151,13 +153,13 @@ public class RpnUtil {
      * @param rpn rpn表达式集合
      * @return
      */
-    public static Ele_int[] to_ele_int(String[] rpn) {
+    public static Ele_int[] to_ele_int(final String[] rpn) {
         return Arrays.stream(rpn).map(e -> {
             try {
                 return new Ele_int(1, Integer.parseInt(e));
             } catch (NumberFormatException ex) {
                 if (e.length() == 1) {
-                    char c = e.charAt(0);
+                    final char c = e.charAt(0);
                     switch (c) {
                         case '+': {
                             return new Ele_int(4, 0);
@@ -189,9 +191,9 @@ public class RpnUtil {
      * @param vals 变量对应值数组,取值规则为 vals[int(char)]
      * @return
      */
-    public static int calc_int(Ele_int[] rpn, int[] vals) {
+    public static int calc_int(final Ele_int[] rpn, final int[] vals) {
         if (rpn.length == 1) {
-            Ele_int first = rpn[0];
+            final Ele_int first = rpn[0];
             switch (first.type) {
                 case 1: {
                     return first.val;
@@ -262,9 +264,9 @@ public class RpnUtil {
      * @param vals 变量对应值数组,取值规则为 vals[int(char)]
      * @return
      */
-    public static double calc_double(Ele_double[] rpn, double[] vals) {
+    public static double calc_double(final Ele_double[] rpn, final double[] vals) {
         if (rpn.length == 1) {
-            Ele_double first = rpn[0];
+            final Ele_double first = rpn[0];
             switch (first.type) {
                 case 1: {
                     return first.val_double;
@@ -329,12 +331,12 @@ public class RpnUtil {
      *
      * @return
      */
-    public static String[] toRpn(String str) {
+    public static String[] toRpn(final String str) {
         List<String> output = new ArrayList<>();
         int stackIndex = -1;
-        char[] stack = new char[str.length()];
-        char[] arr = str.toCharArray();
-        StringBuilder temp = new StringBuilder();
+        final char[] stack = new char[str.length()];
+        final char[] arr = str.toCharArray();
+        final StringBuilder temp = new StringBuilder();
         boolean nextNegative = false;
         for (int i = 0; i <= arr.length - 1; i++) {
             char cur = arr[i];
@@ -478,7 +480,7 @@ public class RpnUtil {
      * @param c
      * @return
      */
-    private static int getSymbolPriority(char c) {
+    private static int getSymbolPriority(final char c) {
         switch (c) {
             case '+':
             case '-': {
@@ -500,7 +502,7 @@ public class RpnUtil {
      * @param rpn
      * @return
      */
-    public static String toExpr(String[] rpn) {
+    public static String toExpr(final String[] rpn) {
         if (rpn.length == 1) {
             return rpn[0];
         } else {

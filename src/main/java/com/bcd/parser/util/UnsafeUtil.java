@@ -16,7 +16,7 @@ public class UnsafeUtil {
         private final static Unsafe INSTANCE = getInstance();
         private static Unsafe getInstance() {
             try {
-                Field field = Unsafe.class.getDeclaredField("theUnsafe");
+                final Field field = Unsafe.class.getDeclaredField("theUnsafe");
                 field.setAccessible(true);
                 return (Unsafe) field.get(null);
             } catch (NoSuchFieldException | SecurityException | IllegalAccessException e) {
@@ -26,7 +26,7 @@ public class UnsafeUtil {
     }
 
 
-    public static long fieldOffset(Field field){
+    public static long fieldOffset(final Field field){
         if(Modifier.isStatic(field.getModifiers())){
             return getUnsafe().staticFieldOffset(field);
         }else{
@@ -36,8 +36,8 @@ public class UnsafeUtil {
 
 
 
-    public static int fieldType(Field field) {
-        Class<?> fieldType = field.getType();
+    public static int fieldType(final Field field) {
+        final Class<?> fieldType = field.getType();
         if (fieldType == byte.class) {
             return 1;
         } else if (fieldType == short.class) {
@@ -67,7 +67,7 @@ public class UnsafeUtil {
      * @param type
      * @return
      */
-    public static Object getValue(Object instance, long offset, int type) {
+    public static Object getValue(final Object instance, final long offset, final int type) {
         switch (type) {
             case 1: {
                 return getUnsafe().getByte(instance, offset);
@@ -107,7 +107,7 @@ public class UnsafeUtil {
      * @param offset
      * @param type
      */
-    public static void setValue(Object instance, Object val, long offset, int type) {
+    public static void setValue(final Object instance, final Object val, final long offset, final int type) {
         switch (type) {
             case 1: {
                 getUnsafe().putByte(instance, offset, (byte) val);
