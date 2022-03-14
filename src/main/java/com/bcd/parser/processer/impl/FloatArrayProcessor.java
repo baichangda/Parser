@@ -16,18 +16,18 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
 
     @Override
     public float[] process(ByteBuf data, FieldProcessContext processContext) {
-        int len = processContext.len;
+        final int len = processContext.len;
         if (len == 0) {
             return new float[0];
         }
-        int singleLen = processContext.fieldInfo.packetField_singleLen;
+        final int singleLen = processContext.fieldInfo.packetField_singleLen;
         final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
 
         //优化处理 short->int
         if (singleLen == 2) {
             final float[] res = new float[len >>> 1];
             for (int i = 0; i < res.length; i++) {
-                int cur = data.readUnsignedShort();
+                final int cur = data.readUnsignedShort();
                 //验证异常、无效值
                 if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
                     res[i] = (float) cur;
@@ -40,7 +40,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
         } else if (singleLen == 4) {
             float[] res = new float[len >>> 2];
             for (int i = 0; i < res.length; i++) {
-                int cur = data.readInt();
+                final int cur = data.readInt();
                 //验证异常、无效值
                 if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
                     res[i] = (float) cur;
@@ -57,11 +57,11 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
 
     @Override
     public void deProcess(float[] data, ByteBuf dest, FieldDeProcessContext processContext) {
-        int len = data.length;
+        final int len = data.length;
         if (len == 0) {
             return;
         }
-        int singleLen = processContext.fieldInfo.packetField_singleLen;
+        final int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
         final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
 

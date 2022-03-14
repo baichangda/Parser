@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class FieldProcessor<T> {
     public Parser parser;
-    protected Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     public T process_print(ByteBuf data, FieldProcessContext processContext) {
         int startIndex = data.readerIndex();

@@ -16,18 +16,18 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
 
     @Override
     public double[] process(ByteBuf data, FieldProcessContext processContext) {
-        int len = processContext.len;
+        final int len = processContext.len;
         if (len == 0) {
             return new double[0];
         }
-        int singleLen = processContext.fieldInfo.packetField_singleLen;
+        final int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
         final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
         //优化处理 int->long
         if (singleLen == 4) {
-            double[] res = new double[len >> 2];
+            final double[] res = new double[len >> 2];
             for (int i = 0; i < res.length; i++) {
-                long cur = data.readUnsignedInt();
+                final long cur = data.readUnsignedInt();
                 //验证异常、无效值
                 if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_long(cur, singleLen)) {
                     res[i] = (double) cur;
@@ -38,9 +38,9 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
             }
             return res;
         } else if (singleLen == 8) {
-            double[] res = new double[len >>> 3];
+            final double[] res = new double[len >>> 3];
             for (int i = 0; i < res.length; i++) {
-                long cur = data.readLong();
+                final long cur = data.readLong();
                 //验证异常、无效值
                 if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_long(cur, singleLen)) {
                     res[i] = (double) cur;
@@ -57,11 +57,11 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
 
     @Override
     public void deProcess(double[] data, ByteBuf dest, FieldDeProcessContext processContext) {
-        int len = data.length;
+        final int len = data.length;
         if (len == 0) {
             return;
         }
-        int singleLen = processContext.fieldInfo.packetField_singleLen;
+        final int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
         final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
         if (valExprCase == null) {

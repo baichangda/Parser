@@ -263,19 +263,19 @@ public abstract class Parser {
      */
     private void parsePacketField(PacketInfo packetInfo, ByteBuf data, Object instance, FieldProcessContext parentContext) {
         //进行解析
-        int varValArrLen = packetInfo.varValArrLen;
-        int[] vals = varValArrLen == 0 ? null : new int[varValArrLen];
-        FieldProcessContext processContext = new FieldProcessContext(instance, parentContext);
-        FieldInfo[] fieldInfos = packetInfo.fieldInfos;
+        final int varValArrLen = packetInfo.varValArrLen;
+        final int[] vals = varValArrLen == 0 ? null : new int[varValArrLen];
+        final FieldProcessContext processContext = new FieldProcessContext(instance, parentContext);
+        final FieldInfo[] fieldInfos = packetInfo.fieldInfos;
         for (int i = 0, end = fieldInfos.length; i < end; i++) {
             FieldInfo fieldInfo = fieldInfos[i];
 
             /**
              * 代表 {@link PacketField#lenExpr()}
              */
-            RpnUtil.Ele_int[] lenRpn = fieldInfo.lenRpn;
+            final RpnUtil.Ele_int[] lenRpn = fieldInfo.lenRpn;
 
-            int len;
+            final int len;
             if (lenRpn == null) {
                 len = fieldInfo.packetField_len;
             } else {
@@ -297,13 +297,13 @@ public abstract class Parser {
             /**
              * 代表 {@link PacketField#listLenExpr()}
              */
-            RpnUtil.Ele_int[] listLenRpn = fieldInfo.listLenRpn;
+            final RpnUtil.Ele_int[] listLenRpn = fieldInfo.listLenRpn;
 
             if (listLenRpn != null) {
                 processContext.listLen = RpnUtil.calc_int(listLenRpn, vals);
             }
 
-            Object val;
+            final Object val;
             //过滤掉对象的日志
             if (printStack) {
                 val = fieldProcessors[fieldInfo.processorIndex].process_print(data, processContext);
