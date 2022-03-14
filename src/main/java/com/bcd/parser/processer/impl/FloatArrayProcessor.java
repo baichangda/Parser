@@ -25,7 +25,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
 
         //优化处理 short->int
         if (singleLen == 2) {
-            float[] res = new float[len >>> 1];
+            final float[] res = new float[len >>> 1];
             for (int i = 0; i < res.length; i++) {
                 int cur = data.readUnsignedShort();
                 //验证异常、无效值
