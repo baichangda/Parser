@@ -23,7 +23,7 @@ public class FieldInfo {
     public boolean packetField_skipParse;
     public String packetField_listLenExpr;
     public int packetField_singleLen;
-    public Class packetField_parserClass;
+    public Class packetField_processorClass;
     public String packetField_valExpr;
     public int packetField_valPrecision;
 

@@ -444,7 +444,7 @@ public class ParserUtil {
             fieldInfo.packetField_singleLen = packetField.singleLen();
             fieldInfo.packetField_var = packetField.var();
             fieldInfo.packetField_var_int = packetField.var();
-            fieldInfo.packetField_parserClass = packetField.processorClass();
+            fieldInfo.packetField_processorClass = packetField.processorClass();
             fieldInfo.packetField_valExpr = packetField.valExpr();
             fieldInfo.packetField_valPrecision = packetField.valPrecision();
             fieldInfo.unsafeOffset = UnsafeUtil.fieldOffset(field);
