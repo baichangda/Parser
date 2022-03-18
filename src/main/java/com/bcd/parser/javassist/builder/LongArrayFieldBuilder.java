@@ -17,15 +17,13 @@ public class LongArrayFieldBuilder extends FieldBuilder {
         final String varNameInstance = context.varNameInstance;
         String lenRes=context.lenRes;
         switch (packetField.singleLen()) {
-            case 4 : {
+            case 4 -> {
                 lenRes = "(" + lenRes + ")/4";
-                break;
             }
-            case 8 : {
+            case 8 -> {
                 lenRes = "(" + lenRes + ")/8";
-                break;
             }
-            default : {
+            default -> {
                 JavassistUtil.packetFieldSingleLenNotSupport(field);
             }
         }
@@ -33,13 +31,11 @@ public class LongArrayFieldBuilder extends FieldBuilder {
         JavassistUtil.append(body,"final long[] {}=new long[{}];\n",arr_var_name, lenRes);
         JavassistUtil.append(body,"for(int i=0;i<{}.length;i++){\n",arr_var_name);
         switch (packetField.singleLen()) {
-            case 4 : {
+            case 4 -> {
                 JavassistUtil.append(body, "{}[i]={}.readUnsignedInt();\n", arr_var_name, FieldBuilder.varNameByteBuf);
-                break;
             }
-            case 8 : {
+            case 8 -> {
                 JavassistUtil.append(body, "{}[i]={}.readLong();\n", arr_var_name, FieldBuilder.varNameByteBuf);
-                break;
             }
         }
         body.append("}\n");

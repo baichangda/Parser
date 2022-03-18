@@ -4,5 +4,5 @@ import com.bcd.parser.javassist.processor.FieldProcessContext;
 import io.netty.buffer.ByteBuf;
 
 public interface JavassistParser<T> {
-    T parse(ByteBuf data, FieldProcessContext context);
+    T parse(final ByteBuf data, final FieldProcessContext context);
 }

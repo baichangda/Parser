@@ -298,8 +298,8 @@ public class Parser {
         if (generateClassField) {
             cc.writeFile("src/main/java");
         }
-//        return cc.toClass(JavassistParser.class);
-        return cc.toClass();
+        return cc.toClass(JavassistParser.class);
+//        return cc.toClass();
     }
 
 

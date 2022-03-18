@@ -16,13 +16,8 @@ public class ByteArrayFieldBuilder extends FieldBuilder {
         final String setMethodName = JavassistUtil.getSetMethodName(field);
         final String varNameInstance = context.varNameInstance;
         String lenRes=context.lenRes;
-        switch (packetField.singleLen()) {
-            case 1: {
-                break;
-            }
-            default: {
-                JavassistUtil.packetFieldSingleLenNotSupport(field);
-            }
+        if (packetField.singleLen() != 1) {
+            JavassistUtil.packetFieldSingleLenNotSupport(field);
         }
         String arr_var_name = varNameField + "_arr";
         JavassistUtil.append(body, "final byte[] {}=new byte[{}];\n", arr_var_name, lenRes);

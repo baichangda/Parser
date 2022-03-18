@@ -16,17 +16,14 @@ public class FloatFieldBuilder extends FieldBuilder{
         final String varNameInstance = context.varNameInstance;
         String valExpr=null;
         switch (packetField.len()) {
-            case 2 : {
+            case 2 -> {
                 valExpr = JavassistUtil.format("(float){}.readUnsignedShort()", FieldBuilder.varNameByteBuf);
-                break;
             }
-            case 4 : {
+            case 4 -> {
                 valExpr = JavassistUtil.format("(float){}.readInt()", FieldBuilder.varNameByteBuf);
-                break;
             }
-            default : {
+            default -> {
                 JavassistUtil.packetFieldLenNotSupport(field);
-                break;
             }
         }
         JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, JavassistUtil.replaceVarToValExpr(packetField.valExpr(),valExpr));

@@ -17,15 +17,13 @@ public class IntArrayFieldBuilder extends FieldBuilder {
         final String varNameInstance = context.varNameInstance;
         String lenRes=context.lenRes;
         switch (packetField.singleLen()) {
-            case 2 : {
+            case 2 -> {
                 lenRes = "(" + lenRes + ")/2";
-                break;
             }
-            case 4 : {
+            case 4 -> {
                 lenRes = "(" + lenRes + ")/4";
-                break;
             }
-            default : {
+            default -> {
                 JavassistUtil.packetFieldSingleLenNotSupport(field);
             }
         }
