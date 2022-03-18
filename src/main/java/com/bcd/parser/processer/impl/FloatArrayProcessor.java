@@ -22,6 +22,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
         }
         final int singleLen = processContext.fieldInfo.packetField_singleLen;
         final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
+        final int valPrecision = processContext.fieldInfo.packetField_valPrecision;
 
         //优化处理 short->int
         if (singleLen == 2) {
@@ -32,7 +33,7 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
                 if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
                     res[i] = (float) cur;
                 } else {
-                    final int valPrecision = processContext.fieldInfo.packetField_valPrecision;
+
                     res[i] = valExprCase.calc_float(cur, valPrecision);
                 }
             }
@@ -45,7 +46,6 @@ public class FloatArrayProcessor extends FieldProcessor<float[]> {
                 if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_int(cur, singleLen)) {
                     res[i] = (float) cur;
                 } else {
-                    final int valPrecision = processContext.fieldInfo.packetField_valPrecision;
                     res[i] = valExprCase.calc_float(cur, valPrecision);
                 }
             }

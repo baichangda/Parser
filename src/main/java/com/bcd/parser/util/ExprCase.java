@@ -2,29 +2,7 @@ package com.bcd.parser.util;
 
 import com.bcd.parser.exception.BaseRuntimeException;
 
-public final class ExprCase {
-    /**
-     * 1、x
-     * 2、b
-     * 3、x+b
-     * 4、x*a
-     * 5、x/a
-     * 6、(x+b)*a
-     * 7、(x+b)/a
-     * 8、x*a+b
-     * 9、x/a+b
-     */
-    public final int mode;
-    public final boolean xPositive;
-    public final int a;
-    public final int b;
-
-    private ExprCase(int mode, boolean xPositive, int a, int b) {
-        this.mode = mode;
-        this.xPositive = xPositive;
-        this.a = a;
-        this.b = b;
-    }
+public record ExprCase(int mode, boolean xPositive, int a, int b) {
 
     public int calc_int(final int x) {
         switch (mode) {
@@ -306,7 +284,6 @@ public final class ExprCase {
             }
         }
     }
-
 
 
     private static ExprCase case1(boolean xPositive) {

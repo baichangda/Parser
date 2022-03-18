@@ -23,6 +23,7 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
         final int singleLen = processContext.fieldInfo.packetField_singleLen;
         //值表达式处理
         final ExprCase valExprCase = processContext.fieldInfo.valExprCase;
+        final int valPrecision = processContext.fieldInfo.packetField_valPrecision;
         //优化处理 int->long
         if (singleLen == 4) {
             final double[] res = new double[len >> 2];
@@ -32,7 +33,7 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
                 if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_long(cur, singleLen)) {
                     res[i] = (double) cur;
                 } else {
-                    final int valPrecision = processContext.fieldInfo.packetField_valPrecision;
+
                     res[i] = valExprCase.calc_double(cur, valPrecision);
                 }
             }
@@ -45,7 +46,6 @@ public class DoubleArrayProcessor extends FieldProcessor<double[]> {
                 if (valExprCase == null || !ParserUtil.checkInvalidOrExceptionVal_long(cur, singleLen)) {
                     res[i] = (double) cur;
                 } else {
-                    final int valPrecision = processContext.fieldInfo.packetField_valPrecision;
                     res[i] = valExprCase.calc_double(cur, valPrecision);
                 }
             }

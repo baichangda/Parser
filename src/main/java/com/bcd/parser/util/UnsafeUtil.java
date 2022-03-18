@@ -69,31 +69,31 @@ public class UnsafeUtil {
      */
     public static Object getValue(final Object instance, final long offset, final int type) {
         switch (type) {
-            case 1: {
+            case 1 -> {
                 return getUnsafe().getByte(instance, offset);
             }
-            case 2: {
+            case 2 -> {
                 return getUnsafe().getShort(instance, offset);
             }
-            case 3: {
+            case 3 -> {
                 return getUnsafe().getInt(instance, offset);
             }
-            case 4: {
+            case 4 -> {
                 return getUnsafe().getLong(instance, offset);
             }
-            case 5: {
+            case 5 -> {
                 return getUnsafe().getFloat(instance, offset);
             }
-            case 6: {
+            case 6 -> {
                 return getUnsafe().getDouble(instance, offset);
             }
-            case 7: {
+            case 7 -> {
                 return getUnsafe().getChar(instance, offset);
             }
-            case 8: {
+            case 8 -> {
                 return getUnsafe().getBoolean(instance, offset);
             }
-            default: {
+            default -> {
                 return getUnsafe().getObject(instance, offset);
             }
         }
@@ -109,39 +109,31 @@ public class UnsafeUtil {
      */
     public static void setValue(final Object instance, final Object val, final long offset, final int type) {
         switch (type) {
-            case 1: {
+            case 1 -> {
                 getUnsafe().putByte(instance, offset, (byte) val);
-                return;
             }
-            case 2: {
+            case 2 -> {
                 getUnsafe().putShort(instance, offset, (short) val);
-                return;
             }
-            case 3: {
+            case 3 -> {
                 getUnsafe().putInt(instance, offset, (int) val);
-                return;
             }
-            case 4: {
+            case 4 -> {
                 getUnsafe().putLong(instance, offset, (long) val);
-                return;
             }
-            case 5: {
+            case 5 -> {
                 getUnsafe().putFloat(instance, offset, (float) val);
-                return;
             }
-            case 6: {
+            case 6 -> {
                 getUnsafe().putDouble(instance, offset, (double) val);
-                return;
             }
-            case 7: {
+            case 7 -> {
                 getUnsafe().putChar(instance, offset, (char) val);
-                return;
             }
-            case 8: {
+            case 8 -> {
                 getUnsafe().putBoolean(instance, offset, (boolean) val);
-                return;
             }
-            default: {
+            default -> {
                 getUnsafe().putObject(instance, offset, val);
             }
         }
