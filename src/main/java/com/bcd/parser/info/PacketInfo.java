@@ -3,15 +3,16 @@ package com.bcd.parser.info;
 
 
 import com.bcd.parser.anno.PacketField;
+import com.bcd.parser.exception.BaseRuntimeException;
 
 import java.lang.reflect.Constructor;
 
-public class PacketInfo {
+public final class PacketInfo {
     //对应的class
-    public Class clazz;
+    public final Class clazz;
 
     //对应无参构造方法
-    public Constructor constructor;
+    public final Constructor constructor;
 
     //解析的字段信息集合
     public FieldInfo[] fieldInfos;
@@ -26,7 +27,14 @@ public class PacketInfo {
      */
     public int varValArrOffset=0;
 
-    public PacketInfo() {
-    }
 
+    public PacketInfo(Class clazz) {
+        this.clazz = clazz;
+        try {
+            this.constructor = clazz.getConstructor();
+            this.constructor.setAccessible(true);
+        } catch (NoSuchMethodException e) {
+            throw BaseRuntimeException.getException(e);
+        }
+    }
 }

@@ -228,15 +228,7 @@ public class ParserUtil {
      * @return
      */
     public static PacketInfo toPacketInfo(Class clazz, FieldProcessor[] processors, int[] processorCount) {
-        PacketInfo packetInfo = new PacketInfo();
-        packetInfo.clazz = clazz;
-        //设置无参构造方法
-        try {
-            packetInfo.constructor = clazz.getConstructor();
-            packetInfo.constructor.setAccessible(true);
-        } catch (NoSuchMethodException e) {
-            throw BaseRuntimeException.getException(e);
-        }
+        PacketInfo packetInfo = new PacketInfo(clazz);
         Field[] declaredFields = clazz.getDeclaredFields();
         //求出最小var char int和最大var char int
         int[] maxVarInt = new int[1];
@@ -270,7 +262,6 @@ public class ParserUtil {
 
             Class fieldType = field.getType();
             Class typeClazz = null;
-            boolean isVar = false;
             int processorIndex;
             /**
              processorList.add(this.byteProcessor);
@@ -390,11 +381,6 @@ public class ParserUtil {
                 }
             }
 
-            //判断是否变量
-            if (packetField.var() != '0') {
-                isVar = true;
-            }
-
             //求maxVarInt、minVarInt
             if (lenRpn != null) {
                 for (com.bcd.parser.util.RpnUtil.Ele_int e : lenRpn) {
@@ -427,29 +413,15 @@ public class ParserUtil {
                 }
             }
 
-            FieldInfo fieldInfo = new FieldInfo();
-            fieldInfo.packetInfo = packetInfo;
-            fieldInfo.field = field;
-            fieldInfo.isVar = isVar;
-            fieldInfo.clazz = typeClazz;
-            fieldInfo.processorIndex = processorIndex;
-            fieldInfo.lenRpn = lenRpn;
-            fieldInfo.listLenRpn = listLenRpn;
-            fieldInfo.valExprCase = valExprCase;
-            fieldInfo.packetField_index = packetField.index();
-            fieldInfo.packetField_len = packetField.len();
-            fieldInfo.packetField_lenExpr = packetField.lenExpr();
-            fieldInfo.packetField_skipParse = packetField.skipParse();
-            fieldInfo.packetField_listLenExpr = packetField.listLenExpr();
-            fieldInfo.packetField_singleLen = packetField.singleLen();
-            fieldInfo.packetField_var = packetField.var();
-            fieldInfo.packetField_var_int = packetField.var();
-            fieldInfo.packetField_processorClass = packetField.processorClass();
-            fieldInfo.packetField_valExpr = packetField.valExpr();
-            fieldInfo.packetField_valPrecision = packetField.valPrecision();
-            fieldInfo.unsafeOffset = UnsafeUtil.fieldOffset(field);
-            fieldInfo.unsafeType = UnsafeUtil.fieldType(field);
-            return fieldInfo;
+            return new FieldInfo(
+                    field,
+                    packetInfo,
+                    packetField,
+                    processorIndex,
+                    typeClazz,
+                    lenRpn,
+                    listLenRpn,
+                    valExprCase);
         }).toArray(FieldInfo[]::new);
 
         /**

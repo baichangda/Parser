@@ -194,9 +194,9 @@ public abstract class Parser {
                         continue A;
                     }
                 }
-                processorList.add((FieldProcessor) e.newInstance());
+                processorList.add((FieldProcessor) e.getDeclaredConstructor().newInstance());
             }
-        } catch (IOException | ClassNotFoundException | IllegalAccessException | InstantiationException e) {
+        } catch (IOException | ClassNotFoundException | IllegalAccessException | InstantiationException | NoSuchMethodException | InvocationTargetException e) {
             throw BaseRuntimeException.getException(e);
         }
         return processorList;
