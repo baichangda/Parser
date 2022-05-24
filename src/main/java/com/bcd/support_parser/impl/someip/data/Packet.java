@@ -1,11 +1,11 @@
-package com.bcd.parser.impl.someip.data;
+package com.bcd.support_parser.impl.someip.data;
 
-import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.anno.Parsable;
-import com.bcd.parser.impl.someip.processor.MessageTypeProcessor;
-import com.bcd.parser.impl.someip.processor.MethodIdOrEventIdProcessor;
-import com.bcd.parser.impl.someip.processor.OffsetProcessor;
-import com.bcd.parser.impl.someip.processor.ReturnCodeProcessor;
+import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.anno.Parsable;
+import com.bcd.support_parser.impl.someip.processor.MessageTypeProcessor;
+import com.bcd.support_parser.impl.someip.processor.MethodIdOrEventIdProcessor;
+import com.bcd.support_parser.impl.someip.processor.OffsetProcessor;
+import com.bcd.support_parser.impl.someip.processor.ReturnCodeProcessor;
 
 @Parsable
 public class Packet {

@@ -1,11 +1,14 @@
-package com.bcd.parser.info;
+package com.bcd.support_parser.info;
 
-import com.bcd.parser.Parser;
-import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.util.ExprCase;
-import com.bcd.parser.util.RpnUtil;
-import com.bcd.parser.util.UnsafeUtil;
+import com.bcd.support_parser.Parser;
+import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.exception.BaseRuntimeException;
+import com.bcd.support_parser.util.ExprCase;
+import com.bcd.support_parser.util.RpnUtil;
+import com.bcd.support_parser.util.UnsafeUtil;
 
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
 
 public final class FieldInfo {
@@ -51,8 +54,8 @@ public final class FieldInfo {
      * 12、String
      * 13、Date
      * 14、ByteBuf
-     * 15、List<{@link com.bcd.parser.anno.Parsable}>
-     * 16、Array[<{@link com.bcd.parser.anno.Parsable}>]
+     * 15、List<{@link com.bcd.support_parser.anno.Parsable}>
+     * 16、Array[<{@link com.bcd.support_parser.anno.Parsable}>]
      * 17、@Parsable标注实体类对象
      * <p>
      * >=18、自定义处理器
@@ -95,9 +98,8 @@ public final class FieldInfo {
      * {@link sun.misc.Unsafe#objectFieldOffset(Field)} 得出的偏移量
      */
     public final long unsafeOffset;
-
     /**
-     * {@link com.bcd.parser.util.UnsafeUtil#fieldType(Field)} 得出类型
+     * {@link com.bcd.support_parser.util.UnsafeUtil#fieldType(Field)} 得出类型
      * 字段基础类型、如果不属于java基础类型、则为0
      * 1:byte
      * 2:short

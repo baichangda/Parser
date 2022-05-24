@@ -1,13 +1,13 @@
-package com.bcd.parser.util;
+package com.bcd.support_parser.util;
 
-import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.anno.Parsable;
-import com.bcd.parser.exception.BaseRuntimeException;
-import com.bcd.parser.info.FieldInfo;
-import com.bcd.parser.info.PacketInfo;
-import com.bcd.parser.processer.FieldDeProcessContext;
-import com.bcd.parser.processer.FieldProcessContext;
-import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.anno.Parsable;
+import com.bcd.support_parser.exception.BaseRuntimeException;
+import com.bcd.support_parser.info.FieldInfo;
+import com.bcd.support_parser.info.PacketInfo;
+import com.bcd.support_parser.processer.FieldDeProcessContext;
+import com.bcd.support_parser.processer.FieldProcessContext;
+import com.bcd.support_parser.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -368,10 +368,10 @@ public class ParserUtil {
             RpnUtil.Ele_int[] listLenRpn = null;
             ExprCase valExprCase = null;
             if (!packetField.lenExpr().isEmpty()) {
-                lenRpn = RpnUtil.to_ele_int(com.bcd.parser.util.RpnUtil.toRpn(packetField.lenExpr()));
+                lenRpn = RpnUtil.to_ele_int(com.bcd.support_parser.util.RpnUtil.toRpn(packetField.lenExpr()));
             }
             if (!packetField.listLenExpr().isEmpty()) {
-                listLenRpn = RpnUtil.to_ele_int(com.bcd.parser.util.RpnUtil.toRpn(packetField.listLenExpr()));
+                listLenRpn = RpnUtil.to_ele_int(com.bcd.support_parser.util.RpnUtil.toRpn(packetField.listLenExpr()));
             }
             if (!packetField.valExpr().isEmpty()) {
                 try {
@@ -383,7 +383,7 @@ public class ParserUtil {
 
             //求maxVarInt、minVarInt
             if (lenRpn != null) {
-                for (com.bcd.parser.util.RpnUtil.Ele_int e : lenRpn) {
+                for (com.bcd.support_parser.util.RpnUtil.Ele_int e : lenRpn) {
                     switch (e.type()) {
                         case 2, 3 -> {
                             if (maxVarInt[0] == 0 || e.val() > maxVarInt[0]) {
@@ -397,7 +397,7 @@ public class ParserUtil {
                 }
             }
             if (listLenRpn != null) {
-                for (com.bcd.parser.util.RpnUtil.Ele_int e : listLenRpn) {
+                for (com.bcd.support_parser.util.RpnUtil.Ele_int e : listLenRpn) {
                     switch (e.type()) {
                         case 2, 3 -> {
                             if (maxVarInt[0] == 0 || e.val() > maxVarInt[0]) {

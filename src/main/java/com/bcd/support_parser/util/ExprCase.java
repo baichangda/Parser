@@ -1,6 +1,6 @@
-package com.bcd.parser.util;
+package com.bcd.support_parser.util;
 
-import com.bcd.parser.exception.BaseRuntimeException;
+import com.bcd.support_parser.exception.BaseRuntimeException;
 
 public record ExprCase(int mode, boolean xPositive, int a, int b) {
 

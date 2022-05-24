@@ -1,18 +1,18 @@
-package com.bcd.parser;
+package com.bcd.support_parser;
 
-import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.anno.Parsable;
-import com.bcd.parser.exception.BaseRuntimeException;
-import com.bcd.parser.info.FieldInfo;
-import com.bcd.parser.info.PacketInfo;
-import com.bcd.parser.processer.FieldDeProcessContext;
-import com.bcd.parser.processer.FieldProcessContext;
-import com.bcd.parser.processer.FieldProcessor;
-import com.bcd.parser.processer.impl.*;
-import com.bcd.parser.util.ClassUtil;
-import com.bcd.parser.util.ParserUtil;
-import com.bcd.parser.util.RpnUtil;
-import com.bcd.parser.util.UnsafeUtil;
+import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.anno.Parsable;
+import com.bcd.support_parser.exception.BaseRuntimeException;
+import com.bcd.support_parser.info.FieldInfo;
+import com.bcd.support_parser.info.PacketInfo;
+import com.bcd.support_parser.processer.FieldDeProcessContext;
+import com.bcd.support_parser.processer.FieldProcessContext;
+import com.bcd.support_parser.processer.FieldProcessor;
+import com.bcd.support_parser.processer.impl.*;
+import com.bcd.support_parser.util.ClassUtil;
+import com.bcd.support_parser.util.ParserUtil;
+import com.bcd.support_parser.util.RpnUtil;
+import com.bcd.support_parser.util.UnsafeUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
@@ -29,11 +29,11 @@ import java.util.*;
  * 主要功能如下:
  * 1、解析
  * 从{@link ByteBuf}中获取二进制数据、解析成{@link Parsable}的class对象实例
- * 解析规则参照{@link com.bcd.parser.anno.PacketField}
+ * 解析规则参照{@link com.bcd.support_parser.anno.PacketField}
  * <p>
  * 2、反解析
  * 将{@link Parsable}的class对象实例反解析成为ByteBuf二进制数据流
- * 反解析规则参照{@link com.bcd.parser.anno.PacketField}}
+ * 反解析规则参照{@link com.bcd.support_parser.anno.PacketField}}
  * <p>
  * {@link FieldProcessor}说明:
  * {@link FieldProcessor}是针对每个字段类型定义的处理器、所有需要解析的字段类型必须要有对应的处理器
@@ -50,7 +50,7 @@ import java.util.*;
  * 单线程、在cpu使用率95%+ 的情况下
  * 解析速度约为 48-51w/s、多个线程成倍数增长
  * 反解析速度约为 41-43w/s、多个线程成倍数增长
- * 具体查看{@link com.bcd.parser.impl.gb32960.Parser_gb32960#main(String[])}
+ * 具体查看{@link com.bcd.support_parser.impl.gb32960.Parser_gb32960#main(String[])}
  * 注意:
  * 因为是cpu密集型运算、所以性能达到计算机物理核心个数后已经达到上限、不能以逻辑核心为准、此时虽然整体cpu使用率没有满、但这只是top使用率显示问题
  * 例如 2核4线程 、物理核心2个、逻辑核心4个、此时使用2个线程就能用尽cpu资源、即使指标显示cpu使用率50%、其实再加线程已经没有提升
@@ -253,7 +253,7 @@ public abstract class Parser {
     }
 
     /**
-     * 解析{@link com.bcd.parser.anno.PacketField}字段
+     * 解析{@link com.bcd.support_parser.anno.PacketField}字段
      *
      * @param packetInfo    当前class对应的{@link PacketInfo}
      * @param data          解析ByteBuf数据源
@@ -338,7 +338,7 @@ public abstract class Parser {
             //构造实例
             T instance = (T) packetInfo.constructor.newInstance();
             /**
-             * 解析{@link com.bcd.parser.anno.PacketField}字段
+             * 解析{@link com.bcd.support_parser.anno.PacketField}字段
              */
             parsePacketField(packetInfo, data, instance, parentContext);
             return instance;
@@ -404,6 +404,7 @@ public abstract class Parser {
             processContext.fieldInfo = fieldInfo;
             processContext.len = len;
             processContext.listLen = listLen;
+
 
             Object data = UnsafeUtil.getValue(t, fieldInfo.unsafeOffset, fieldInfo.unsafeType);
 

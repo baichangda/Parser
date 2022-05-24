@@ -1,4 +1,4 @@
-package com.bcd.parser.anno;
+package com.bcd.support_parser.anno;
 
 import java.lang.annotation.*;
 

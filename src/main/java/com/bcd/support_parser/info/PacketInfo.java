@@ -1,9 +1,9 @@
-package com.bcd.parser.info;
+package com.bcd.support_parser.info;
 
 
 
-import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.exception.BaseRuntimeException;
+import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.exception.BaseRuntimeException;
 
 import java.lang.reflect.Constructor;
 

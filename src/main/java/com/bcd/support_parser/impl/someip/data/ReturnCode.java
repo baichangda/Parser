@@ -1,4 +1,4 @@
-package com.bcd.parser.impl.someip.data;
+package com.bcd.support_parser.impl.someip.data;
 
 public enum ReturnCode {
     /**

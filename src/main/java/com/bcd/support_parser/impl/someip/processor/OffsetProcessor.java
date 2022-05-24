@@ -1,8 +1,8 @@
-package com.bcd.parser.impl.someip.processor;
+package com.bcd.support_parser.impl.someip.processor;
 
-import com.bcd.parser.processer.FieldDeProcessContext;
-import com.bcd.parser.processer.FieldProcessContext;
-import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.support_parser.processer.FieldDeProcessContext;
+import com.bcd.support_parser.processer.FieldProcessContext;
+import com.bcd.support_parser.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
 
 public class OffsetProcessor extends FieldProcessor<Integer> {

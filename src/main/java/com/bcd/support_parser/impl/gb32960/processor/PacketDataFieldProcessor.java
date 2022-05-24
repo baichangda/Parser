@@ -1,9 +1,9 @@
-package com.bcd.parser.impl.gb32960.processor;
+package com.bcd.support_parser.impl.gb32960.processor;
 
-import com.bcd.parser.impl.gb32960.data.*;
-import com.bcd.parser.processer.FieldDeProcessContext;
-import com.bcd.parser.processer.FieldProcessContext;
-import com.bcd.parser.processer.FieldProcessor;
+import com.bcd.support_parser.impl.gb32960.data.*;
+import com.bcd.support_parser.processer.FieldDeProcessContext;
+import com.bcd.support_parser.processer.FieldProcessContext;
+import com.bcd.support_parser.processer.FieldProcessor;
 import io.netty.buffer.ByteBuf;
 
 
@@ -60,12 +60,12 @@ public class PacketDataFieldProcessor extends FieldProcessor<PacketData> {
     @Override
     public PacketData process(ByteBuf data, FieldProcessContext processContext) {
         Packet packet=(Packet)processContext.instance;
-        return parse(data,packet.getFlag(),processContext);
+        return parse(data,packet.flag,processContext);
     }
 
     @Override
     public void deProcess(PacketData data, ByteBuf dest, FieldDeProcessContext processContext) {
-        int flag=((Packet)processContext.instance).getFlag();
+        int flag=((Packet)processContext.instance).flag;
         switch (flag){
             //车辆登入
             case 1:{

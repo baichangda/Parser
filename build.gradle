@@ -1,23 +1,23 @@
 buildscript {
     ext {
-        nettyVersion = '4.+'
-        slf4jVersion = '1.7.+'
-        log4j2Version = '+'
         mavenRepoUrl = 'https://maven.aliyun.com/repository/central'
         publishRepoUrl = 'http://repository.incarcloud.com/content/repositories/snapshots/'
 
     }
 }
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'java-library'
-apply plugin: 'maven-publish'
+plugins{
+    id 'java-library'
+    id 'java'
+    id 'idea'
+    id 'maven-publish'
+}
 
 group 'com.bcd'
 version '6.0-SNAPSHOT'
 
-sourceCompatibility = 17
+sourceCompatibility = 18
+targetCompatibility = 18
 
 repositories {
     maven { url "${mavenRepoUrl}" }
@@ -25,16 +25,15 @@ repositories {
 
 dependencies {
     //集成netty
-    api group: 'io.netty', name: 'netty-buffer', version: "${nettyVersion}"
+    api group: 'io.netty', name: 'netty-buffer', version: "4.+"
 
-    implementation group: 'org.slf4j', name: 'slf4j-api', version: "${slf4jVersion}"
-    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "${log4j2Version}"
+    implementation group: 'org.slf4j', name: 'slf4j-api', version: "1.7.+"
+    implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "+"
 }
 
 //生成jar时打包源码
 task sourceJar(type: Jar) {
     from sourceSets.main.java.srcDirs
-    classifier "sources"
 }
 
 
@@ -43,7 +42,7 @@ task sourceJar(type: Jar) {
 //---------------------------------
 task gb32960_performance(type: JavaExec,description:'gb32960性能测试') {
     classpath sourceSets.main.runtimeClasspath
-    main = 'com.bcd.parser.impl.gb32960.Parser_gb32960'
+    mainClass= 'com.bcd.support_parser.impl.gb32960.Parser_gb32960'
 }
 
 //发布到本地MAVEN仓库使用 gradle PublishToMavenLocal
