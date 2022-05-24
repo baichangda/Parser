@@ -14,7 +14,7 @@ plugins{
 }
 
 group 'com.bcd'
-version '6.0-SNAPSHOT'
+version '6.5-SNAPSHOT'
 
 sourceCompatibility = 18
 targetCompatibility = 18
@@ -31,31 +31,26 @@ dependencies {
     implementation group: 'org.apache.logging.log4j', name: 'log4j-slf4j-impl', version: "+"
 }
 
+
 //生成jar时打包源码
 task sourceJar(type: Jar) {
     from sourceSets.main.java.srcDirs
+    archiveClassifier= "sources"
 }
 
-
-//---------------------------------
-// 在gradle运行时环境下执行main函数
-//---------------------------------
-task gb32960_performance(type: JavaExec,description:'gb32960性能测试') {
-    classpath sourceSets.main.runtimeClasspath
-    mainClass= 'com.bcd.support_parser.impl.gb32960.Parser_gb32960'
-}
 
 //发布到本地MAVEN仓库使用 gradle PublishToMavenLocal
 //发布到远程MAVEN仓库使用 gradle publishMavenPublicationToMavenRepository
 publishing{
     publications {
         maven(MavenPublication){
-            from components.java
             artifact(sourceJar)
+            from components.java
         }
     }
     repositories {
         maven{
+            allowInsecureProtocol true
             url "${publishRepoUrl}"
             credentials {
                 username 'deployment'

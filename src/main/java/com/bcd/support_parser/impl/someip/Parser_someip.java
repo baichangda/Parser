@@ -23,18 +23,18 @@ public class Parser_someip extends Parser {
 
     public static void main(String[] args) {
         Packet sample = new Packet();
-        sample.setServiceId(1);
-        sample.setFlag((byte) 1);
-        sample.setMethodIdOrEventId((short) 100);
-        sample.setClientId(9);
-        sample.setSessionId(10);
-        sample.setProtocolVersion((short) 3);
-        sample.setInterfaceVersion((short) 4);
-        sample.setMessageType(MessageType.REQUEST);
-        sample.setReturnCode(ReturnCode.E_OK);
-        sample.setOffset(10);
-        sample.setPayload(new byte[sample.getOffset() * 16]);
-        sample.setLength(12 + sample.getPayload().length);
+        sample.serviceId=1;
+        sample.flag=(byte) 1;
+        sample.methodIdOrEventId=(short) 100;
+        sample.clientId=9;
+        sample.sessionId=10;
+        sample.protocolVersion=(short) 3;
+        sample.interfaceVersion=(short) 4;
+        sample.messageType=MessageType.REQUEST;
+        sample.returnCode=ReturnCode.E_OK;
+        sample.offset=10;
+        sample.payload=new byte[sample.offset * 16];
+        sample.length=12 + sample.payload.length;
 
 
 

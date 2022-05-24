@@ -85,12 +85,7 @@ public enum ReturnCode {
      */
     E_E2E_NO_NEW_DATA(0x0f);
 
-    private final int val;
-
-
-    public int getVal() {
-        return val;
-    }
+    public final int val;
 
     ReturnCode(int val) {
         this.val = val;

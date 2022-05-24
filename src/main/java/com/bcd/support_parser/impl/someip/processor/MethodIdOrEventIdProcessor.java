@@ -15,14 +15,14 @@ public class MethodIdOrEventIdProcessor extends FieldProcessor<Short> {
     public Short process(ByteBuf data, FieldProcessContext processContext) {
         short s = data.readShort();
         //解析flag
-        ((Packet) processContext.instance).setFlag((byte) ((s >> 7) & 0b01));
+        ((Packet) processContext.instance).flag=(byte) ((s >> 7) & 0b01);
         return (short) (s & (0xff >> 1));
     }
 
     @Override
     public void deProcess(Short data, ByteBuf dest, FieldDeProcessContext processContext) {
         dest.writeShort(
-                (((Packet) processContext.instance).getFlag() << 7) | data
+                (((Packet) processContext.instance).flag << 7) | data
         );
     }
 
@@ -35,7 +35,7 @@ public class MethodIdOrEventIdProcessor extends FieldProcessor<Short> {
                 "flag",
                 fieldInfo.field.getName(),
                 ByteBufUtil.hexDump(bytesVal),
-                ((Packet) processContext.instance).getFlag(),
+                ((Packet) processContext.instance).flag,
                 val,
                 this.getClass().getName());
     }
@@ -49,7 +49,7 @@ public class MethodIdOrEventIdProcessor extends FieldProcessor<Short> {
                 "flag",
                 fieldInfo.field.getName(),
                 ByteBufUtil.hexDump(bytesVal),
-                ((Packet) processContext.instance).getFlag(),
+                ((Packet) processContext.instance).flag,
                 val,
                 this.getClass().getName());
     }

@@ -17,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.LongAdder;
 
 public class Parser_gb32960 extends Parser {
 
@@ -37,21 +38,16 @@ public class Parser_gb32960 extends Parser {
     }
 
     public static void main(String[] args) {
-        Parser parser = new Parser_gb32960(false);
-        parser.init();
+        Parser_gb32960 parser_gb32960 = new Parser_gb32960(false);
+        parser_gb32960.init();
+        parser_gb32960.performanceTest("232302fe4c534a4532343036364a4732323935383901011f14090812110c01020101000000031fec0e8026bb45021013dd0000050007381f0701d8cc8c06013e0f20010c0f1701054e01074c070000000000000000000801010e8126bb00600001600f1b0f1b0f190f1a0f1a0f1a0f1a0f180f1a0f1a0f1b0f170f1b0f1b0f1b0f1c0f190f1a0f1a0f1b0f1a0f1a0f1a0f1a0f1a0f1a0f1a0f190f1a0f190f1b0f1a0f1b0f1a0f190f1a0f1b0f1b0f1a0f1b0f1a0f1d0f1a0f1a0f1b0f1c0f1d0f1d0f1c0f1b0f1b0f1c0f1a0f1d0f1d0f1c0f1d0f1d0f1b0f1b0f1a0f200f1d0f1a0f1a0f1a0f1a0f1b0f1b0f1b0f1a0f1c0f1b0f1a0f1a0f1a0f1b0f1e0f1d0f1b0f1c0f1d0f1d0f1d0f1d0f1c0f1b0f1b0f1d0f1c0f1c0f1c0f1c0f1d0f1b0f1d09010100104d4d4d4d4e4d4c4c4d4c4d4d4d4d4d4c2a",
+                1,
+                true);
+    }
 
-//        String data="232303FE4C534A41323430333048533139323936390101351403190F0507010203010000000469B00EE5271055020F1FFF000002010103424E1E4E2045FFFF2710050006BE437001CF306A060160FFFF0101FFFF0118FF01010E070000000000000000000801010EE527100060000160FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF09010100180EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFED";
-        String data = "232302fe4c534a4532343036364a4732323935383901011f14090812110c01020101000000031fec0e8026bb45021013dd0000050007381f0701d8cc8c06013e0f20010c0f1701054e01074c070000000000000000000801010e8126bb00600001600f1b0f1b0f190f1a0f1a0f1a0f1a0f180f1a0f1a0f1b0f170f1b0f1b0f1b0f1c0f190f1a0f1a0f1b0f1a0f1a0f1a0f1a0f1a0f1a0f1a0f190f1a0f190f1b0f1a0f1b0f1a0f190f1a0f1b0f1b0f1a0f1b0f1a0f1d0f1a0f1a0f1b0f1c0f1d0f1d0f1c0f1b0f1b0f1c0f1a0f1d0f1d0f1c0f1d0f1d0f1b0f1b0f1a0f200f1d0f1a0f1a0f1a0f1a0f1b0f1b0f1b0f1a0f1c0f1b0f1a0f1a0f1a0f1b0f1e0f1d0f1b0f1c0f1d0f1d0f1d0f1d0f1c0f1b0f1b0f1d0f1c0f1c0f1c0f1c0f1d0f1b0f1d09010100104d4d4d4d4e4d4c4c4d4c4d4d4d4d4d4c2a";
-        int threadNum = 1;
-        if (args.length >= 1) {
-            threadNum = Integer.parseInt(args[0]);
-        }
+    public void performanceTest(String data, int threadNum, boolean parse) {
         logger.info("param threadNum[{}]", threadNum);
-        int num = 1000000000;
-        PerformanceUtil.testMultiThreadPerformance(data, parser, Packet.class, threadNum, num, true);
-//        testMultiThreadPerformance(data,threadNum,num);
-//        PerformanceUtil.testDeParse(data,parser,Packet.class,1,new LongAdder());
-//        PerformanceUtil.testParse(data,parser,Packet.class,1,new LongAdder());
+        PerformanceUtil.testMultiThreadPerformance(data, this, Packet.class, threadNum, Integer.MAX_VALUE, parse);
     }
 
     private static void parseToPacket(String data, int num, AtomicInteger count) {
@@ -93,7 +89,7 @@ public class Parser_gb32960 extends Parser {
             byteBuf.readBytes(dataContent);
             packet.dataContent = dataContent;
 
-            packet.code=byteBuf.readByte();
+            packet.code = byteBuf.readByte();
 
             count.incrementAndGet();
         }

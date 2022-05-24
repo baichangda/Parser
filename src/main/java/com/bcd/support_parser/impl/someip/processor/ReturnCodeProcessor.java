@@ -16,6 +16,6 @@ public class ReturnCodeProcessor extends FieldProcessor<ReturnCode> {
 
     @Override
     public void deProcess(ReturnCode data, ByteBuf dest, FieldDeProcessContext processContext) {
-        dest.writeByte(data.getVal());
+        dest.writeByte(data.val);
     }
 }
