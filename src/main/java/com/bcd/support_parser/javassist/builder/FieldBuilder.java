@@ -1,7 +1,7 @@
-package com.bcd.parser.javassist.builder;
+package com.bcd.support_parser.javassist.builder;
 
 
-import com.bcd.parser.javassist.Parser;
+import com.bcd.support_parser.javassist.Parser;
 
 public abstract class FieldBuilder {
 

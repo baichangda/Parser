@@ -1,10 +1,7 @@
-package com.bcd.parser.exception;
+package com.bcd.support_parser.exception;
 
 
 import org.slf4j.helpers.MessageFormatter;
-
-import java.text.MessageFormat;
-import java.util.Arrays;
 
 /**
  * 建造此异常类的目的:

@@ -1,6 +1,6 @@
-package com.bcd.parser.anno;
+package com.bcd.support_parser.anno;
 
-import com.bcd.parser.javassist.processor.FieldProcessor;
+import com.bcd.support_parser.javassist.processor.FieldProcessor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -115,7 +115,7 @@ public @interface PacketField {
 
     /**
      * asm构建类
-     * 必须是{@link com.bcd.parser.javassist.builder.FieldBuilder}子类
+     * 必须是{@link com.bcd.support_parser.javassist.builder.FieldBuilder}子类
      * @return
      */
     Class<?> builderClass() default void.class;

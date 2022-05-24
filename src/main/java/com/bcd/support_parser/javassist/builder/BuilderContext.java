@@ -1,10 +1,10 @@
-package com.bcd.parser.javassist.builder;
+package com.bcd.support_parser.javassist.builder;
 
-import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.javassist.Parser;
-import com.bcd.parser.javassist.parser.JavassistParser;
-import com.bcd.parser.javassist.processor.FieldProcessContext;
-import com.bcd.parser.javassist.util.JavassistUtil;
+import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.javassist.Parser;
+import com.bcd.support_parser.javassist.parser.JavassistParser;
+import com.bcd.support_parser.javassist.processor.FieldProcessContext;
+import com.bcd.support_parser.javassist.util.JavassistUtil;
 import io.netty.buffer.ByteBuf;
 import javassist.CtClass;
 
@@ -44,7 +44,7 @@ public class BuilderContext {
 
     /**
      * 用于给
-     * {@link com.bcd.parser.javassist.processor.FieldProcessor#process(ByteBuf, FieldProcessContext)}
+     * {@link com.bcd.support_parser.javassist.processor.FieldProcessor#process(ByteBuf, FieldProcessContext)}
      * 的参数对象、对象复用、避免构造多个
      */
     private String classProcessContextVarName;

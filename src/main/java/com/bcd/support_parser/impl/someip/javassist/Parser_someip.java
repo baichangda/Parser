@@ -1,9 +1,9 @@
-package com.bcd.parser.impl.someip.javassist;
+package com.bcd.support_parser.impl.someip.javassist;
 
 
-import com.bcd.parser.impl.someip.data.Packet;
-import com.bcd.parser.javassist.Parser;
-import com.bcd.parser.javassist.util.PerformanceUtil;
+import com.bcd.support_parser.impl.someip.data.Packet;
+import com.bcd.support_parser.javassist.Parser;
+import com.bcd.support_parser.javassist.util.PerformanceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

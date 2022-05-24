@@ -1,11 +1,11 @@
-package com.bcd.parser.javassist;
+package com.bcd.support_parser.javassist;
 
-import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.exception.BaseRuntimeException;
-import com.bcd.parser.javassist.builder.*;
-import com.bcd.parser.javassist.parser.JavassistParser;
-import com.bcd.parser.javassist.processor.FieldProcessContext;
-import com.bcd.parser.javassist.util.JavassistUtil;
+import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.exception.BaseRuntimeException;
+import com.bcd.support_parser.javassist.builder.*;
+import com.bcd.support_parser.javassist.parser.JavassistParser;
+import com.bcd.support_parser.javassist.processor.FieldProcessContext;
+import com.bcd.support_parser.javassist.util.JavassistUtil;
 import io.netty.buffer.ByteBuf;
 import javassist.*;
 import javassist.bytecode.SignatureAttribute;
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * 主要功能如下:
  * 1、解析
  * 从{@link ByteBuf}中获取二进制数据、解析成class对象实例
- * 解析规则参照{@link com.bcd.parser.anno.PacketField}
+ * 解析规则参照{@link com.bcd.support_parser.anno.PacketField}
  * <p>
  * 原理简介
  * 通过使用第三方工具包Javassist
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
  * 各种类型字段的字节码构造器、提供的类型在{@link Parser}中的变量可以看到
  * 如果当前某个类型规则和实现不一致、可以替换{@link Parser}中对应的变量、注意需要在{@link Parser#init()}前替换
  * <p>
- * {@link com.bcd.parser.javassist.processor.FieldProcessor}
+ * {@link com.bcd.support_parser.javassist.processor.FieldProcessor}
  * 用于支持{@link PacketField#processorClass()}完成自定义解析
  * 注意所有的子类必须提供参数为空的构造方法
  * <p>
@@ -42,14 +42,14 @@ import java.util.stream.Collectors;
  * 执行{@link FieldBuilder#build(BuilderContext)}的上下文环境
  * <p>
  * {@link FieldProcessContext}
- * 执行{@link com.bcd.parser.javassist.processor.FieldProcessor#process(ByteBuf, FieldProcessContext)}的上下文环境
+ * 执行{@link com.bcd.support_parser.javassist.processor.FieldProcessor#process(ByteBuf, FieldProcessContext)}的上下文环境
  * <p>
  * 性能表现:
  * 以gb32960协议为例子
  * cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
  * 单线程、在cpu使用率90%+ 的情况下
  * 解析速度约为 120-125w/s、多个线程成倍数增长
- * 具体查看{@link com.bcd.parser.impl.gb32960.javassist.Parser_gb32960#main(String[])}
+ * 具体查看{@link com.bcd.support_parser.impl.gb32960.javassist.Parser_gb32960#main(String[])}
  * 注意:
  * 因为是cpu密集型运算、所以性能达到计算机物理核心个数后已经达到上限、不能以逻辑核心为准、此时虽然整体cpu使用率没有满、但这只是top使用率显示问题
  * 例如 2核4线程 、物理核心2个、逻辑核心4个、此时使用2个线程就能用尽cpu资源、即使指标显示cpu使用率50%、其实再加线程已经没有提升

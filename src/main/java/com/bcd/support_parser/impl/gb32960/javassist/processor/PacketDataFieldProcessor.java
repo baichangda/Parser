@@ -1,9 +1,9 @@
-package com.bcd.parser.impl.gb32960.javassist.processor;
+package com.bcd.support_parser.impl.gb32960.javassist.processor;
 
-import com.bcd.parser.impl.gb32960.data.*;
-import com.bcd.parser.javassist.Parser;
-import com.bcd.parser.javassist.processor.FieldProcessor;
-import com.bcd.parser.javassist.processor.FieldProcessContext;
+import com.bcd.support_parser.impl.gb32960.data.*;
+import com.bcd.support_parser.javassist.Parser;
+import com.bcd.support_parser.javassist.processor.FieldProcessor;
+import com.bcd.support_parser.javassist.processor.FieldProcessContext;
 import io.netty.buffer.ByteBuf;
 
 
@@ -14,7 +14,7 @@ public class PacketDataFieldProcessor extends FieldProcessor<PacketData> {
         Packet packet=(Packet)context.instance;
         final Parser parser = context.parser;
         PacketData packetData=null;
-        switch (packet.getFlag()) {
+        switch (packet.flag) {
             //车辆登入
             case 1 : {
                 packetData = parser.parse(VehicleLoginData.class, data, context);

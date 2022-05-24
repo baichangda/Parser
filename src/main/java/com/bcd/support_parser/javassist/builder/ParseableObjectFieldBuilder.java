@@ -1,6 +1,6 @@
-package com.bcd.parser.javassist.builder;
+package com.bcd.support_parser.javassist.builder;
 
-import com.bcd.parser.javassist.util.JavassistUtil;
+import com.bcd.support_parser.javassist.util.JavassistUtil;
 
 
 public class ParseableObjectFieldBuilder extends FieldBuilder{
@@ -8,13 +8,12 @@ public class ParseableObjectFieldBuilder extends FieldBuilder{
     public void build(final BuilderContext context){
         final StringBuilder body = context.body;
         final String varNameField = JavassistUtil.getFieldVarName(context);
-        final String setMethodName = JavassistUtil.getSetMethodName(context.field);
         final String varNameInstance = context.varNameInstance;
         final String fieldTypeClassName = context.field.getType().getName();
         if(parser.allInOne){
             parser.buildAppend(context);
         }else{
-            JavassistUtil.append(body,"{}.{}({}.parse({}.class,{},{}));\n",varNameInstance,setMethodName, FieldBuilder.varNameParser,fieldTypeClassName, FieldBuilder.varNameByteBuf,context.getClassProcessContextVarName());
+            JavassistUtil.append(body,"{}.{}={}.parse({}.class,{},{});\n",varNameInstance,context.field.getName(), FieldBuilder.varNameParser,fieldTypeClassName, FieldBuilder.varNameByteBuf,context.getClassProcessContextVarName());
         }
     }
 }

@@ -1,8 +1,8 @@
-package com.bcd.parser.impl.gb32960.javassist;
+package com.bcd.support_parser.impl.gb32960.javassist;
 
-import com.bcd.parser.impl.gb32960.data.Packet;
-import com.bcd.parser.javassist.Parser;
-import com.bcd.parser.javassist.util.PerformanceUtil;
+import com.bcd.support_parser.impl.gb32960.data.Packet;
+import com.bcd.support_parser.javassist.Parser;
+import com.bcd.support_parser.javassist.util.PerformanceUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
@@ -58,11 +58,11 @@ public class Parser_gb32960 extends Parser {
 
             byte[] header = new byte[2];
             byteBuf.readBytes(header);
-            packet.setHeader(header);
+            packet.header=header;
 
-            packet.setFlag(byteBuf.readUnsignedByte());
+            packet.flag=byteBuf.readUnsignedByte();
 
-            packet.setReplyFlag(byteBuf.readUnsignedByte());
+            packet.replyFlag=byteBuf.readUnsignedByte();
 
             int discardLen = 0;
             byte[] vinBytes = new byte[17];
@@ -75,17 +75,17 @@ public class Parser_gb32960 extends Parser {
                 }
             }
             String vin = new String(vinBytes, 0, vinBytes.length - discardLen);
-            packet.setVin(vin);
+            packet.vin=vin;
 
-            packet.setEncodeWay(byteBuf.readUnsignedByte());
+            packet.encodeWay=byteBuf.readUnsignedByte();
 
-            packet.setContentLength(byteBuf.readUnsignedShort());
+            packet.contentLength=byteBuf.readUnsignedShort();
 
-            byte[] dataContent = new byte[packet.getContentLength()];
+            byte[] dataContent = new byte[packet.contentLength];
             byteBuf.readBytes(dataContent);
-            packet.setDataContent(dataContent);
+            packet.dataContent=dataContent;
 
-            packet.setCode(byteBuf.readByte());
+            packet.code=byteBuf.readByte();
 
             count.incrementAndGet();
         }

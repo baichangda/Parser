@@ -1,6 +1,6 @@
-package com.bcd.parser.javassist.processor;
+package com.bcd.support_parser.javassist.processor;
 
-import com.bcd.parser.javassist.Parser;
+import com.bcd.support_parser.javassist.Parser;
 import io.netty.buffer.ByteBuf;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

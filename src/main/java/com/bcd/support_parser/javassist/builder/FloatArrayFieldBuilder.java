@@ -1,8 +1,8 @@
-package com.bcd.parser.javassist.builder;
+package com.bcd.support_parser.javassist.builder;
 
 
-import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.javassist.util.JavassistUtil;
+import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.javassist.util.JavassistUtil;
 
 import java.lang.reflect.Field;
 
@@ -13,7 +13,6 @@ public class FloatArrayFieldBuilder extends FieldBuilder {
         final PacketField packetField = context.packetField;
         final Field field = context.field;
         final String varNameField = JavassistUtil.getFieldVarName(context);
-        final String setMethodName = JavassistUtil.getSetMethodName(field);
         final String varNameInstance = context.varNameInstance;
         String lenRes=context.lenRes;
         switch (packetField.singleLen()) {
@@ -43,6 +42,6 @@ public class FloatArrayFieldBuilder extends FieldBuilder {
         JavassistUtil.append(body,"{}[i]={};\n",arrVarName,JavassistUtil.replaceVarToValExpr(packetField.valExpr(),valExpr));
         body.append("}\n");
 
-        JavassistUtil.append(body,"{}.{}({});\n", varNameInstance, setMethodName, arrVarName);
+        JavassistUtil.append(body,"{}.{}={};\n", varNameInstance, field.getName(), arrVarName);
     }
 }

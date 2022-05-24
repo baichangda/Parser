@@ -1,7 +1,7 @@
-package com.bcd.parser.javassist.builder;
+package com.bcd.support_parser.javassist.builder;
 
-import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.javassist.util.JavassistUtil;
+import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.javassist.util.JavassistUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -15,7 +15,6 @@ public class ParseableObjectListFieldBuilder extends FieldBuilder{
         final Field field = context.field;
         final String varNameField = JavassistUtil.getFieldVarName(context);
         final PacketField packetField = context.packetField;
-        final String setMethodName = JavassistUtil.getSetMethodName(field);
         final String varNameInstance = context.varNameInstance;
         String listLenRes = JavassistUtil.replaceVarToFieldName(packetField.listLenExpr(), context.varToFieldName, field);
         final String arrayListClassName = ArrayList.class.getName();
@@ -35,6 +34,6 @@ public class ParseableObjectListFieldBuilder extends FieldBuilder{
             JavassistUtil.append(body, "{}.add({}.parse({}.class,{},{}));\n", varNameField, FieldBuilder.varNameParser, typeClassName, FieldBuilder.varNameByteBuf, classProcessContextVarName);
         }
         JavassistUtil.append(body, "}\n");
-        JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);
+        JavassistUtil.append(body, "{}.{}={};\n", varNameInstance, field.getName(), varNameField);
     }
 }

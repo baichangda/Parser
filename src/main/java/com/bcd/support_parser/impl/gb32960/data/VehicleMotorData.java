@@ -1,6 +1,6 @@
-package com.bcd.parser.impl.gb32960.data;
+package com.bcd.support_parser.impl.gb32960.data;
 
-import com.bcd.parser.anno.PacketField;
+import com.bcd.support_parser.anno.PacketField;
 
 /**
  * 驱动电机数据
@@ -8,25 +8,9 @@ import com.bcd.parser.anno.PacketField;
 public class VehicleMotorData {
     //驱动电机个数
     @PacketField(index = 1,len = 1,var = 'a')
-    short num;
+    public short num;
 
     //驱动电机总成信息列表
     @PacketField(index = 2,listLenExpr = "a")
-    MotorData[] content;
-
-    public short getNum() {
-        return num;
-    }
-
-    public void setNum(short num) {
-        this.num = num;
-    }
-
-    public MotorData[] getContent() {
-        return content;
-    }
-
-    public void setContent(MotorData[] content) {
-        this.content = content;
-    }
+    public MotorData[] content;
 }

@@ -1,15 +1,12 @@
-package com.bcd.parser.javassist.util;
+package com.bcd.support_parser.javassist.util;
 
 
-import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.exception.BaseRuntimeException;
-import com.bcd.parser.javassist.builder.BuilderContext;
+import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.exception.BaseRuntimeException;
+import com.bcd.support_parser.javassist.builder.BuilderContext;
 import org.slf4j.helpers.MessageFormatter;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 public class JavassistUtil {
@@ -42,12 +39,6 @@ public class JavassistUtil {
 
     public static String getFieldVarName(final BuilderContext context) {
         return getVarName(context,context.field.getName());
-    }
-
-    public static String getSetMethodName(final Field field) {
-        final String fieldName = field.getName();
-        final String setMethodName = "set" + toFirstUpperCase(fieldName);
-        return setMethodName;
     }
 
     public static String replaceVarToValExpr(final String expr, final String valExpr) {

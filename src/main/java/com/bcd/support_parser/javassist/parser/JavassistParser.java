@@ -1,6 +1,6 @@
-package com.bcd.parser.javassist.parser;
+package com.bcd.support_parser.javassist.parser;
 
-import com.bcd.parser.javassist.processor.FieldProcessContext;
+import com.bcd.support_parser.javassist.processor.FieldProcessContext;
 import io.netty.buffer.ByteBuf;
 
 public interface JavassistParser<T> {

@@ -1,6 +1,6 @@
-package com.bcd.parser.javassist.processor;
+package com.bcd.support_parser.javassist.processor;
 
-import com.bcd.parser.javassist.Parser;
+import com.bcd.support_parser.javassist.Parser;
 
 public class FieldProcessContext {
     public final Object instance;

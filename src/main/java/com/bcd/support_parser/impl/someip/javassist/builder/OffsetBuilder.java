@@ -1,9 +1,9 @@
-package com.bcd.parser.impl.someip.javassist.builder;
+package com.bcd.support_parser.impl.someip.javassist.builder;
 
-import com.bcd.parser.anno.PacketField;
-import com.bcd.parser.javassist.builder.BuilderContext;
-import com.bcd.parser.javassist.builder.FieldBuilder;
-import com.bcd.parser.javassist.util.JavassistUtil;
+import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.javassist.builder.BuilderContext;
+import com.bcd.support_parser.javassist.builder.FieldBuilder;
+import com.bcd.support_parser.javassist.util.JavassistUtil;
 
 import java.lang.reflect.Field;
 
@@ -15,11 +15,10 @@ public class OffsetBuilder extends FieldBuilder{
         final PacketField packetField = context.packetField;
         final Field field = context.field;
         final String varNameField = JavassistUtil.getFieldVarName(context);
-        final String setMethodName = JavassistUtil.getSetMethodName(field);
         final String varNameInstance = context.varNameInstance;
         final String fieldTypeClassName = field.getType().getName();
         JavassistUtil.append(body,"{} {}={}.readInt()>>4;\n", fieldTypeClassName,varNameField, FieldBuilder.varNameByteBuf);
-        JavassistUtil.append(body, "{}.{}({});\n", varNameInstance, setMethodName, varNameField);
+        JavassistUtil.append(body, "{}.{}={};\n", varNameInstance, field.getName(), varNameField);
         context.varToFieldName.put(packetField.var(),varNameField);
     }
 }
