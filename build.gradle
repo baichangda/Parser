@@ -17,7 +17,7 @@ apply plugin: 'maven-publish'
 group 'com.bcd'
 version '6.0-SNAPSHOT'
 
-sourceCompatibility = 18
+sourceCompatibility = 1.8
 
 repositories {
     maven { url "${mavenRepoUrl}" }
