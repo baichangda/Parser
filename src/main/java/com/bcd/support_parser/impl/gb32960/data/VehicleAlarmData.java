@@ -32,11 +32,11 @@ public class VehicleAlarmData {
     @PacketField(index = 6,lenExpr = "b*4",singleLen = 4)
     public long[] driverBadCodes;
 
-    //驱动电机故障总数
+    //发动机故障总数
     @PacketField(index = 7,len = 1,var = 'c')
     public short engineBadNum;
 
-    //驱动电机故障代码列表
+    //发动机故障代码列表
     @PacketField(index = 8,lenExpr = "c*4",singleLen = 4)
     public long[] engineBadCodes;
 
