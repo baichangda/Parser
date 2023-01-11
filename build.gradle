@@ -16,8 +16,8 @@ plugins{
 group 'com.bcd'
 version '6.5-SNAPSHOT'
 
-sourceCompatibility = 18
-targetCompatibility = 18
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     maven { url "${mavenRepoUrl}" }

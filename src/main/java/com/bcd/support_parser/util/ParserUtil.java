@@ -126,13 +126,13 @@ public class ParserUtil {
      */
     public static boolean checkInvalidOrExceptionVal_short(short val, int len) {
         switch (len) {
-            case 1 -> {
+            case 1: {
                 return val != 0xff && val != 0xfe;
             }
-            case 2 -> {
+            case 2: {
                 return val != (short) 0xffff && val != (short) 0xfffe;
             }
-            default -> {
+            default: {
                 throw BaseRuntimeException.getException("param len[{0}] not support", len);
             }
         }
@@ -147,19 +147,19 @@ public class ParserUtil {
      */
     public static boolean checkInvalidOrExceptionVal_int(int val, int len) {
         switch (len) {
-            case 1 -> {
+            case 1: {
                 return val != 0xff && val != 0xfe;
             }
-            case 2 -> {
+            case 2: {
                 return val != 0xffff && val != 0xfffe;
             }
-            case 3 -> {
+            case 3: {
                 return val != 0xffffff && val != 0xfffffe;
             }
-            case 4 -> {
+            case 4: {
                 return val != 0xffffffff && val != 0xfffffffe;
             }
-            default -> {
+            default: {
                 throw BaseRuntimeException.getException("param len[{0}] not support", len);
             }
         }
@@ -174,31 +174,31 @@ public class ParserUtil {
      */
     public static boolean checkInvalidOrExceptionVal_long(long val, int len) {
         switch (len) {
-            case 1 -> {
+            case 1: {
                 return val != 0xffL && val != 0xfeL;
             }
-            case 2 -> {
+            case 2: {
                 return val != 0xffffL && val != 0xfffeL;
             }
-            case 3 -> {
+            case 3: {
                 return val != 0xffffffL && val != 0xfffffeL;
             }
-            case 4 -> {
+            case 4: {
                 return val != 0xffffffffL && val != 0xfffffffeL;
             }
-            case 5 -> {
+            case 5: {
                 return val != 0xffffffffffL && val != 0xfffffffffeL;
             }
-            case 6 -> {
+            case 6: {
                 return val != 0xffffffffffffL && val != 0xfffffffffffeL;
             }
-            case 7 -> {
+            case 7: {
                 return val != 0xffffffffffffffL && val != 0xfffffffffffffeL;
             }
-            case 8 -> {
+            case 8: {
                 return val != 0xffffffffffffffffL && val != 0xfffffffffffffffeL;
             }
-            default -> {
+            default: {
                 throw BaseRuntimeException.getException("param len[{0}] not support", len);
             }
         }
@@ -384,28 +384,32 @@ public class ParserUtil {
             //求maxVarInt、minVarInt
             if (lenRpn != null) {
                 for (com.bcd.support_parser.util.RpnUtil.Ele_int e : lenRpn) {
-                    switch (e.type()) {
-                        case 2, 3 -> {
-                            if (maxVarInt[0] == 0 || e.val() > maxVarInt[0]) {
-                                maxVarInt[0] = e.val();
+                    switch (e.type) {
+                        case 2:
+                        case 3: {
+                            if (maxVarInt[0] == 0 || e.val > maxVarInt[0]) {
+                                maxVarInt[0] = e.val;
                             }
-                            if (minVarInt[0] == 0 || e.val() < minVarInt[0]) {
-                                minVarInt[0] = e.val();
+                            if (minVarInt[0] == 0 || e.val < minVarInt[0]) {
+                                minVarInt[0] = e.val;
                             }
+                            break;
                         }
                     }
                 }
             }
             if (listLenRpn != null) {
                 for (com.bcd.support_parser.util.RpnUtil.Ele_int e : listLenRpn) {
-                    switch (e.type()) {
-                        case 2, 3 -> {
-                            if (maxVarInt[0] == 0 || e.val() > maxVarInt[0]) {
-                                maxVarInt[0] = e.val();
+                    switch (e.type) {
+                        case 2:
+                        case 3: {
+                            if (maxVarInt[0] == 0 || e.val > maxVarInt[0]) {
+                                maxVarInt[0] = e.val;
                             }
-                            if (minVarInt[0] == 0 || e.val() < minVarInt[0]) {
-                                minVarInt[0] = e.val();
+                            if (minVarInt[0] == 0 || e.val < minVarInt[0]) {
+                                minVarInt[0] = e.val;
                             }
+                            break;
                         }
                     }
                 }
@@ -442,9 +446,11 @@ public class ParserUtil {
             if (lenRpn != null) {
                 for (int i = 0; i < lenRpn.length; i++) {
                     final RpnUtil.Ele_int cur = lenRpn[i];
-                    switch (cur.type()) {
-                        case 2, 3 -> {
-                            lenRpn[i] = new RpnUtil.Ele_int(cur.type(), cur.val() - varValArrOffset);
+                    switch (cur.type) {
+                        case 2:
+                        case 3: {
+                            lenRpn[i] = new RpnUtil.Ele_int(cur.type, cur.val - varValArrOffset);
+                            break;
                         }
                     }
                 }
@@ -453,9 +459,11 @@ public class ParserUtil {
             if (listLenRpn != null) {
                 for (int i = 0; i < listLenRpn.length; i++) {
                     final RpnUtil.Ele_int cur = listLenRpn[i];
-                    switch (cur.type()) {
-                        case 2, 3 -> {
-                            listLenRpn[i] = new RpnUtil.Ele_int(cur.type(), cur.val() - varValArrOffset);
+                    switch (cur.type) {
+                        case 2:
+                        case 3: {
+                            listLenRpn[i] = new RpnUtil.Ele_int(cur.type, cur.val - varValArrOffset);
+                            break;
                         }
                     }
                 }

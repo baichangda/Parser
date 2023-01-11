@@ -7,8 +7,6 @@ import com.bcd.support_parser.util.ExprCase;
 import com.bcd.support_parser.util.RpnUtil;
 import com.bcd.support_parser.util.UnsafeUtil;
 
-import java.lang.invoke.MethodHandles;
-import java.lang.invoke.VarHandle;
 import java.lang.reflect.Field;
 
 public final class FieldInfo {

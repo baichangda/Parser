@@ -64,7 +64,14 @@ public class RpnUtil {
         }
     }
 
-    public record Ele_int(int type, int val) {
+    public final static class Ele_int {
+        public final int type;
+        public final int val;
+
+        public Ele_int(int type, int val) {
+            this.type = type;
+            this.val = val;
+        }
     }
 
     public final static class Ele_double {
@@ -108,19 +115,19 @@ public class RpnUtil {
                 if (e.length() == 1) {
                     char c = e.charAt(0);
                     switch (c) {
-                        case '+' -> {
+                        case '+' : {
                             return new Ele_double(4, 0);
                         }
-                        case '-' -> {
+                        case '-' : {
                             return new Ele_double(5, 0);
                         }
-                        case '*' -> {
+                        case '*' : {
                             return new Ele_double(6, 0);
                         }
-                        case '/' -> {
+                        case '/' : {
                             return new Ele_double(7, 0);
                         }
-                        default -> {
+                        default : {
                             return new Ele_double(2, c);
                         }
                     }
@@ -145,19 +152,19 @@ public class RpnUtil {
                 if (e.length() == 1) {
                     final char c = e.charAt(0);
                     switch (c) {
-                        case '+' -> {
+                        case '+' : {
                             return new Ele_int(4, 0);
                         }
-                        case '-' -> {
+                        case '-' : {
                             return new Ele_int(5, 0);
                         }
-                        case '*' -> {
+                        case '*' : {
                             return new Ele_int(6, 0);
                         }
-                        case '/' -> {
+                        case '/' : {
                             return new Ele_int(7, 0);
                         }
-                        default -> {
+                        default : {
                             return new Ele_int(2, c);
                         }
                     }
@@ -179,16 +186,16 @@ public class RpnUtil {
         if (rpn.length == 1) {
             final Ele_int first = rpn[0];
             switch (first.type) {
-                case 1 -> {
+                case 1 : {
                     return first.val;
                 }
-                case 2 -> {
+                case 2 : {
                     return vals[first.val];
                 }
-                case 3 -> {
+                case 3 : {
                     return -vals[first.val];
                 }
-                default -> {
+                default : {
                     throw BaseRuntimeException.getException("error single type[{}] val[{}]", first.type, first.val);
                 }
             }
@@ -197,30 +204,37 @@ public class RpnUtil {
             final int[] stack = new int[rpn.length];
             for (Ele_int e : rpn) {
                 switch (e.type) {
-                    case 1 -> {
+                    case 1 : {
                         stack[++stackIndex] = e.val;
+                        break;
                     }
-                    case 2 -> {
+                    case 2 : {
                         stack[++stackIndex] = vals[e.val];
+                        break;
                     }
-                    case 3 -> {
+                    case 3 : {
                         stack[++stackIndex] = -vals[e.val];
+                        break;
                     }
-                    case 4 -> {
+                    case 4 : {
                         stackIndex--;
                         stack[stackIndex] = stack[stackIndex] + stack[stackIndex + 1];
+                        break;
                     }
-                    case 5 -> {
+                    case 5 : {
                         stackIndex--;
                         stack[stackIndex] = stack[stackIndex] - stack[stackIndex + 1];
+                        break;
                     }
-                    case 6 -> {
+                    case 6 : {
                         stackIndex--;
                         stack[stackIndex] = stack[stackIndex] * stack[stackIndex + 1];
+                        break;
                     }
-                    case 7 -> {
+                    case 7 : {
                         stackIndex--;
                         stack[stackIndex] = stack[stackIndex] / stack[stackIndex + 1];
+                        break;
                     }
                 }
             }
@@ -245,16 +259,16 @@ public class RpnUtil {
         if (rpn.length == 1) {
             final Ele_double first = rpn[0];
             switch (first.type) {
-                case 1 -> {
+                case 1 : {
                     return first.val_double;
                 }
-                case 2 -> {
+                case 2 : {
                     return vals[first.val_int];
                 }
-                case 3 -> {
+                case 3 : {
                     return -vals[first.val_int];
                 }
-                default -> {
+                default : {
                     throw BaseRuntimeException.getException("error single type[{}] val_int[{}] val_double[{}]", first.type, first.val_int, first.val_double);
                 }
             }
@@ -263,30 +277,37 @@ public class RpnUtil {
             final double[] stack = new double[rpn.length];
             for (Ele_double e : rpn) {
                 switch (e.type) {
-                    case 1 -> {
+                    case 1 : {
                         stack[++stackIndex] = e.val_double;
+                        break;
                     }
-                    case 2 -> {
+                    case 2 : {
                         stack[++stackIndex] = vals[e.val_int];
+                        break;
                     }
-                    case 3 -> {
+                    case 3 : {
                         stack[++stackIndex] = -vals[e.val_int];
+                        break;
                     }
-                    case 4 -> {
+                    case 4 : {
                         stackIndex--;
                         stack[stackIndex] = stack[stackIndex] + stack[stackIndex + 1];
+                        break;
                     }
-                    case 5 -> {
+                    case 5 : {
                         stackIndex--;
                         stack[stackIndex] = stack[stackIndex] - stack[stackIndex + 1];
+                        break;
                     }
-                    case 6 -> {
+                    case 6 : {
                         stackIndex--;
                         stack[stackIndex] = stack[stackIndex] * stack[stackIndex + 1];
+                        break;
                     }
-                    case 7 -> {
+                    case 7 : {
                         stackIndex--;
                         stack[stackIndex] = stack[stackIndex] / stack[stackIndex + 1];
+                        break;
                     }
                 }
             }

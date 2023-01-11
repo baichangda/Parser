@@ -2,7 +2,18 @@ package com.bcd.support_parser.util;
 
 import com.bcd.support_parser.exception.BaseRuntimeException;
 
-public record ExprCase(int mode, boolean xPositive, int a, int b) {
+public class ExprCase {
+    public final int mode;
+    public final boolean xPositive;
+    public final int a;
+    public final int b;
+
+    public ExprCase(int mode, boolean xPositive, int a, int b) {
+        this.mode = mode;
+        this.xPositive = xPositive;
+        this.a = a;
+        this.b = b;
+    }
 
     public int calc_int(final int x) {
         switch (mode) {
