@@ -17,28 +17,34 @@ public class ShortFieldBuilder extends FieldBuilder{
         final String fieldTypeClassName = field.getType().getName();
         if(packetField.var()=='0'){
             switch (packetField.len()) {
-                case 1 -> {
+                case 1 : {
                     JavassistUtil.append(body, "{}.{}={}.readUnsignedByte();\n", varNameInstance, field.getName(), FieldBuilder.varNameByteBuf);
+                    break;
                 }
-                case 2 -> {
+                case 2 : {
                     JavassistUtil.append(body, "{}.{}={}.readShort();\n", varNameInstance, field.getName(), FieldBuilder.varNameByteBuf);
+                    break;
                 }
-                default -> {
+                default : {
                     JavassistUtil.packetFieldLenNotSupport(field);
+                    break;
                 }
             }
         }else {
             switch (packetField.len()) {
-                case 1 -> {
+                case 1 : {
                     JavassistUtil.append(body, "final {} {}={}.readUnsignedByte();\n", fieldTypeClassName, varNameField, FieldBuilder.varNameByteBuf);
                     JavassistUtil.append(body, "{}.{}={};\n", varNameInstance, field.getName(), varNameField);
+                    break;
                 }
-                case 2 -> {
+                case 2 : {
                     JavassistUtil.append(body, "final {} {}={}.readShort();\n", fieldTypeClassName, varNameField, FieldBuilder.varNameByteBuf);
                     JavassistUtil.append(body, "{}.{}={};\n", varNameInstance, field.getName(), varNameField);
+                    break;
                 }
-                default -> {
+                default : {
                     JavassistUtil.packetFieldLenNotSupport(field);
+                    break;
                 }
             }
             context.varToFieldName.put(packetField.var(),varNameField);

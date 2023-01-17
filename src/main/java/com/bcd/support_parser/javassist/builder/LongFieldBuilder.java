@@ -17,28 +17,34 @@ public class LongFieldBuilder extends FieldBuilder{
         final String fieldTypeClassName = field.getType().getName();
         if(packetField.var()=='0'){
             switch (packetField.len()) {
-                case 4 -> {
+                case 4 : {
                     JavassistUtil.append(body, "{}.{}={}.readUnsignedInt();\n", varNameInstance, field.getName(), FieldBuilder.varNameByteBuf);
+                    break;
                 }
-                case 8 -> {
+                case 8 : {
                     JavassistUtil.append(body, "{}.{}={}.readLong();\n", varNameInstance, field.getName(), FieldBuilder.varNameByteBuf);
+                    break;
                 }
-                default -> {
+                default : {
                     JavassistUtil.packetFieldLenNotSupport(field);
+                    break;
                 }
             }
         }else {
             switch (packetField.len()) {
-                case 4 -> {
+                case 4 : {
                     JavassistUtil.append(body, "final {} {}={}.readUnsignedInt();\n", fieldTypeClassName, varNameField, FieldBuilder.varNameByteBuf);
                     JavassistUtil.append(body, "{}.{}={};\n", varNameInstance, field.getName(), varNameField);
+                    break;
                 }
-                case 8 -> {
+                case 8 : {
                     JavassistUtil.append(body, "final {} {}={}.readLong();\n", fieldTypeClassName, varNameField, FieldBuilder.varNameByteBuf);
                     JavassistUtil.append(body, "{}.{}={};\n", varNameInstance, field.getName(), varNameField);
+                    break;
                 }
-                default -> {
+                default : {
                     JavassistUtil.packetFieldLenNotSupport(field);
+                    break;
                 }
             }
             context.varToFieldName.put(packetField.var(),varNameField);

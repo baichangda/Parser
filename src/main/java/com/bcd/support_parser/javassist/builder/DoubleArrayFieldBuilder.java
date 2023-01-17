@@ -16,14 +16,17 @@ public class DoubleArrayFieldBuilder extends FieldBuilder {
         final String varNameInstance = context.varNameInstance;
         String lenRes = context.lenRes;
         switch (packetField.singleLen()) {
-            case 4 -> {
+            case 4 : {
                 lenRes = "(" + lenRes + ")/4";
+                break;
             }
-            case 8 -> {
+            case 8 : {
                 lenRes = "(" + lenRes + ")/8";
+                break;
             }
-            default -> {
+            default : {
                 JavassistUtil.packetFieldSingleLenNotSupport(field);
+                break;
             }
         }
         String arrVarName = varNameField + "_arr";
