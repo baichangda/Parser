@@ -15,7 +15,6 @@ public class IntFieldBuilder extends FieldBuilder {
         final String varNameField = JavassistUtil.getFieldVarName(context);
         final String varNameInstance = context.varNameInstance;
         final String fieldTypeClassName = field.getType().getName();
-        final int bitLen = packetField.bitLen();
         if (packetField.var() == '0') {
             switch (packetField.len()) {
                 case 2: {
