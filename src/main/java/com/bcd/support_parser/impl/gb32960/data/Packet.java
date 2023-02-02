@@ -1,10 +1,8 @@
 package com.bcd.support_parser.impl.gb32960.data;
 
-import com.bcd.support_parser.anno.F_integer_array;
-import com.bcd.support_parser.anno.F_integer;
-import com.bcd.support_parser.anno.F_string;
-import com.bcd.support_parser.anno.F_userDefine;
+import com.bcd.support_parser.anno.*;
 import com.bcd.support_parser.impl.gb32960.javassist.builder.PacketDataFieldBuilder;
+import com.bcd.support_parser.impl.gb32960.javassist.processor.PacketDataFieldProcessor;
 
 
 public class Packet {
@@ -30,9 +28,10 @@ public class Packet {
 //    @PacketField(index = 7,lenExpr = "a")
     public byte[] dataContent;
     @F_userDefine(
-//            processorClass = PacketDataFieldProcessor.class,
-            builderClass = PacketDataFieldBuilder.class
+            processorClass = PacketDataFieldProcessor.class
+//            builderClass = PacketDataFieldBuilder.class
     )
+//    @F_skip(lenExpr = "a")
     public PacketData data;
     //异或校验位
     @F_integer(len = 1)

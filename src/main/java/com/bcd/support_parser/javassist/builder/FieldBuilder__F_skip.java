@@ -17,10 +17,10 @@ public class FieldBuilder__F_skip extends FieldBuilder {
             if (anno.lenExpr().isEmpty()) {
                 throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have len or lenExpr", field.getDeclaringClass().getName(), field.getName(), F_skip.class.getName());
             } else {
-                JavassistUtil.append(body, "{}.skip({});\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceVarToFieldName(anno.lenExpr(), context.varToFieldName, field));
+                JavassistUtil.append(body, "{}.skipBytes({});\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceVarToFieldName(anno.lenExpr(), context.varToFieldName, field));
             }
         } else {
-            JavassistUtil.append(body, "{}.skip({});\n", FieldBuilder.varNameByteBuf, anno.len());
+            JavassistUtil.append(body, "{}.skipBytes({});\n", FieldBuilder.varNameByteBuf, anno.len());
         }
     }
 }
