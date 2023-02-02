@@ -1,60 +1,54 @@
 package com.bcd.support_parser.impl.someip.data;
 
-import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.anno.*;
 import com.bcd.support_parser.impl.someip.javassist.builder.MessageTypeBuilder;
-import com.bcd.support_parser.impl.someip.javassist.builder.MethodIdOrEventIdBuilder;
 import com.bcd.support_parser.impl.someip.javassist.builder.OffsetBuilder;
 import com.bcd.support_parser.impl.someip.javassist.builder.ReturnCodeBuilder;
 
 public class Packet {
-    @PacketField(index = 1, len = 2)
+    @F_integer(len = 2)
     public int serviceId;
 
-    /**
-     * 与{@link #methodIdOrEventId} 一起处理
-     */
+    @F_integer(bit = 1)
     public byte flag;
 
-    @PacketField(index = 3
-//            , processorClass = MethodIdOrEventIdProcessor.class
-            , builderClass = MethodIdOrEventIdBuilder.class
-    )
-    public short methodIdOrEventId;
+    @F_integer(bit = 7)
+    public byte methodIdOrEventId;
 
-    @PacketField(index = 4, len = 4)
+    @F_integer(len = 4)
     public long length;
 
-    @PacketField(index = 5, len = 2)
+    @F_integer(len = 2)
     public int clientId;
 
-    @PacketField(index = 6, len = 2)
+    @F_integer(len = 2)
     public int sessionId;
 
-    @PacketField(index = 7, len = 1)
+    @F_integer(len = 1)
     public short protocolVersion;
 
-    @PacketField(index = 8, len = 1)
+    @F_integer(len = 1)
     public short interfaceVersion;
 
-    @PacketField(index = 9, len = 1
+    @F_userDefine(
 //            , processorClass = MessageTypeProcessor.class
-            , builderClass = MessageTypeBuilder.class
+            builderClass = MessageTypeBuilder.class
     )
     public MessageType messageType;
 
-    @PacketField(index = 10, len = 1
+    @F_userDefine(
 //            , processorClass = ReturnCodeProcessor.class
-            , builderClass = ReturnCodeBuilder.class
+            builderClass = ReturnCodeBuilder.class
     )
     public ReturnCode returnCode;
 
-    @PacketField(index = 11, len = 4,
+    @F_userDefine(
 //            processorClass = OffsetProcessor.class,
             builderClass = OffsetBuilder.class,
             var = 'a'
     )
     public int offset;
 
-    @PacketField(index = 12, lenExpr = "a*16")
+    @F_integer_array(lenExpr = "a*16",singleLen = 1)
     public byte[] payload;
 }

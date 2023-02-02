@@ -1,6 +1,6 @@
 package com.bcd.support_parser.impl.someip.data;
 
-public enum ReturnCode {
+public enum ReturnCode{
     /**
      * No error occurred
      */

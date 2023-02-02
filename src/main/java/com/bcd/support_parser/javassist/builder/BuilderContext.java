@@ -1,6 +1,6 @@
 package com.bcd.support_parser.javassist.builder;
 
-import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.anno.F_userDefine;
 import com.bcd.support_parser.javassist.Parser;
 import com.bcd.support_parser.javassist.parser.JavassistParser;
 import com.bcd.support_parser.javassist.processor.FieldProcessContext;
@@ -49,21 +49,24 @@ public class BuilderContext {
      */
     private String classProcessContextVarName;
 
-
     /**
      * 当前字段
      */
     public Field field;
-    /**
-     * 当前字段{@link PacketField}注解
-     */
-    public PacketField packetField;
-    /**
-     * 长度变量
-     */
-    public String lenRes;
 
+    /**
+     * 主要用于{@link F_userDefine#builderClass()}缓存、避免在生成解析类的过程中生成多个实例
+     */
+    public final Map<Class, FieldBuilder> fieldBuilderCache = new HashMap<>();
 
+    /**
+     * 主要用于处理
+     * {@link com.bcd.support_parser.anno.F_integer}
+     * {@link com.bcd.support_parser.anno.F_float}
+     * 使用bit时候
+     */
+    public Map<String, int[]> fieldNameToBitInfo = new HashMap<>();
+    public String varNameBitBytes;
 
     public BuilderContext(StringBuilder body, Parser parser, CtClass implCc, String instance_var_name, BuilderContext parentContext) {
         this.body = body;
@@ -73,9 +76,9 @@ public class BuilderContext {
         this.parentContext = parentContext;
     }
 
-    public final String getClassProcessContextVarName(){
-        if(classProcessContextVarName ==null){
-            classProcessContextVarName = JavassistUtil.getVarName(this,"processContext");
+    public final String getClassProcessContextVarName() {
+        if (classProcessContextVarName == null) {
+            classProcessContextVarName = JavassistUtil.getVarName(this, "processContext");
             final String processContextClassName = FieldProcessContext.class.getName();
             JavassistUtil.append(body, "final {} {}=new {}({},{},{});\n",
                     processContextClassName,

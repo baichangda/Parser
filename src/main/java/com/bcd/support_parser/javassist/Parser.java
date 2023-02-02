@@ -1,6 +1,6 @@
 package com.bcd.support_parser.javassist;
 
-import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.anno.*;
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.javassist.builder.*;
 import com.bcd.support_parser.javassist.parser.JavassistParser;
@@ -13,78 +13,65 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
 
 /**
- * 协议解析器
- * 主要功能如下:
- * 1、解析
- * 从{@link ByteBuf}中获取二进制数据、解析成class对象实例
- * 解析规则参照{@link com.bcd.support_parser.anno.PacketField}
+ * 解析器
+ * 配合注解完成解析工作
+ * 会忽视如下字段
+ * 1、没有被{@link #annoSet}中注解标注的字段
+ * 2、static或者final修饰的字段
+ * 3、非public字段
  * <p>
- * 原理简介
- * 通过使用第三方工具包Javassist
- * 根据{@link PacketField}动态生成{@link JavassistParser}的子类、生成子类对象、调用对象{@link JavassistParser#parse(ByteBuf, FieldProcessContext)}完成解析
+ * 工作原理:
+ * 使用javassist框架配合自定义注解、生成一套解析代码
  * <p>
- * 主要类介绍
- * {@link FieldBuilder}
- * 各种类型字段的字节码构造器、提供的类型在{@link Parser}中的变量可以看到
- * 如果当前某个类型规则和实现不一致、可以替换{@link Parser}中对应的变量、注意需要在{@link Parser#init()}前替换
- * <p>
- * {@link com.bcd.support_parser.javassist.processor.FieldProcessor}
- * 用于支持{@link PacketField#processorClass()}完成自定义解析
- * 注意所有的子类必须提供参数为空的构造方法
- * <p>
- * {@link BuilderContext}
- * 执行{@link FieldBuilder#build(BuilderContext)}的上下文环境
- * <p>
- * {@link FieldProcessContext}
- * 执行{@link com.bcd.support_parser.javassist.processor.FieldProcessor#process(ByteBuf, FieldProcessContext)}的上下文环境
+ * 调用入口:
+ * {@link #parse(Class, ByteBuf, FieldProcessContext)}
  * <p>
  * 性能表现:
- * 以gb32960协议为例子
- * cpu: Intel(R) Core(TM) i5-7360U CPU @ 2.30GHz
- * 单线程、在cpu使用率90%+ 的情况下
- * 解析速度约为 120-125w/s、多个线程成倍数增长
- * 具体查看{@link com.bcd.support_parser.impl.gb32960.javassist.Parser_gb32960#main(String[])}
- * 注意:
- * 因为是cpu密集型运算、所以性能达到计算机物理核心个数后已经达到上限、不能以逻辑核心为准、此时虽然整体cpu使用率没有满、但这只是top使用率显示问题
- * 例如 2核4线程 、物理核心2个、逻辑核心4个、此时使用2个线程就能用尽cpu资源、即使指标显示cpu使用率50%、其实再加线程已经没有提升
- * <p>
- * 遗留问题:
- * 1、如果当一个字段需要作为变量供其他表达式使用、且此时变量解析出来的值为无效或者异常、会导致解析出错;
- * 要解决这个问题需要设置字段自定义处理器{@link PacketField#processorClass()}
- * <p>
- * 注意事项:
- * 1、不支持基础类型的包装类型、因为在字节码层面需要进行boxing、unBoxing处理、过于复杂
- * 2、在使用时候需要定义字段类型 能完全 容纳下协议文档中所占用字节数
- * (包括容纳下异常值、无效值,这两种值一般是0xfe、0xff结尾; 例如两个字节即为0xfffe、0xffff、此时需要用int存储才能正确表示其值)
+ * 由于是字节码增强技术、和手动编写代码解析效率一样
  */
 public class Parser {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    public ShortFieldBuilder shortFieldBuilder = new ShortFieldBuilder();
-    public ByteFieldBuilder byteFieldBuilder = new ByteFieldBuilder();
-    public IntFieldBuilder intFieldBuilder = new IntFieldBuilder();
-    public LongFieldBuilder longFieldBuilder = new LongFieldBuilder();
-    public ByteArrayFieldBuilder byteArrayFieldBuilder = new ByteArrayFieldBuilder();
-    public ShortArrayFieldBuilder shortArrayFieldBuilder = new ShortArrayFieldBuilder();
-    public IntArrayFieldBuilder intArrayFieldBuilder = new IntArrayFieldBuilder();
-    public LongArrayFieldBuilder longArrayFieldBuilder = new LongArrayFieldBuilder();
-    public FloatFieldBuilder floatFieldBuilder = new FloatFieldBuilder();
-    public DoubleFieldBuilder doubleFieldBuilder = new DoubleFieldBuilder();
-    public StringFieldBuilder stringFieldBuilder = new StringFieldBuilder();
-    public ProcessorClassFieldBuilder processorClassFieldBuilder = new ProcessorClassFieldBuilder();
-    public FloatArrayFieldBuilder floatArrayFieldBuilder = new FloatArrayFieldBuilder();
-    public DoubleArrayFieldBuilder doubleArrayFieldBuilder = new DoubleArrayFieldBuilder();
-    public ParseableObjectFieldBuilder parseableObjectFieldBuilder = new ParseableObjectFieldBuilder();
-    public DateFieldBuilder dateFieldBuilder = new DateFieldBuilder();
-    public ParseableObjectListFieldBuilder parseableObjectListFieldBuilder = new ParseableObjectListFieldBuilder();
-    public ParseableObjectArrayFieldBuilder parseableObjectArrayFieldBuilder = new ParseableObjectArrayFieldBuilder();
+    public final FieldBuilder__F_bean fieldBuilder__f_bean = new FieldBuilder__F_bean();
+    public final FieldBuilder__F_bean_list fieldBuilder__f_bean_list = new FieldBuilder__F_bean_list();
+    public final FieldBuilder__F_date fieldBuilder__f_date = new FieldBuilder__F_date();
+    public final FieldBuilder__F_float_array fieldBuilder__f_float_array = new FieldBuilder__F_float_array();
+    public final FieldBuilder__F_float fieldBuilder__f_float_ = new FieldBuilder__F_float();
+    public final FieldBuilder__F_integer_array fieldBuilder__f_integer_array = new FieldBuilder__F_integer_array();
+    public final FieldBuilder__F_integer fieldBuilder__f_integer_ = new FieldBuilder__F_integer();
+    public final FieldBuilder__F_skip fieldBuilder__f_skip = new FieldBuilder__F_skip();
+    public final FieldBuilder__F_string fieldBuilder__f_string = new FieldBuilder__F_string();
+    public final FieldBuilder__F_userDefine fieldBuilder__f_userDefine = new FieldBuilder__F_userDefine();
+
+    public final Set<Class> annoSet = new HashSet<>();
+
+    {
+        annoSet.add(F_integer.class);
+        annoSet.add(F_integer_array.class);
+
+        annoSet.add(F_float.class);
+        annoSet.add(F_float_array.class);
+
+        annoSet.add(F_string.class);
+
+        annoSet.add(F_date.class);
+
+        annoSet.add(F_bean.class);
+        annoSet.add(F_bean_list.class);
+
+        annoSet.add(F_userDefine.class);
+
+        annoSet.add(F_skip.class);
+    }
+
 
     private final Map<Class, JavassistParser> beanClass_to_javassistParser = new HashMap<>();
 
@@ -124,92 +111,134 @@ public class Parser {
         }
     }
 
+    /**
+     * 计算bit字段属性、解析时候使用
+     * map
+     * key为字段名称
+     * val [bit偏移、当前字段是否是bit组的最后一个字段、当前组bit计算的byte数组长度]
+     *
+     * @param fieldList
+     * @param builderContext
+     * @return
+     */
+    private Map<String, int[]> calcBitField(List<Field> fieldList, BuilderContext builderContext) {
+        Map<String, int[]> fieldNameToBitInfo = new HashMap<>();
+        List<int[]> tempList = new ArrayList<>();
+        int bitSum = 0;
+        for (int i = 0; i < fieldList.size(); i++) {
+            final Field field = fieldList.get(i);
+            final F_integer f_integer = field.getAnnotation(F_integer.class);
+            if (f_integer != null && f_integer.bit() > 0) {
+                final int[] ints = new int[]{bitSum, 0, 0};
+                tempList.add(ints);
+                fieldNameToBitInfo.put(field.getName(), ints);
+                bitSum += f_integer.bit();
+                continue;
+            }
+            final F_float f_float = field.getAnnotation(F_float.class);
+            if (f_float != null && f_float.bit() > 0) {
+                final int[] ints = new int[]{bitSum, 0, 0};
+                tempList.add(ints);
+                fieldNameToBitInfo.put(field.getName(), ints);
+                bitSum += f_float.len();
+                continue;
+            }
+            if (!tempList.isEmpty()) {
+                final int byteLen = bitSum / 8 + (bitSum % 8 == 0 ? 0 : 1);
+                tempList.get(tempList.size() - 1)[1] = 1;
+                for (int[] ints : tempList) {
+                    ints[2] = byteLen;
+                }
+                tempList.clear();
+                bitSum = 0;
+            }
+        }
+        return fieldNameToBitInfo;
+    }
+
+    private boolean needParse(Field field) {
+        final Annotation[] annotations = field.getAnnotations();
+        for (Annotation annotation : annotations) {
+            if (annoSet.contains(annotation.annotationType())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public final void buildParseMethodBody(Class clazz, BuilderContext context) {
-        final Field[] declaredFields = clazz.getDeclaredFields();
-        final List<Object[]> collect = Arrays.stream(declaredFields).map(f -> new Object[]{f, f.getAnnotation(PacketField.class)}).filter(e -> e[1] != null)
-                .sorted(Comparator.comparing(e -> ((PacketField) e[1]).index())).collect(Collectors.toList());
-        for (int i = 0; i < collect.size(); i++) {
-            Field field = (Field) collect.get(i)[0];
-            PacketField packetField = (PacketField) collect.get(i)[1];
+        //过滤掉 final、static关键字修饰、@F_not注解修饰、且不是public的字段
+        final List<Field> fieldList = Arrays.stream(clazz.getDeclaredFields())
+                .filter(e ->
+                        needParse(e) &&
+                                !Modifier.isFinal(e.getModifiers()) &&
+                                !Modifier.isStatic(e.getModifiers()) &&
+                                Modifier.isPublic(e.getModifiers()))
+                .collect(Collectors.toList());
+        //需要提前计算出F_integer_bit、F_float_bit的占用字节数、以及各个字段的在其中的偏移量
+        context.fieldNameToBitInfo = calcBitField(fieldList, context);
 
-
-            /**
-             * 解析字段占用字节长度
-             */
-            String lenRes;
-            if (packetField.len() == 0) {
-                if (packetField.lenExpr().isEmpty()) {
-                    lenRes = null;
-                } else {
-                    lenRes = JavassistUtil.replaceVarToFieldName(packetField.lenExpr(), context.varToFieldName, field);
-                }
-            } else {
-                lenRes = packetField.len() + "";
-            }
-
-            /**
-             * 处理 {@link PacketField#skipParse()}
-             */
-            if (packetField.skipParse()) {
-                if (lenRes == null) {
-                    throw BaseRuntimeException.getException("class[{}] field[{}] @PacketField[skipParse=true] not support", clazz.getName(), field.getName(), packetField.singleLen());
-                } else {
-                    JavassistUtil.append(context.body, "{}.skipBytes({});\n", FieldBuilder.varNameByteBuf, lenRes);
-                    continue;
-                }
-            }
-
-            final Class builderClass = packetField.builderClass();
-            final Class processorClass = packetField.processorClass();
+        for (int i = 0; i < fieldList.size(); i++) {
+            Field field = fieldList.get(i);
             context.field = field;
-            context.packetField = packetField;
-            context.lenRes = lenRes;
-            if (builderClass != void.class) {
-                try {
-                    final FieldBuilder builder = (FieldBuilder) builderClass.newInstance();
-                    builder.build(context);
-                } catch (InstantiationException | IllegalAccessException e) {
-                    throw BaseRuntimeException.getException(e);
-                }
-            } else if (processorClass != void.class) {
-                processorClassFieldBuilder.build(context);
-            } else {
-                final Class<?> type = field.getType();
-                if (type.isAssignableFrom(byte[].class)) {
-                    byteArrayFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(short.class)) {
-                    shortFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(int.class)) {
-                    intFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(byte.class)) {
-                    byteFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(long.class)) {
-                    longFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(String.class)) {
-                    stringFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(long[].class)) {
-                    longArrayFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(int[].class)) {
-                    intArrayFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(short[].class)) {
-                    shortArrayFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(float.class)) {
-                    floatFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(double.class)) {
-                    doubleFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(float[].class)) {
-                    floatArrayFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(double[].class)) {
-                    doubleArrayFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(Date.class)) {
-                    dateFieldBuilder.build(context);
-                } else if (type.isAssignableFrom(List.class)) {
-                    parseableObjectListFieldBuilder.build(context);
-                } else if (type.isArray()) {
-                    parseableObjectArrayFieldBuilder.build(context);
-                } else {
-                    parseableObjectFieldBuilder.build(context);
-                }
+
+            final F_integer f_integer = field.getAnnotation(F_integer.class);
+            if (f_integer != null) {
+                fieldBuilder__f_integer_.build(context);
+                continue;
+            }
+
+            final F_float f_float = field.getAnnotation(F_float.class);
+            if (f_float != null) {
+                fieldBuilder__f_float_.build(context);
+                continue;
+            }
+
+            final F_integer_array f_integer_array = field.getAnnotation(F_integer_array.class);
+            if (f_integer_array != null) {
+                fieldBuilder__f_integer_array.build(context);
+                continue;
+            }
+
+            final F_float_array f_float_array = field.getAnnotation(F_float_array.class);
+            if (f_float_array != null) {
+                fieldBuilder__f_float_array.build(context);
+                continue;
+            }
+
+            final F_string f_string = field.getAnnotation(F_string.class);
+            if (f_string != null) {
+                fieldBuilder__f_string.build(context);
+                continue;
+            }
+
+            final F_date f_date = field.getAnnotation(F_date.class);
+            if (f_date != null) {
+                fieldBuilder__f_date.build(context);
+                continue;
+            }
+
+            final F_bean f_bean = field.getAnnotation(F_bean.class);
+            if (f_bean != null) {
+                fieldBuilder__f_bean.build(context);
+                continue;
+            }
+
+            final F_bean_list f_bean_list = field.getAnnotation(F_bean_list.class);
+            if (f_bean_list != null) {
+                fieldBuilder__f_bean_list.build(context);
+                continue;
+            }
+
+            final F_userDefine f_userDefine = field.getAnnotation(F_userDefine.class);
+            if (f_userDefine != null) {
+                fieldBuilder__f_userDefine.build(context);
+            }
+
+            final F_skip f_skip = field.getAnnotation(F_skip.class);
+            if (f_skip != null) {
+                fieldBuilder__f_skip.build(context);
+                continue;
             }
         }
     }
@@ -255,7 +284,7 @@ public class Parser {
         initBody.append("{\n");
         initBody.append("this.parser=$1;\n");
         //加processorClass字段并初始化
-        final List<Class> processorClassList = Arrays.stream(clazz.getDeclaredFields()).map(f -> f.getAnnotation(PacketField.class)).filter(Objects::nonNull).map(PacketField::processorClass).filter(e -> e != void.class).collect(Collectors.toList());
+        final List<Class> processorClassList = Arrays.stream(clazz.getDeclaredFields()).map(f -> f.getAnnotation(F_userDefine.class)).filter(Objects::nonNull).map(F_userDefine::processorClass).filter(e -> e != void.class).collect(Collectors.toList());
         for (Class processorClass : processorClassList) {
             final String processorClassName = processorClass.getName();
             final String processorVarName = JavassistUtil.toFirstLowerCase(processorClass.getSimpleName());

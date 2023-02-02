@@ -1,7 +1,6 @@
 package com.bcd.support_parser.javassist.util;
 
 
-import com.bcd.support_parser.anno.PacketField;
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.javassist.builder.BuilderContext;
 import org.slf4j.helpers.MessageFormatter;
@@ -10,12 +9,16 @@ import java.lang.reflect.Field;
 import java.util.Map;
 
 public class JavassistUtil {
-    public static void packetFieldLenNotSupport(final Field field) {
-        throw BaseRuntimeException.getException("class[{}] field[{}] @PacketField[len={}] not support", field.getDeclaringClass().getName(), field.getName(), field.getAnnotation(PacketField.class).len());
+    public static void notSupport_fieldType(final Field field, Class annoClass) {
+        throw BaseRuntimeException.getException("class[{}] field[{}] anno[{}] not support", field.getDeclaringClass().getName(), field.getName(), annoClass.getName());
     }
 
-    public static void packetFieldSingleLenNotSupport(final Field field) {
-        throw BaseRuntimeException.getException("class[{}] field[{}] @PacketField[singleLen={}] not support", field.getDeclaringClass().getName(), field.getName(), field.getAnnotation(PacketField.class).singleLen());
+    public static void notSupport_len(final Field field, Class annoClass) {
+        throw BaseRuntimeException.getException("class[{}] field[{}] anno[{}] len not support", field.getDeclaringClass().getName(), field.getName(), annoClass.getName());
+    }
+
+    public static void notSupport_singleLen(final Field field, Class annoClass) {
+        throw BaseRuntimeException.getException("class[{}] field[{}] anno[{}] len not support", field.getDeclaringClass().getName(), field.getName(), annoClass.getName());
     }
 
     public static String toFirstLowerCase(final String str) {
@@ -26,11 +29,11 @@ public class JavassistUtil {
         return str.substring(0, 1).toUpperCase() + str.substring(1);
     }
 
-    public static String getVarName(final BuilderContext context,final String suffix) {
+    public static String getVarName(final BuilderContext context, final String suffix) {
         final StringBuilder sb = new StringBuilder();
         BuilderContext temp = context;
         while (temp != null) {
-            sb.insert(0,toFirstLowerCase(temp.field.getDeclaringClass().getSimpleName())+"_");
+            sb.insert(0, toFirstLowerCase(temp.field.getDeclaringClass().getSimpleName()) + "_");
             temp = temp.parentContext;
         }
         sb.append(suffix);
@@ -38,14 +41,17 @@ public class JavassistUtil {
     }
 
     public static String getFieldVarName(final BuilderContext context) {
-        return getVarName(context,context.field.getName());
+        return getVarName(context, context.field.getName());
     }
 
     public static String replaceVarToValExpr(final String expr, final String valExpr) {
+        if (expr.isEmpty()) {
+            return valExpr;
+        }
         final StringBuilder sb = new StringBuilder();
         final char[] chars = expr.toCharArray();
         for (char c : chars) {
-            if (c != '+' && c != '-' && c != '*' && c != '/' && !Character.isDigit(c)) {
+            if (c != '+' && c != '-' && c != '*' && c != '/' && c != '(' && c != ')' && !Character.isDigit(c)) {
                 sb.append(valExpr);
             } else {
                 sb.append(c);
@@ -55,20 +61,20 @@ public class JavassistUtil {
     }
 
 
-    public static String unBoxing(final String num,final Class clazz){
-        if(clazz==byte.class){
-            return num+".byteValue()";
-        }else if(clazz==short.class){
-            return num+".shortValue()";
-        }else if(clazz==int.class){
-            return num+".intValue()";
-        }else if(clazz==long.class){
-            return num+".longValue()";
-        }else if(clazz==float.class){
-            return num+".floatValue()";
-        }else if(clazz==double.class){
-            return num+".doubleValue()";
-        }else{
+    public static String unBoxing(final String num, final Class clazz) {
+        if (clazz == byte.class) {
+            return num + ".byteValue()";
+        } else if (clazz == short.class) {
+            return num + ".shortValue()";
+        } else if (clazz == int.class) {
+            return num + ".intValue()";
+        } else if (clazz == long.class) {
+            return num + ".longValue()";
+        } else if (clazz == float.class) {
+            return num + ".floatValue()";
+        } else if (clazz == double.class) {
+            return num + ".doubleValue()";
+        } else {
             return num;
         }
     }
@@ -106,5 +112,66 @@ public class JavassistUtil {
 
     public static void append(final StringBuilder sb, final String message, Object... params) {
         sb.append(format(message, params));
+    }
+
+    public static int getBitVal(byte[] bytes, int bitOffset, int bitLen) {
+        final int startByteIndex = bitOffset / 8;
+        final int endBitOffset = bitOffset + bitLen - 1;
+        final int endByteIndex = endBitOffset / 8;
+        final int byteLen = endByteIndex - startByteIndex + 1;
+//        System.out.println("startByteIndex["+startByteIndex+"] endByteIndex["+endByteIndex+"] byteLen["+byteLen+"] bitOffset["+bitOffset+"] endBitOffset["+endBitOffset+"]");
+        int c = bytes[endByteIndex] & 0xff;
+        for (int i = endByteIndex - 1; i >= startByteIndex; i--) {
+            c |= ((bytes[i] & 0xff) << ((endByteIndex - i) * 8));
+        }
+//        printBinaryString(byteLen + "个字节转换为int的二进制表示", c, byteLen);
+        final int right = byteLen * 8 - bitOffset - bitLen;
+//        printBinaryString("右移" + right + "后的结果", c >>> right, byteLen);
+//        printBinaryString("需要进行&运算", (0x01 << bitLen) - 1, byteLen);
+        final int res = (c >>> right) & ((0x01 << bitLen) - 1);
+//        printBinaryString("最后结果二进制表示", res, byteLen);
+        return res;
+    }
+
+    private static void printBinaryString(String prepend, int i, int byteLen) {
+        System.out.println(String.format(prepend + "---%" + byteLen * 8 + "s", Integer.toBinaryString(i)).replaceAll(" ", "0"));
+    }
+
+    static final double[] pows;
+
+    static {
+        pows = new double[10];
+        for (int i = 0; i < pows.length; i++) {
+            pows[i] = Math.pow(10, i);
+        }
+    }
+
+    public static double format(double d, int i) {
+        if (d > 0) {
+            if (i == 0) {
+                return Math.floor(d);
+            } else {
+                return Math.floor(d * pows[i]) / pows[i];
+            }
+
+        } else if (d < 0) {
+            if (i == 0) {
+                return Math.ceil(d);
+            } else {
+                return Math.ceil(d * pows[i]) / pows[i];
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    public static void main(String[] args) {
+//        byte[] bytes = new byte[]{(byte) 0};
+//        System.out.println(getBitVal(bytes, 0, 1));
+//        System.out.println(getBitVal(bytes, 1, 7));
+//        System.out.println(getBitVal(new byte[]{0x01, 0x02, 0x03}, 2, 20));
+
+//        final double format = JavassistUtil.format(1.23232d, 4);
+//        System.out.println(format);
     }
 }

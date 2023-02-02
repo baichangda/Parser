@@ -1,6 +1,7 @@
 package com.bcd.support_parser.impl.gb32960.data;
 
-import com.bcd.support_parser.anno.PacketField;
+import com.bcd.support_parser.anno.F_bean_list;
+import com.bcd.support_parser.anno.F_integer;
 
 import java.util.List;
 
@@ -9,10 +10,10 @@ import java.util.List;
  */
 public class VehicleStorageTemperatureData {
     //可充电储能子系统个数
-    @PacketField(index = 1,len = 1,var = 'a')
+    @F_integer(len = 1, var = 'a')
     public short num;
 
     //可充电储能子系统温度信息列表
-    @PacketField(index = 2,listLenExpr = "a")
+    @F_bean_list(listLenExpr = "a")
     public List<StorageTemperatureData> content;
 }
