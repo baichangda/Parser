@@ -5,6 +5,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * 用于如下类型字段
+ * String
+ */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface F_string {
@@ -26,4 +30,7 @@ public @interface F_string {
      * a*(b-2)
      */
     String lenExpr() default "";
+
+    String charset() default "UTF-8";
+
 }
