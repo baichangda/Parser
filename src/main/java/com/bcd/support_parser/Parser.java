@@ -1,11 +1,11 @@
-package com.bcd.support_parser.javassist;
+package com.bcd.support_parser;
 
 import com.bcd.support_parser.anno.*;
 import com.bcd.support_parser.exception.BaseRuntimeException;
-import com.bcd.support_parser.javassist.builder.*;
-import com.bcd.support_parser.javassist.processor.Processor;
-import com.bcd.support_parser.javassist.processor.ProcessContext;
-import com.bcd.support_parser.javassist.util.JavassistUtil;
+import com.bcd.support_parser.builder.*;
+import com.bcd.support_parser.processor.Processor;
+import com.bcd.support_parser.processor.ProcessContext;
+import com.bcd.support_parser.util.JavassistUtil;
 import io.netty.buffer.ByteBuf;
 import javassist.*;
 import javassist.bytecode.SignatureAttribute;

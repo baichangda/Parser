@@ -1,9 +1,8 @@
-package com.bcd.support_parser.impl.gb32960.javassist;
+package com.bcd.support_parser.impl.gb32960;
 
 import com.bcd.support_parser.impl.gb32960.data.Packet;
-import com.bcd.support_parser.impl.gb32960.data.VehicleSupplementData;
-import com.bcd.support_parser.javassist.Parser;
-import com.bcd.support_parser.javassist.util.PerformanceUtil;
+import com.bcd.support_parser.Parser;
+import com.bcd.support_parser.util.PerformanceUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
@@ -33,15 +32,6 @@ public class Parser_gb32960 extends Parser {
         logger.info("param threadNum[{}]", threadNum);
         int num = 1000000000;
         PerformanceUtil.testMultiThreadPerformance(data,parser, Packet.class,threadNum,num,false);
-
-//        byte [] bytes= ByteBufUtil.decodeHexDump(data);
-//        ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
-//        final Packet packet = parser.parse(Packet.class, byteBuf, null);
-//        ByteBuf dest=Unpooled.buffer();
-//        parser.deParse(packet, dest,null);
-//        logger.info("{}",data.toUpperCase());
-//        logger.info("{}",ByteBufUtil.hexDump(dest).toUpperCase());
-//        logger.info("{}", data.equalsIgnoreCase(ByteBufUtil.hexDump(dest)));
     }
 
     private static void parseToPacket(String data, int num, AtomicInteger count) {

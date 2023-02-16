@@ -1,7 +1,7 @@
-package com.bcd.support_parser.impl.someip.javassist.processor;
+package com.bcd.support_parser.impl.someip.processor;
 
-import com.bcd.support_parser.javassist.processor.Processor;
-import com.bcd.support_parser.javassist.processor.ProcessContext;
+import com.bcd.support_parser.processor.Processor;
+import com.bcd.support_parser.processor.ProcessContext;
 import io.netty.buffer.ByteBuf;
 
 public class OffsetProcessor extends Processor<Integer> {

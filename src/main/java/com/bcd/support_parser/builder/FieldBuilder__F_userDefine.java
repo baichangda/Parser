@@ -1,9 +1,9 @@
-package com.bcd.support_parser.javassist.builder;
+package com.bcd.support_parser.builder;
 
 
 import com.bcd.support_parser.anno.F_userDefine;
 import com.bcd.support_parser.exception.BaseRuntimeException;
-import com.bcd.support_parser.javassist.util.JavassistUtil;
+import com.bcd.support_parser.util.JavassistUtil;
 
 import java.lang.reflect.Field;
 

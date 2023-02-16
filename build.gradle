@@ -32,6 +32,10 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.javassist/javassist
     implementation group: 'org.javassist', name: 'javassist', version: "+"
+
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
+    testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: "+"
+
 }
 
 //生成jar时打包源码

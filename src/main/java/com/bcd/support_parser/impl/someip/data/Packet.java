@@ -1,9 +1,9 @@
 package com.bcd.support_parser.impl.someip.data;
 
 import com.bcd.support_parser.anno.*;
-import com.bcd.support_parser.impl.someip.javassist.builder.MessageTypeBuilder;
-import com.bcd.support_parser.impl.someip.javassist.builder.OffsetBuilder;
-import com.bcd.support_parser.impl.someip.javassist.builder.ReturnCodeBuilder;
+import com.bcd.support_parser.impl.someip.builder.MessageTypeBuilder;
+import com.bcd.support_parser.impl.someip.builder.OffsetBuilder;
+import com.bcd.support_parser.impl.someip.builder.ReturnCodeBuilder;
 
 public class Packet {
     @F_integer(len = 2)

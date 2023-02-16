@@ -1,8 +1,8 @@
-package com.bcd.support_parser.javassist.util;
+package com.bcd.support_parser.util;
 
 
 import com.bcd.support_parser.exception.BaseRuntimeException;
-import com.bcd.support_parser.javassist.builder.BuilderContext;
+import com.bcd.support_parser.builder.BuilderContext;
 import org.slf4j.helpers.MessageFormatter;
 
 import java.lang.reflect.Field;

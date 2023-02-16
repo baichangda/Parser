@@ -3,7 +3,7 @@ package com.bcd.support_parser.impl.gb32960.data;
 
 import com.bcd.support_parser.anno.F_date;
 import com.bcd.support_parser.anno.F_userDefine;
-import com.bcd.support_parser.impl.gb32960.javassist.processor.VehicleCommonDataFieldProcessor;
+import com.bcd.support_parser.impl.gb32960.processor.VehicleCommonDataFieldProcessor;
 
 import java.util.Date;
 

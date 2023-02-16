@@ -1,7 +1,7 @@
-package com.bcd.support_parser.javassist.builder;
+package com.bcd.support_parser.builder;
 
 
-import com.bcd.support_parser.javassist.Parser;
+import com.bcd.support_parser.Parser;
 
 public abstract class FieldBuilder {
     public final static String varNameThis = "$0";

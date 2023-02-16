@@ -1,9 +1,9 @@
-package com.bcd.support_parser.impl.someip.javassist.builder;
+package com.bcd.support_parser.impl.someip.builder;
 
 import com.bcd.support_parser.impl.someip.data.MessageType;
-import com.bcd.support_parser.javassist.builder.BuilderContext;
-import com.bcd.support_parser.javassist.builder.FieldBuilder;
-import com.bcd.support_parser.javassist.util.JavassistUtil;
+import com.bcd.support_parser.builder.BuilderContext;
+import com.bcd.support_parser.builder.FieldBuilder;
+import com.bcd.support_parser.util.JavassistUtil;
 
 import java.lang.reflect.Field;
 

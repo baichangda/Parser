@@ -1,6 +1,6 @@
-package com.bcd.support_parser.javassist.processor;
+package com.bcd.support_parser.processor;
 
-import com.bcd.support_parser.javassist.Parser;
+import com.bcd.support_parser.Parser;
 import io.netty.buffer.ByteBuf;
 
 public abstract class Processor<T> {

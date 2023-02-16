@@ -1,6 +1,6 @@
-package com.bcd.support_parser.javassist.util;
+package com.bcd.support_parser.util;
 
-import com.bcd.support_parser.javassist.Parser;
+import com.bcd.support_parser.Parser;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;

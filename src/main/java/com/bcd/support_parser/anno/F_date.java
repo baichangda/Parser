@@ -19,4 +19,9 @@ public @interface F_date {
      * 年份偏移量、结果年份=baseYear+原始值
      */
     int baseYear() default 2000;
+
+    /**
+     * 所代表的时区
+     */
+    String zoneId() default "Asia/Shanghai";
 }
