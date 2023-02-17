@@ -18,92 +18,99 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
             if (anno.lenExpr().isEmpty()) {
                 throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have len or lenExpr", field.getDeclaringClass().getName(), field.getName(), F_skip.class.getName());
             } else {
-                lenRes = JavassistUtil.replaceVarToFieldName(anno.lenExpr(), context.varToFieldName, field);
+                lenRes = JavassistUtil.replaceLenExprToCode(anno.lenExpr(), context.varToFieldName, field);
             }
         } else {
             lenRes = anno.len() + "";
         }
 
         final Class<?> fieldTypeClass = field.getType();
-        final String arrayElementType;
-        if (byte[].class.isAssignableFrom(fieldTypeClass)) {
-            arrayElementType = "byte";
-        } else if (short[].class.isAssignableFrom(fieldTypeClass)) {
-            arrayElementType = "short";
-        } else if (int[].class.isAssignableFrom(fieldTypeClass)) {
-            arrayElementType = "int";
-        } else if (long[].class.isAssignableFrom(fieldTypeClass)) {
-            arrayElementType = "long";
-        } else {
-            JavassistUtil.notSupport_fieldType(field, F_integer_array.class);
-            arrayElementType = "";
-        }
-
-        final String varNameInstance = FieldBuilder.varNameInstance;
+        final int singleLen = anno.singleLen();
+        final String valExpr = anno.valExpr();
+        final StringBuilder body = context.body;
         final String varNameField = JavassistUtil.getFieldVarName(context);
         String arrVarName = varNameField + "_arr";
-        final StringBuilder body = context.body;
-        final int singleLen = anno.singleLen();
-        //如果类型是byte[]、singleLen==1、则特殊优化处理
-        if (arrayElementType.equals("byte") && singleLen == 1) {
+        if (byte[].class.isAssignableFrom(fieldTypeClass)) {
             JavassistUtil.append(body, "final byte[] {}=new byte[{}];\n", arrVarName, lenRes);
-            JavassistUtil.append(body, "{}.readBytes({});\n", FieldBuilder.varNameByteBuf, arrVarName);
-            JavassistUtil.append(body, "{}.{}={};\n", varNameInstance, field.getName(), arrVarName);
-        } else {
-            final String arrLenRes;
             switch (singleLen) {
                 case 1: {
-                    arrLenRes = lenRes;
-                    break;
-                }
-                case 2: {
-                    arrLenRes = "(" + lenRes + ")/2";
-                    break;
-                }
-                case 4: {
-                    arrLenRes = "(" + lenRes + ")/4";
-                    break;
-                }
-                case 8: {
-                    arrLenRes = "(" + lenRes + ")/8";
+                    if (valExpr.isEmpty()) {
+                        JavassistUtil.append(body, "{}.readBytes({});\n", FieldBuilder.varNameByteBuf, arrVarName);
+                    } else {
+                        final String varNameArrayElement = varNameField + "_arrEle";
+                        JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", arrVarName);
+                        JavassistUtil.append(body, "byte {}={}.readByte();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
+                        JavassistUtil.append(body, "{}[i]=(byte)({});\n", arrVarName, JavassistUtil.replaceValExprToCode(valExpr, varNameArrayElement));
+                        JavassistUtil.append(body, "}\n");
+                    }
                     break;
                 }
                 default: {
                     JavassistUtil.notSupport_singleLen(field, F_integer_array.class);
-                    arrLenRes = "";
-                    break;
                 }
             }
-
-            JavassistUtil.append(body, "final {}[] {}=new {}[{}];\n", arrayElementType, arrVarName, arrayElementType, arrLenRes);
-            JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", arrVarName);
+        } else if (short[].class.isAssignableFrom(fieldTypeClass)) {
+            JavassistUtil.append(body, "final short[] {}=new short[{}];\n", arrVarName, "(" + lenRes + ")/" + singleLen);
             final String varNameArrayElement = varNameField + "_arrEle";
+            JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", arrVarName);
             switch (singleLen) {
                 case 1: {
-                    JavassistUtil.append(body, "{} {}=({}){}.readUnsignedByte();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf);
+                    JavassistUtil.append(body, "short {}={}.readUnsignedByte();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
                     break;
                 }
                 case 2: {
-                    JavassistUtil.append(body, "{} {}=({}){}.readUnsignedShort();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf);
-                    break;
-                }
-                case 4: {
-                    JavassistUtil.append(body, "{} {}=({}){}.readUnsignedInt();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf);
-                    break;
-                }
-                case 8: {
-                    JavassistUtil.append(body, "{} {}=({}){}.readLong();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf);
+                    JavassistUtil.append(body, "short {}={}.readShort();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
                     break;
                 }
                 default: {
-                    JavassistUtil.notSupport_len(field, F_integer_array.class);
+                    JavassistUtil.notSupport_singleLen(field, F_integer_array.class);
                 }
             }
-            JavassistUtil.append(body, "{}[i]={};\n", arrVarName, JavassistUtil.replaceVarToValExpr(anno.valExpr(), varNameArrayElement));
-            body.append("}\n");
+            JavassistUtil.append(body, "{}[i]=(short)({});\n", arrVarName, JavassistUtil.replaceValExprToCode(valExpr, varNameArrayElement));
+            JavassistUtil.append(body, "}\n");
+        } else if (int[].class.isAssignableFrom(fieldTypeClass)) {
+            JavassistUtil.append(body, "final int[] {}=new int[{}];\n", arrVarName, "(" + lenRes + ")/" + singleLen);
+            final String varNameArrayElement = varNameField + "_arrEle";
+            JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", arrVarName);
+            switch (singleLen) {
+                case 2: {
+                    JavassistUtil.append(body, "int {}={}.readUnsignedShort();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
+                    break;
+                }
+                case 4: {
+                    JavassistUtil.append(body, "int {}={}.readInt();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
+                    break;
+                }
+                default: {
+                    JavassistUtil.notSupport_singleLen(field, F_integer_array.class);
+                }
+            }
+            JavassistUtil.append(body, "{}[i]=(int)({});\n", arrVarName, JavassistUtil.replaceValExprToCode(valExpr, varNameArrayElement));
+            JavassistUtil.append(body, "}\n");
+        } else if (long[].class.isAssignableFrom(fieldTypeClass)) {
+            JavassistUtil.append(body, "final long[] {}=new long[{}];\n", arrVarName, "(" + lenRes + ")/" + singleLen);
+            final String varNameArrayElement = varNameField + "_arrEle";
+            JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", arrVarName);
+            switch (singleLen) {
+                case 4: {
+                    JavassistUtil.append(body, "long {}={}.readUnsignedInt();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
+                    break;
+                }
+                case 8: {
+                    JavassistUtil.append(body, "long {}={}.readLong();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
+                    break;
+                }
+                default: {
+                    JavassistUtil.notSupport_singleLen(field, F_integer_array.class);
+                }
+            }
+            JavassistUtil.append(body, "{}[i]=(long)({});\n", arrVarName, JavassistUtil.replaceValExprToCode(valExpr, varNameArrayElement));
+            JavassistUtil.append(body, "}\n");
 
-            JavassistUtil.append(body, "{}.{}={};\n", varNameInstance, field.getName(), arrVarName);
+        } else {
+            JavassistUtil.notSupport_fieldType(field, F_integer_array.class);
         }
+        JavassistUtil.append(body, "{}.{}={};\n", varNameInstance, field.getName(), arrVarName);
     }
 
     @Override
@@ -128,7 +135,7 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
                         JavassistUtil.append(body, "final byte[] {}={};\n", varNameFieldArr, valCode);
                         JavassistUtil.append(body, "final byte[] {}=new byte[{}.length];\n", varNameFieldRes, varNameFieldArr);
                         JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", varNameFieldRes);
-                        JavassistUtil.append(body, "{}[i]={};\n", varNameFieldRes, JavassistUtil.replaceVarToValExpr(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                        JavassistUtil.append(body, "{}[i]={};\n", varNameFieldRes, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                         JavassistUtil.append(body, "}\n");
                         JavassistUtil.append(body, "{}.writeBytes({});\n", FieldBuilder.varNameByteBuf, varNameFieldRes);
                     }
@@ -145,17 +152,17 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
             switch (singleLen) {
                 case 1: {
                     if (anno.valExpr().isEmpty()) {
-                        JavassistUtil.append(body, "{}.writeByte((byte){});\n", FieldBuilder.varNameByteBuf, varNameFieldArr+"[i]");
+                        JavassistUtil.append(body, "{}.writeByte((byte){});\n", FieldBuilder.varNameByteBuf, varNameFieldArr + "[i]");
                     } else {
-                        JavassistUtil.append(body, "{}.writeByte((byte)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceVarToValExpr(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                        JavassistUtil.append(body, "{}.writeByte((byte)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                     }
                     break;
                 }
                 case 2: {
                     if (anno.valExpr().isEmpty()) {
-                        JavassistUtil.append(body, "{}.writeShort({});\n", FieldBuilder.varNameByteBuf, varNameFieldArr+"[i]");
+                        JavassistUtil.append(body, "{}.writeShort({});\n", FieldBuilder.varNameByteBuf, varNameFieldArr + "[i]");
                     } else {
-                        JavassistUtil.append(body, "{}.writeShort((short)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceVarToValExpr(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                        JavassistUtil.append(body, "{}.writeShort((short)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                     }
                     break;
                 }
@@ -171,17 +178,17 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
             switch (singleLen) {
                 case 2: {
                     if (anno.valExpr().isEmpty()) {
-                        JavassistUtil.append(body, "{}.writeShort((short){});\n", FieldBuilder.varNameByteBuf, varNameFieldArr+"[i]");
+                        JavassistUtil.append(body, "{}.writeShort((short){});\n", FieldBuilder.varNameByteBuf, varNameFieldArr + "[i]");
                     } else {
-                        JavassistUtil.append(body, "{}.writeShort((short)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceVarToValExpr(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                        JavassistUtil.append(body, "{}.writeShort((short)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                     }
                     break;
                 }
                 case 4: {
                     if (anno.valExpr().isEmpty()) {
-                        JavassistUtil.append(body, "{}.writeInt({});\n", FieldBuilder.varNameByteBuf, varNameFieldArr+"[i]");
+                        JavassistUtil.append(body, "{}.writeInt({});\n", FieldBuilder.varNameByteBuf, varNameFieldArr + "[i]");
                     } else {
-                        JavassistUtil.append(body, "{}.writeInt((int)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceVarToValExpr(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                        JavassistUtil.append(body, "{}.writeInt((int)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                     }
                     break;
                 }
@@ -197,17 +204,17 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
             switch (singleLen) {
                 case 4: {
                     if (anno.valExpr().isEmpty()) {
-                        JavassistUtil.append(body, "{}.writeInt((int){});\n", FieldBuilder.varNameByteBuf, varNameFieldArr+"[i]");
+                        JavassistUtil.append(body, "{}.writeInt((int){});\n", FieldBuilder.varNameByteBuf, varNameFieldArr + "[i]");
                     } else {
-                        JavassistUtil.append(body, "{}.writeInt((int)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceVarToValExpr(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                        JavassistUtil.append(body, "{}.writeInt((int)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                     }
                     break;
                 }
                 case 8: {
                     if (anno.valExpr().isEmpty()) {
-                        JavassistUtil.append(body, "{}.writeLong({});\n", FieldBuilder.varNameByteBuf, varNameFieldArr+"[i]");
+                        JavassistUtil.append(body, "{}.writeLong({});\n", FieldBuilder.varNameByteBuf, varNameFieldArr + "[i]");
                     } else {
-                        JavassistUtil.append(body, "{}.writeLong((long)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceVarToValExpr(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                        JavassistUtil.append(body, "{}.writeLong((long)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                     }
                     break;
                 }

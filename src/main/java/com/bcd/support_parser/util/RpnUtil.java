@@ -48,7 +48,8 @@ public class RpnUtil {
 //        System.out.println(Arrays.toString(toRpn("(-x+3)/5")));
 //        System.out.println(Arrays.toString(toRpn("--(a/-3-4)--d")));
 
-        System.out.println(reverseExpr("x/10-1000"));
+//        System.out.println(reverseExpr("x/10-1000"));
+//        System.out.println(reverseExpr("-x"));
 //        System.out.println(reverseExpr("(y-3)/-2"));
 //        System.out.println(reverseExpr("2/(-x*4-3)"));
 //        System.out.println(reverseExpr("-2*x+3"));
@@ -65,6 +66,9 @@ public class RpnUtil {
      * @param str
      */
     public static String reverseExpr(String str) {
+        if (str == null || str.isEmpty()) {
+            throw new IllegalArgumentException("param[str] must not be null or empty");
+        }
         List<String> operateList = new ArrayList<>();
         final Ele[] eles = toRpn(str);
         //将其中的变量替换为x
@@ -203,6 +207,9 @@ public class RpnUtil {
     }
 
     public static String toExpr(Ele[] eles) {
+        if (eles == null || eles.length==0) {
+            throw new IllegalArgumentException("param[eles] must not be null or empty");
+        }
         final String[] stack = new String[eles.length];
         int stackIndex = -1;
         for (Ele ele : eles) {
@@ -272,10 +279,16 @@ public class RpnUtil {
     }
 
     public static double calc(String str, Map<String, Double> dataMap) {
+        if (str == null || str.isEmpty()) {
+            throw new IllegalArgumentException("param[str] must not be null or empty");
+        }
         return calc(toRpn(str), dataMap);
     }
 
     public static double calc(Ele[] eles, Map<String, Double> dataMap) {
+        if (eles == null || eles.length==0) {
+            throw new IllegalArgumentException("param[eles] must not be null or empty");
+        }
         final double[] stack = new double[eles.length];
         int stackIndex = -1;
         for (Ele ele : eles) {
@@ -345,6 +358,9 @@ public class RpnUtil {
      * @return
      */
     public static Ele[] toRpn(String str) {
+        if (str == null || str.isEmpty()) {
+            throw new IllegalArgumentException("param[str] must not be null or empty");
+        }
         final char[] chars = str.toCharArray();
         //存储rpn结果
         final List<String> output = new ArrayList<>();

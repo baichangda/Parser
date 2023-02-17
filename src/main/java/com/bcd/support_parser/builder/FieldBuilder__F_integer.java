@@ -14,19 +14,7 @@ public class FieldBuilder__F_integer extends FieldBuilder {
         final Class<F_integer> annoClass = F_integer.class;
         final Field field = context.field;
         final Class<?> fieldTypeClass = field.getType();
-        final String fieldType;
-        if (byte.class.isAssignableFrom(fieldTypeClass)) {
-            fieldType = "byte";
-        } else if (short.class.isAssignableFrom(fieldTypeClass)) {
-            fieldType = "short";
-        } else if (int.class.isAssignableFrom(fieldTypeClass)) {
-            fieldType = "int";
-        } else if (long.class.isAssignableFrom(fieldTypeClass)) {
-            fieldType = "long";
-        } else {
-            JavassistUtil.notSupport_fieldType(field, annoClass);
-            fieldType = "";
-        }
+        final String fieldTypeName = fieldTypeClass.getName();
         final F_integer anno = context.field.getAnnotation(annoClass);
         final StringBuilder body = context.body;
         final String varNameInstance = FieldBuilder.varNameInstance;
@@ -49,36 +37,97 @@ public class FieldBuilder__F_integer extends FieldBuilder {
                     context.varNameBitBytes = varNameBitBytes;
                 }
                 JavassistUtil.append(body, "final int {}={}.getBitVal({},{},{});\n", varNameField, JavassistUtil.class.getName(), varNameBitBytes, ints[0], bit);
+                if (fieldTypeClass.isEnum()) {
+                    JavassistUtil.append(body, "{}.{}={}.fromInteger((int){});\n", varNameInstance, field.getName(), fieldTypeClass.getName(), JavassistUtil.replaceValExprToCode(anno.valExpr(), varNameField));
+                } else {
+                    JavassistUtil.append(body, "{}.{}=({}){};\n", varNameInstance, field.getName(), fieldTypeName, JavassistUtil.replaceValExprToCode(anno.valExpr(), varNameField));
+                }
                 if (ints[1] == 1) {
                     context.varNameBitBytes = null;
                 }
             }
         } else {
-            switch (anno.len()) {
-                case 1: {
-                    JavassistUtil.append(body, "final {} {}={}.readUnsignedByte();\n", fieldType, varNameField, FieldBuilder.varNameByteBuf);
-                    break;
+            if (byte.class.isAssignableFrom(fieldTypeClass)) {
+                switch (anno.len()) {
+                    case 1: {
+                        JavassistUtil.append(body, "final byte {}={}.readByte();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        break;
+                    }
+                    default: {
+                        JavassistUtil.notSupport_len(field, annoClass);
+                    }
                 }
-                case 2: {
-                    JavassistUtil.append(body, "final {} {}={}.readUnsignedShort();\n", fieldType, varNameField, FieldBuilder.varNameByteBuf);
-                    break;
+                JavassistUtil.append(body, "{}.{}=({}){};\n", varNameInstance, field.getName(), fieldTypeName, JavassistUtil.replaceValExprToCode(anno.valExpr(), varNameField));
+            } else if (short.class.isAssignableFrom(fieldTypeClass)) {
+                switch (anno.len()) {
+                    case 1: {
+                        JavassistUtil.append(body, "final short {}={}.readUnsignedByte();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        break;
+                    }
+                    case 2: {
+                        JavassistUtil.append(body, "final short {}={}.readShort();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        break;
+                    }
+                    default: {
+                        JavassistUtil.notSupport_len(field, annoClass);
+                    }
                 }
-                case 4: {
-                    JavassistUtil.append(body, "final {} {}={}.readUnsignedInt();\n", fieldType, varNameField, FieldBuilder.varNameByteBuf);
-                    break;
+                JavassistUtil.append(body, "{}.{}=({}){};\n", varNameInstance, field.getName(), fieldTypeName, JavassistUtil.replaceValExprToCode(anno.valExpr(), varNameField));
+            } else if (int.class.isAssignableFrom(fieldTypeClass)) {
+                switch (anno.len()) {
+                    case 2: {
+                        JavassistUtil.append(body, "final int {}={}.readUnsignedShort();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        break;
+                    }
+                    case 4: {
+                        JavassistUtil.append(body, "final int {}={}.readInt();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        break;
+                    }
+                    default: {
+                        JavassistUtil.notSupport_len(field, annoClass);
+                    }
                 }
-                case 8: {
-                    JavassistUtil.append(body, "final {} {}={}.readLong();\n", fieldType, varNameField, FieldBuilder.varNameByteBuf);
-                    break;
+                JavassistUtil.append(body, "{}.{}=({}){};\n", varNameInstance, field.getName(), fieldTypeName, JavassistUtil.replaceValExprToCode(anno.valExpr(), varNameField));
+            } else if (long.class.isAssignableFrom(fieldTypeClass)) {
+                switch (anno.len()) {
+                    case 4: {
+                        JavassistUtil.append(body, "final long {}={}.readUnsignedInt();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        break;
+                    }
+                    case 8: {
+                        JavassistUtil.append(body, "final long {}={}.readLong();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        break;
+                    }
+                    default: {
+                        JavassistUtil.notSupport_len(field, annoClass);
+                    }
                 }
-                default: {
-                    JavassistUtil.notSupport_len(field, annoClass);
-                    break;
+                JavassistUtil.append(body, "{}.{}=({}){};\n", varNameInstance, field.getName(), fieldTypeName, JavassistUtil.replaceValExprToCode(anno.valExpr(), varNameField));
+            } else if (fieldTypeClass.isEnum()) {
+                switch (anno.len()) {
+                    case 1: {
+                        JavassistUtil.append(body, "final short {}={}.readUnsignedByte();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        break;
+                    }
+                    case 2: {
+                        JavassistUtil.append(body, "final int {}={}.readUnsignedShort();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        break;
+                    }
+                    case 4: {
+                        JavassistUtil.append(body, "final int {}={}.readInt();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        break;
+                    }
+                    default: {
+                        JavassistUtil.notSupport_len(field, annoClass);
+                    }
                 }
+                JavassistUtil.append(body, "{}.{}={}.fromInteger((int){});\n", varNameInstance, field.getName(), fieldTypeName, JavassistUtil.replaceValExprToCode(anno.valExpr(), varNameField));
+            } else {
+                JavassistUtil.notSupport_fieldType(field, annoClass);
             }
         }
 
-        JavassistUtil.append(body, "{}.{}=({}){};\n", varNameInstance, field.getName(), fieldType, JavassistUtil.replaceVarToValExpr(anno.valExpr(), varNameField));
+
         final char var = anno.var();
         if (var != '0') {
             context.varToFieldName.put(var, varNameField);
@@ -94,22 +143,25 @@ public class FieldBuilder__F_integer extends FieldBuilder {
         final StringBuilder body = context.body;
         final String fieldName = field.getName();
         final String varNameField = JavassistUtil.getFieldVarName(context);
+        final Class<?> fieldType = field.getType();
         final char var = anno.var();
-        final String valCode;
-        if (var == '0') {
-            if (anno.valExpr().isEmpty()) {
-                valCode = varNameInstance + "." + fieldName;
-            } else {
-                valCode = JavassistUtil.replaceVarToValExpr(RpnUtil.reverseExpr(anno.valExpr()), varNameInstance + "." + fieldName);
-            }
+        String valCode;
+        //先判断是否是枚举类型、如果是枚举转换为int
+        if (fieldType.isEnum()) {
+            valCode = JavassistUtil.format("{}.toInteger()", varNameInstance + "." + fieldName);
         } else {
-            JavassistUtil.append(body, "final {} {}={};\n", field.getType().getName(), varNameField, varNameInstance + "." + fieldName);
+            valCode = varNameInstance + "." + fieldName;
+        }
+
+        //判断是否用到变量中、如果用到了、需要定义变量
+        if (var != '0') {
+            JavassistUtil.append(body, "final {} {}={};\n", fieldType.getName(), varNameField, valCode);
             context.varToFieldName.put(var, varNameField);
-            if (anno.valExpr().isEmpty()) {
-                valCode = varNameField;
-            } else {
-                valCode = JavassistUtil.replaceVarToValExpr(RpnUtil.reverseExpr(anno.valExpr()), varNameField);
-            }
+        }
+
+        //最后判断是否用了值表达式、如果用了、进行表达式处理
+        if(!anno.valExpr().isEmpty()){
+            valCode = JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), valCode);
         }
 
         if (anno.len() == 0) {

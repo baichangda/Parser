@@ -71,8 +71,11 @@ public enum MessageType {
         }
     }
 
-    public static MessageType valueOf(int val) {
+    public static MessageType fromInteger(int val) {
         return arr[val];
+    }
+    public int toInteger() {
+        return val;
     }
 
 }

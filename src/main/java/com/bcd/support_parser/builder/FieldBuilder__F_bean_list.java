@@ -17,7 +17,7 @@ public class FieldBuilder__F_bean_list extends FieldBuilder {
         final F_bean_list anno = context.field.getAnnotation(F_bean_list.class);
         final String fieldVarNameListLen = varNameField + "_listLen";
         if (anno.listLen() == 0) {
-            String listLenRes = JavassistUtil.replaceVarToFieldName(anno.listLenExpr(), context.varToFieldName, field);
+            String listLenRes = JavassistUtil.replaceLenExprToCode(anno.listLenExpr(), context.varToFieldName, field);
             JavassistUtil.append(body, "final int {}=(int)({});\n", fieldVarNameListLen, listLenRes);
         } else {
             JavassistUtil.append(body, "final int {}=(int)({});\n", fieldVarNameListLen, anno.listLen());

@@ -333,17 +333,17 @@ public class Parser {
         StringBuilder initBody = new StringBuilder();
         //加parser字段
         final String parserClassName = Parser.class.getName();
-        cc.addField(CtField.make("private final " + parserClassName + " parser;", cc));
+        cc.addField(CtField.make("private final " + parserClassName + " " + FieldBuilder.varNameParser + ";", cc));
         //初始化parser字段
         final CtClass parser_cc = ClassPool.getDefault().get(parserClassName);
         final CtConstructor constructor = CtNewConstructor.make(new CtClass[]{parser_cc}, null, cc);
         initBody.append("{\n");
-        initBody.append("this.parser=$1;\n");
+        initBody.append("this." + FieldBuilder.varNameParser + "=$1;\n");
         //加processorClass字段并初始化
         final List<Class> processorClassList = Arrays.stream(clazz.getDeclaredFields()).map(f -> f.getAnnotation(F_userDefine.class)).filter(Objects::nonNull).map(F_userDefine::processorClass).filter(e -> e != void.class).collect(Collectors.toList());
         for (Class processorClass : processorClassList) {
             final String processorClassName = processorClass.getName();
-            final String processorVarName = JavassistUtil.toFirstLowerCase(processorClass.getSimpleName());
+            final String processorVarName = JavassistUtil.getProcessorVarName(processorClass);
             cc.addField(CtField.make("private final " + processorClassName + " " + processorVarName + ";", cc));
             initBody.append(JavassistUtil.format("this.{}=new {}();\n", processorVarName, processorClassName));
             initBody.append(JavassistUtil.format("this.{}.parser=$1;\n", processorVarName));
@@ -352,6 +352,9 @@ public class Parser {
         logger.info("----------clazz[{}] constructor body-------------\n{}", clazz.getName(), initBody.toString());
         constructor.setBody(initBody.toString());
         cc.addConstructor(constructor);
+
+        final Map<String, String> classVarDefineToVarName = new HashMap<>();
+
         //添加实现、定义process方法
         final CtClass super_cc = ClassPool.getDefault().get(processor_class_name);
         cc.setSuperclass(super_cc);
@@ -372,7 +375,7 @@ public class Parser {
         StringBuilder processBody = new StringBuilder();
         processBody.append("\n{\n");
         JavassistUtil.append(processBody, "final {} {}=new {}();\n", clazzName, FieldBuilder.varNameInstance, clazzName);
-        BuilderContext parseContext = new BuilderContext(processBody, this, cc, FieldBuilder.varNameInstance, null);
+        BuilderContext parseContext = new BuilderContext(processBody, this, cc, FieldBuilder.varNameInstance, null, classVarDefineToVarName);
         buildMethodBody_parse(clazz, parseContext);
         JavassistUtil.append(processBody, "return {};\n", FieldBuilder.varNameInstance);
         processBody.append("}");
@@ -394,10 +397,10 @@ public class Parser {
         StringBuilder deProcessBody = new StringBuilder();
         deProcessBody.append("\n{\n");
         JavassistUtil.append(deProcessBody, "final {} {}=({})$3;\n", clazzName, FieldBuilder.varNameInstance, clazzName);
-        BuilderContext deParseContext = new BuilderContext(deProcessBody, this, cc, FieldBuilder.varNameInstance, null);
+        BuilderContext deParseContext = new BuilderContext(deProcessBody, this, cc, FieldBuilder.varNameInstance, null, classVarDefineToVarName);
         buildMethodBody_deParse(clazz, deParseContext);
         deProcessBody.append("}");
-        logger.info("\n-----------class[{}] deProcess-----------{}\n",clazz.getName(),deProcessBody.toString());
+        logger.info("\n-----------class[{}] deProcess-----------{}\n", clazz.getName(), deProcessBody.toString());
         deProcess_cm.setBody(deProcessBody.toString());
 
         if (generateClassField) {
@@ -446,6 +449,6 @@ public class Parser {
                 }
             }
         }
-        processor.deProcess(data, parentContext,instance);
+        processor.deProcess(data, parentContext, instance);
     }
 }

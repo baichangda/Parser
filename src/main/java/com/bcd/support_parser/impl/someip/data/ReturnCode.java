@@ -99,7 +99,10 @@ public enum ReturnCode{
         }
     }
 
-    public static ReturnCode valueOf(int val) {
+    public static ReturnCode fromInteger(int val) {
         return arr[val];
+    }
+    public int toInteger() {
+        return val;
     }
 }

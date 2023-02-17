@@ -8,9 +8,7 @@ import java.lang.annotation.Target;
 /**
  * 适用如下字段类型
  * byte[]、short[]、int[]、long[]
- *
  * 数组长度=总字节数/singleLen
- *
  * {@link #len()}和{@link #lenExpr()} 二选一、代表字段所占用总字节数
  */
 @Target({ElementType.FIELD})
@@ -36,13 +34,15 @@ public @interface F_integer_array {
 
     /**
      * 单个元素字节长度(用于字节数组转换成byte[]、short[]、int[]、long[]数组中单个元素对应字节数)
-     * 支持1、2、4、8
+     * 不同的数据类型对应不同的长度
+     * byte[]: 1
+     * short[]: 1、2
+     * int[]: 2、4
+     * long[]: 4、8
      * 例如:
      * 原始为 byte[8] 字段数据 转换成 int[],
-     * singleLen=1、调用readUnsignedByte、然后将short转换为int、将得到int[8]
-     * singleLen=2、调用readUnsignedInt、无需类型转换、将得到int[4]
-     * singleLen=4、调用readUnsignedLong、然后将long转换为int 将得到int[2]
-     * singleLen=8、调用readLong、然后将long转换为int 将得到int[1]
+     * singleLen=2、调用readUnsignedShort、将得到int[4]
+     * singleLen=4、调用readInt、将得到int[2]
      */
     int singleLen();
 

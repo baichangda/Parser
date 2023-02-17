@@ -4,6 +4,7 @@ package com.bcd.support_parser.builder;
 import com.bcd.support_parser.anno.F_userDefine;
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.util.JavassistUtil;
+import javassist.CtField;
 
 import java.lang.reflect.Field;
 
@@ -20,7 +21,7 @@ public class FieldBuilder__F_userDefine extends FieldBuilder {
             } else {
                 final StringBuilder body = context.body;
                 final String varNameField = JavassistUtil.getFieldVarName(context);
-                final String processorClassVarName = JavassistUtil.toFirstLowerCase(processorClass.getSimpleName());
+                final String processorClassVarName = JavassistUtil.getProcessorVarName(processorClass);
                 final String varNameInstance = FieldBuilder.varNameInstance;
                 final String fieldTypeClassName = field.getType().getName();
                 final String unBoxing = JavassistUtil.unBoxing(JavassistUtil.format("{}.process({},{})", processorClassVarName, FieldBuilder.varNameByteBuf, context.getProcessContextVarName()), field.getType());
@@ -62,7 +63,7 @@ public class FieldBuilder__F_userDefine extends FieldBuilder {
             if (processorClass == void.class) {
                 throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have builderClass or processorClass", field.getDeclaringClass().getName(), field.getName(), F_userDefine.class.getName());
             } else {
-                final String processorClassVarName = JavassistUtil.toFirstLowerCase(processorClass.getSimpleName());
+                final String processorClassVarName = JavassistUtil.getProcessorVarName(processorClass);
                 JavassistUtil.append(body, "{}.deProcess({},{},{});\n", processorClassVarName, FieldBuilder.varNameByteBuf, context.getProcessContextVarName(), valCode);
             }
         } else {

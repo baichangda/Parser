@@ -8,8 +8,8 @@ public abstract class FieldBuilder {
     public final static String varNameByteBuf = "$1";
     public final static String varNameParentProcessContext = "$2";
 
-    public final static String varNameInstance = "instance";
-    public final static String varNameParser = "parser";
+    public final static String varNameInstance = "_instance";
+    public final static String varNameParser = "_parser";
     
     public Parser parser;
 

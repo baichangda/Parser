@@ -7,8 +7,15 @@ import java.lang.annotation.Target;
 
 /**
  * 适用如下字段类型
- * byte、short、int、long
- * 且值以多少字节表示
+ * byte、short、int、long、枚举类
+ *
+ * 枚举类
+ * 仅支持当{@link #len()}为1、2、4时候、因为默认类型为int、8会产生精度丢失
+ * 要求枚举类必有如下静态方法、例如
+ * public enum Example{
+ *     public static Example fromInteger(int i){}
+ *     public int toInteger(){}
+ * }
  *
  */
 @Target({ElementType.FIELD})
@@ -17,7 +24,11 @@ public @interface F_integer {
     /**
      * 占用字节数
      * 和{@link #bit()}互斥
-     * 1、2、4、8
+     * 不同的类型对应不同的长度
+     * byte: 1
+     * short: 1、2
+     * int: 2、4
+     * long: 4、8
      */
     int len() default 0;
 

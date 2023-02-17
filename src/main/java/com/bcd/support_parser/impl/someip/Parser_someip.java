@@ -27,7 +27,7 @@ public class Parser_someip extends Parser {
         logger.info("param threadNum[{}]",threadNum);
         int num=1000000000;
 
-        PerformanceUtil.testMultiThreadPerformance(hex,parser,Packet.class,threadNum,num,true);
+        PerformanceUtil.testMultiThreadPerformance(hex,parser,Packet.class,threadNum,num,false);
 
 
     }

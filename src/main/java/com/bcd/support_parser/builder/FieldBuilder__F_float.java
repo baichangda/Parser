@@ -74,9 +74,9 @@ public class FieldBuilder__F_float extends FieldBuilder {
             }
         }
         if (anno.valPrecision() == -1) {
-            JavassistUtil.append(body, "{}.{}={};\n", varNameInstance, field.getName(), JavassistUtil.replaceVarToValExpr(anno.valExpr(), varNameField));
+            JavassistUtil.append(body, "{}.{}={};\n", varNameInstance, field.getName(), JavassistUtil.replaceValExprToCode(anno.valExpr(), varNameField));
         } else {
-            JavassistUtil.append(body, "{}.{}=({}){}.format((double){},{});\n", varNameInstance, field.getName(), fieldType, JavassistUtil.class.getName(), JavassistUtil.replaceVarToValExpr(anno.valExpr(), varNameField), anno.valPrecision());
+            JavassistUtil.append(body, "{}.{}=({}){}.format((double){},{});\n", varNameInstance, field.getName(), fieldType, JavassistUtil.class.getName(), JavassistUtil.replaceValExprToCode(anno.valExpr(), varNameField), anno.valPrecision());
         }
     }
 
@@ -94,7 +94,7 @@ public class FieldBuilder__F_float extends FieldBuilder {
             valCode = varNameInstance + "." + fieldName;
         } else {
             final String reverseExpr = RpnUtil.reverseExpr(anno.valExpr());
-            valCode = JavassistUtil.replaceVarToValExpr(reverseExpr, varNameInstance + "." + fieldName);
+            valCode = JavassistUtil.replaceValExprToCode(reverseExpr, varNameInstance + "." + fieldName);
         }
         if (anno.len() == 0) {
             if (anno.bit() == 0) {

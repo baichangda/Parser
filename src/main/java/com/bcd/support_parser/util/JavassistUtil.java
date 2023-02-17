@@ -3,6 +3,9 @@ package com.bcd.support_parser.util;
 
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.builder.BuilderContext;
+import javassist.CannotCompileException;
+import javassist.CtClass;
+import javassist.CtField;
 import org.slf4j.helpers.MessageFormatter;
 
 import java.lang.reflect.Field;
@@ -19,33 +22,45 @@ public class JavassistUtil {
     }
 
     public static void notSupport_singleLen(final Field field, Class annoClass) {
-        throw BaseRuntimeException.getException("class[{}] field[{}] anno[{}] len not support", field.getDeclaringClass().getName(), field.getName(), annoClass.getName());
+        throw BaseRuntimeException.getException("class[{}] field[{}] anno[{}] singleLen not support", field.getDeclaringClass().getName(), field.getName(), annoClass.getName());
     }
 
-    public static String toFirstLowerCase(final String str) {
+    private static String toFirstLowerCase(final String str) {
         return str.substring(0, 1).toLowerCase() + str.substring(1);
     }
 
-    public static String toFirstUpperCase(final String str) {
-        return str.substring(0, 1).toUpperCase() + str.substring(1);
+    public static String getProcessorVarName(final Class processorClass) {
+        return "_" + toFirstLowerCase(processorClass.getSimpleName());
     }
 
-    public static String getVarName(final BuilderContext context, final String suffix) {
-        final StringBuilder sb = new StringBuilder();
-        BuilderContext temp = context;
-        while (temp != null) {
-            sb.insert(0, toFirstLowerCase(temp.field.getDeclaringClass().getSimpleName()) + "_");
-            temp = temp.parentContext;
-        }
-        sb.append(suffix);
-        return sb.toString();
+    /**
+     * 定义类变量、解析其中的变量名称
+     *
+     * @param context
+     * @param valDefine
+     * @param params
+     * @return
+     */
+    public static String defineClassVar(final BuilderContext context, Class varClass, final String valDefine, Object... params) {
+        return context.classVarDefineToVarName.computeIfAbsent(format(valDefine, params), k -> {
+            final int size = context.classVarDefineToVarName.size();
+            final String varName = "_" + size + "_" + varClass.getSimpleName();
+            final CtClass ctClass = context.implCc;
+            try {
+                final CtField ctField = CtField.make("private final " + varClass.getName() + " " + varName + "=" + k + ";\n", ctClass);
+                ctClass.addField(ctField);
+            } catch (CannotCompileException e) {
+                throw BaseRuntimeException.getException(e);
+            }
+            return varName;
+        });
     }
 
     public static String getFieldVarName(final BuilderContext context) {
-        return getVarName(context, context.field.getName());
+        return context.field.getName();
     }
 
-    public static String replaceVarToValExpr(final String expr, final String valExpr) {
+    public static String replaceValExprToCode(final String expr, final String valExpr) {
         if (expr.isEmpty()) {
             return valExpr;
         }
@@ -81,7 +96,7 @@ public class JavassistUtil {
     }
 
 
-    public static String replaceVarToFieldName(final String expr, final Map<Character, String> map, final Field field) {
+    public static String replaceLenExprToCode(final String expr, final Map<Character, String> map, final Field field) {
         final StringBuilder sb = new StringBuilder();
         final char[] chars = expr.toCharArray();
         for (char c : chars) {
@@ -90,7 +105,8 @@ public class JavassistUtil {
                 if (s == null) {
                     throw BaseRuntimeException.getException("class[{}] field[{}] expr[{}] can't find char[{}] value", field.getDeclaringClass().getName(), field.getName(), expr, c);
                 }
-                sb.append(s);
+                //所有的len字段必须转化为int运算
+                sb.append("(int)(").append(s).append(")");
             } else {
                 sb.append(c);
             }
@@ -183,11 +199,15 @@ public class JavassistUtil {
 //        byte[] bytes = new byte[]{(byte) 0};
 //        System.out.println(getBitVal(bytes, 0, 1));
 //        System.out.println(getBitVal(bytes, 1, 7));
-        final int bitVal = getBitVal(new byte[]{0x01, 0x02, 0x03}, 2, 13);
-        System.out.println(bitVal);
-        byte[] bytes = new byte[3];
-        putBitVal(bitVal, bytes, 2, 13);
-        System.out.println(Arrays.toString(bytes));
+        final byte[] source = {0x00, (byte) 0xe4};
+        final int bitVal1 = getBitVal(source, 0, 1);
+        final int bitVal2 = getBitVal(source, 1, 15);
+        System.out.println(bitVal1);
+        System.out.println(bitVal2);
+        byte[] dest = new byte[2];
+        putBitVal(bitVal1, dest, 0, 1);
+        putBitVal(bitVal2, dest, 1, 15);
+        System.out.println(Arrays.toString(dest));
 
 //        final double format = JavassistUtil.format(1.23232d, 4);
 //        System.out.println(format);

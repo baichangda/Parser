@@ -21,7 +21,7 @@ public class FieldBuilder__F_string extends FieldBuilder {
             if (anno.lenExpr().isEmpty()) {
                 throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have len or lenExpr", field.getDeclaringClass().getName(), field.getName(), F_skip.class.getName());
             } else {
-                lenRes = JavassistUtil.replaceVarToFieldName(anno.lenExpr(), context.varToFieldName, field);
+                lenRes = JavassistUtil.replaceLenExprToCode(anno.lenExpr(), context.varToFieldName, field);
             }
         } else {
             lenRes = anno.len() + "";
@@ -42,21 +42,9 @@ public class FieldBuilder__F_string extends FieldBuilder {
         JavassistUtil.append(body, "}\n", discardLenVarName);
         JavassistUtil.append(body, "}\n", discardLenVarName);
         final Charset charset = Charset.forName(anno.charset());
-        if (charset == StandardCharsets.UTF_8) {
-            JavassistUtil.append(body, "{}.{}=new String({},0,{}.length-{});\n", varNameInstance, field.getName(), arrVarName, arrVarName, discardLenVarName);
-        } else if (charset == StandardCharsets.ISO_8859_1) {
-            JavassistUtil.append(body, "{}.{}=new String({},0,{}.length-{},java.nio.charset.StandardCharsets.ISO_8859_1);\n", varNameInstance, field.getName(), arrVarName, arrVarName, discardLenVarName);
-        } else if (charset == StandardCharsets.UTF_16) {
-            JavassistUtil.append(body, "{}.{}=new String({},0,{}.length-{},java.nio.charset.StandardCharsets.UTF_16);\n", varNameInstance, field.getName(), arrVarName, arrVarName, discardLenVarName);
-        } else if (charset == StandardCharsets.US_ASCII) {
-            JavassistUtil.append(body, "{}.{}=new String({},0,{}.length-{},java.nio.charset.StandardCharsets.US_ASCII);\n", varNameInstance, field.getName(), arrVarName, arrVarName, discardLenVarName);
-        } else if (charset == StandardCharsets.UTF_16LE) {
-            JavassistUtil.append(body, "{}.{}=new String({},0,{}.length-{},java.nio.charset.StandardCharsets.UTF_16LE);\n", varNameInstance, field.getName(), arrVarName, arrVarName, discardLenVarName);
-        } else if (charset == StandardCharsets.UTF_16BE) {
-            JavassistUtil.append(body, "{}.{}=new String({},0,{}.length-{},java.nio.charset.StandardCharsets.UTF_16BE);\n", varNameInstance, field.getName(), arrVarName, arrVarName, discardLenVarName);
-        } else {
-            JavassistUtil.append(body, "{}.{}=new String({},0,{}.length-{},java.nio.charset.Charset.forName(\"{}\"));\n", varNameInstance, field.getName(), arrVarName, arrVarName, discardLenVarName, charset.name());
-        }
+        final String charsetClassName = Charset.class.getName();
+        final String charsetVarName = JavassistUtil.defineClassVar(context,Charset.class, "{}.forName(\"{}\")", charsetClassName, charset.name());
+        JavassistUtil.append(body, "{}.{}=new String({},0,{}.length-{},{});\n", varNameInstance, field.getName(), arrVarName, arrVarName, discardLenVarName, charsetVarName);
     }
 
     @Override
@@ -69,7 +57,7 @@ public class FieldBuilder__F_string extends FieldBuilder {
             if (anno.lenExpr().isEmpty()) {
                 throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have len or lenExpr", field.getDeclaringClass().getName(), field.getName(), F_skip.class.getName());
             } else {
-                lenRes = JavassistUtil.replaceVarToFieldName(anno.lenExpr(), context.varToFieldName, field);
+                lenRes = JavassistUtil.replaceLenExprToCode(anno.lenExpr(), context.varToFieldName, field);
             }
         } else {
             lenRes = anno.len() + "";
@@ -82,23 +70,9 @@ public class FieldBuilder__F_string extends FieldBuilder {
         String arrLeaveVarName = varNameField + "_leave";
 
         final Charset charset = Charset.forName(anno.charset());
-        if (charset == StandardCharsets.UTF_8) {
-            JavassistUtil.append(body, "final byte[] {}={}.getBytes();\n", arrVarName, valCode, anno.charset());
-        } else if (charset == StandardCharsets.ISO_8859_1) {
-            JavassistUtil.append(body, "final byte[] {}={}.getBytes(java.nio.charset.StandardCharsets.ISO_8859_1);\n", arrVarName, valCode, anno.charset());
-        } else if (charset == StandardCharsets.UTF_16) {
-            JavassistUtil.append(body, "final byte[] {}={}.getBytes(java.nio.charset.StandardCharsets.UTF_16);\n", arrVarName, valCode, anno.charset());
-        } else if (charset == StandardCharsets.US_ASCII) {
-            JavassistUtil.append(body, "final byte[] {}={}.getBytes(java.nio.charset.StandardCharsets.US_ASCII);\n", arrVarName, valCode, anno.charset());
-        } else if (charset == StandardCharsets.UTF_16LE) {
-            JavassistUtil.append(body, "final byte[] {}={}.getBytes(java.nio.charset.StandardCharsets.UTF_16LE);\n", arrVarName, valCode, anno.charset());
-        } else if (charset == StandardCharsets.UTF_16BE) {
-            JavassistUtil.append(body, "final byte[] {}={}.getBytes(java.nio.charset.StandardCharsets.UTF_16BE);\n", arrVarName, valCode, anno.charset());
-        } else {
-            JavassistUtil.append(body, "final byte[] {}={}.getBytes(java.nio.charset.Charset.forName(\"{}\"));\n", arrVarName, valCode, anno.charset());
-        }
-
-
+        final String charsetClassName = Charset.class.getName();
+        final String charsetVarName = JavassistUtil.defineClassVar(context,Charset.class, "{}.forName(\"{}\")", charsetClassName, charset.name());
+        JavassistUtil.append(body, "final byte[] {}={}.getBytes({});\n", arrVarName, valCode, charsetVarName);
         JavassistUtil.append(body, "{}.writeBytes({});\n", varNameByteBuf, arrVarName);
         JavassistUtil.append(body, "final int {}={}-{}.length;\n", arrLeaveVarName, lenRes, arrVarName);
         JavassistUtil.append(body, "if({}>0){\n", arrLeaveVarName);

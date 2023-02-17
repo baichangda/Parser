@@ -24,4 +24,10 @@ public @interface F_date {
      * 所代表的时区
      */
     String zoneId() default "Asia/Shanghai";
+
+    /**
+     * 当字段为string时候
+     * 此属性生效且代表日期格式
+     */
+    String formatWhenString() default "yyyy-MM-dd HH:mm:ss.SSS Z";
 }

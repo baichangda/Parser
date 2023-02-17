@@ -18,7 +18,7 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
             if (anno.lenExpr().isEmpty()) {
                 throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have len or lenExpr", field.getDeclaringClass().getName(), field.getName(), F_skip.class.getName());
             } else {
-                lenRes = JavassistUtil.replaceVarToFieldName(anno.lenExpr(), context.varToFieldName, field);
+                lenRes = JavassistUtil.replaceLenExprToCode(anno.lenExpr(), context.varToFieldName, field);
             }
         } else {
             lenRes = anno.len() + "";
@@ -85,9 +85,9 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
             }
         }
         if (anno.valPrecision() == -1) {
-            JavassistUtil.append(body, "{}[i]={};\n", arrVarName, JavassistUtil.replaceVarToValExpr(anno.valExpr(), varNameArrayElement));
+            JavassistUtil.append(body, "{}[i]={};\n", arrVarName, JavassistUtil.replaceValExprToCode(anno.valExpr(), varNameArrayElement));
         } else {
-            JavassistUtil.append(body, "{}[i]=({}){}.format((double){},{});\n", arrVarName, arrayElementType, JavassistUtil.class.getName(), JavassistUtil.replaceVarToValExpr(anno.valExpr(), varNameArrayElement), anno.valPrecision());
+            JavassistUtil.append(body, "{}[i]=({}){}.format((double){},{});\n", arrVarName, arrayElementType, JavassistUtil.class.getName(), JavassistUtil.replaceValExprToCode(anno.valExpr(), varNameArrayElement), anno.valPrecision());
         }
         body.append("}\n");
 
@@ -124,7 +124,7 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
                 if (anno.valExpr().isEmpty()) {
                     JavassistUtil.append(body, "{}[i]=(byte){};\n", varNameFieldRes, varNameFieldArr + "[i]");
                 } else {
-                    JavassistUtil.append(body, "{}[i]=(byte)({});\n", varNameFieldRes, JavassistUtil.replaceVarToValExpr(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                    JavassistUtil.append(body, "{}[i]=(byte)({});\n", varNameFieldRes, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                 }
                 JavassistUtil.append(body, "}\n");
                 JavassistUtil.append(body, "{}.writeBytes({});\n", FieldBuilder.varNameByteBuf, varNameFieldRes);
@@ -135,7 +135,7 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
                 if (anno.valExpr().isEmpty()) {
                     JavassistUtil.append(body, "{}.writeShort((short){});\n", FieldBuilder.varNameByteBuf, varNameFieldArr + "[i]");
                 } else {
-                    JavassistUtil.append(body, "{}.writeShort((short)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceVarToValExpr(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                    JavassistUtil.append(body, "{}.writeShort((short)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                 }
                 JavassistUtil.append(body, "}\n");
                 break;
@@ -145,7 +145,7 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
                 if (anno.valExpr().isEmpty()) {
                     JavassistUtil.append(body, "{}.writeInt((int){});\n", FieldBuilder.varNameByteBuf, varNameFieldArr + "[i]");
                 } else {
-                    JavassistUtil.append(body, "{}.writeInt((int)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceVarToValExpr(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                    JavassistUtil.append(body, "{}.writeInt((int)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                 }
                 JavassistUtil.append(body, "}\n");
                 break;
@@ -155,7 +155,7 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
                 if (anno.valExpr().isEmpty()) {
                     JavassistUtil.append(body, "{}.writeLong((long){});\n", FieldBuilder.varNameByteBuf, varNameFieldArr + "[i]");
                 } else {
-                    JavassistUtil.append(body, "{}.writeLong((long)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceVarToValExpr(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                    JavassistUtil.append(body, "{}.writeLong((long)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                 }
                 JavassistUtil.append(body, "}\n");
                 break;

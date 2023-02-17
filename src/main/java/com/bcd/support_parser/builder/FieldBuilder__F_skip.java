@@ -17,7 +17,7 @@ public class FieldBuilder__F_skip extends FieldBuilder {
             if (anno.lenExpr().isEmpty()) {
                 throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have len or lenExpr", field.getDeclaringClass().getName(), field.getName(), F_skip.class.getName());
             } else {
-                JavassistUtil.append(body, "{}.skipBytes({});\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceVarToFieldName(anno.lenExpr(), context.varToFieldName, field));
+                JavassistUtil.append(body, "{}.skipBytes({});\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceLenExprToCode(anno.lenExpr(), context.varToFieldName, field));
             }
         } else {
             JavassistUtil.append(body, "{}.skipBytes({});\n", FieldBuilder.varNameByteBuf, anno.len());
@@ -33,7 +33,7 @@ public class FieldBuilder__F_skip extends FieldBuilder {
             if (anno.lenExpr().isEmpty()) {
                 throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have len or lenExpr", field.getDeclaringClass().getName(), field.getName(), F_skip.class.getName());
             } else {
-                JavassistUtil.append(body, "{}.writeBytes(new byte[{}]);\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceVarToFieldName(anno.lenExpr(), context.varToFieldName, field));
+                JavassistUtil.append(body, "{}.writeBytes(new byte[{}]);\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceLenExprToCode(anno.lenExpr(), context.varToFieldName, field));
             }
         } else {
             JavassistUtil.append(body, "{}.writeBytes(new byte[{}]);\n", FieldBuilder.varNameByteBuf, anno.len());

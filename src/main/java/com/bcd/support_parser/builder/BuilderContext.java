@@ -11,6 +11,7 @@ import javassist.CtClass;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class BuilderContext {
 
@@ -67,22 +68,29 @@ public class BuilderContext {
      */
     public final Map<Character, String> varToFieldName = new HashMap<>();
 
-    public BuilderContext(StringBuilder body, Parser parser, CtClass implCc, String varNameInstance, BuilderContext parentContext) {
+    /**
+     * 类全局变量定义内容对应变量名称
+     * 避免重复定义类变量
+     */
+    public final Map<String,String> classVarDefineToVarName;
+
+    public BuilderContext(StringBuilder body, Parser parser, CtClass implCc, String varNameInstance, BuilderContext parentContext,Map<String,String> classVarDefineToVarName) {
         this.body = body;
         this.parser = parser;
         this.implCc = implCc;
         this.varNameInstance = varNameInstance;
         this.parentContext = parentContext;
+        this.classVarDefineToVarName=classVarDefineToVarName;
     }
 
     public final String getProcessContextVarName() {
         if (processContextVarName == null) {
-            processContextVarName = JavassistUtil.getVarName(this, "processContext");
-            final String fieldContextCLassName = ProcessContext.class.getName();
+            processContextVarName = "processContext";
+            final String fieldContextClassName = ProcessContext.class.getName();
             JavassistUtil.append(body, "final {} {}=new {}({},{});\n",
-                    fieldContextCLassName,
+                    fieldContextClassName,
                     processContextVarName,
-                    fieldContextCLassName,
+                    fieldContextClassName,
                     FieldBuilder.varNameInstance,
                     FieldBuilder.varNameParentProcessContext);
         }

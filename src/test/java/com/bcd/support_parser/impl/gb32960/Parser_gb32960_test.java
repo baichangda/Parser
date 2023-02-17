@@ -7,6 +7,10 @@ import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
 
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+
 public class Parser_gb32960_test {
     @Test
     public void test(){
@@ -19,6 +23,8 @@ public class Parser_gb32960_test {
         final Packet packet = parser.parse(Packet.class, byteBuf, null);
         ByteBuf dest=Unpooled.buffer();
         parser.deParse(packet, dest,null);
+        System.out.println(data);
+        System.out.println(ByteBufUtil.hexDump(dest));
         assert data.equalsIgnoreCase(ByteBufUtil.hexDump(dest));
     }
 }
