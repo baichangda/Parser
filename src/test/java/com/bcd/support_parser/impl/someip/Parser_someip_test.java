@@ -11,7 +11,11 @@ public class Parser_someip_test {
     @Test
     public void test(){
         Parser parser = new Parser_someip();
-        parser.init();
+        parser
+                .withDefaultLogCollector()
+                .enablePrintBuildLog()
+                .enableGenerateClassFile()
+                .init();
         String data = "000100e4000000ac0009000a0304000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a1";
         byte [] bytes= ByteBufUtil.decodeHexDump(data);
         ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);

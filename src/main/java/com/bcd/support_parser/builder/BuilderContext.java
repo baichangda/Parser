@@ -74,6 +74,11 @@ public class BuilderContext {
      */
     public final Map<String,String> classVarDefineToVarName;
 
+    /**
+     * log字符串采集器
+     */
+    public final StringBuilder logSb=new StringBuilder();
+
     public BuilderContext(StringBuilder body, Parser parser, CtClass implCc, String varNameInstance, BuilderContext parentContext,Map<String,String> classVarDefineToVarName) {
         this.body = body;
         this.parser = parser;

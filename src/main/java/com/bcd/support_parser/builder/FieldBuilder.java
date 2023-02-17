@@ -14,6 +14,7 @@ public abstract class FieldBuilder {
     public Parser parser;
 
     public abstract void buildParse(final BuilderContext context);
+    
 
     public void buildDeParse(final BuilderContext context){
 

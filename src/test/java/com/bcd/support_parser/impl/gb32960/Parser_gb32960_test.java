@@ -7,20 +7,21 @@ import io.netty.buffer.ByteBufUtil;
 import io.netty.buffer.Unpooled;
 import org.junit.jupiter.api.Test;
 
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class Parser_gb32960_test {
     @Test
     public void test(){
         Parser parser = new Parser_gb32960();
-        parser.init();
+        parser
+                .withDefaultLogCollector()
+                .enablePrintBuildLog()
+                .enableGenerateClassFile()
+                .init();
         String data = "232303FE4C534A4132343033304853313932393639010135" +
                 "1403190F0507010203010000000469B00EE5271055020F1FFF000002010103424E1E4E2045FFFF2710050006BE437001CF306A060160FFFF0101FFFF0118FF01010E070000000000000000000801010EE527100060000160FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF09010100180EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFED";
         byte [] bytes= ByteBufUtil.decodeHexDump(data);
         ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
-        final Packet packet = parser.parse(Packet.class, byteBuf, null);
+        Packet packet = parser.parse(Packet.class, byteBuf, null);
         ByteBuf dest=Unpooled.buffer();
         parser.deParse(packet, dest,null);
         System.out.println(data);

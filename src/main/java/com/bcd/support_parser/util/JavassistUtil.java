@@ -1,8 +1,11 @@
 package com.bcd.support_parser.util;
 
 
+import com.bcd.support_parser.builder.FieldBuilder;
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.builder.BuilderContext;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtField;
@@ -56,6 +59,34 @@ public class JavassistUtil {
         });
     }
 
+    public static String getFieldByteBufReadIndexVarName(final BuilderContext context) {
+        final String fieldVarName = getFieldVarName(context);
+        return fieldVarName + "_log_byteBuf_readIndex";
+    }
+
+    public static String getFieldLogBytesVarName(final BuilderContext context) {
+        final String fieldVarName = getFieldVarName(context);
+        return fieldVarName + "_log_bytes";
+    }
+
+    public static void prependLogCode(final BuilderContext context) {
+        final String varName = getFieldByteBufReadIndexVarName(context);
+        append(context.body, "int {}={}.readerIndex();\n", varName, FieldBuilder.varNameByteBuf);
+    }
+
+    public static void appendLogCode(final BuilderContext context) {
+        final String fieldByteBufReadIndexVarName = getFieldByteBufReadIndexVarName(context);
+        final String fieldLogBytesVarName = getFieldLogBytesVarName(context);
+        append(context.body, "byte[] {}=new byte[{}.readerIndex()-{}];\n", fieldLogBytesVarName, FieldBuilder.varNameByteBuf, fieldByteBufReadIndexVarName);
+        append(context.body, "{}.getBytes({},{});\n", FieldBuilder.varNameByteBuf, fieldByteBufReadIndexVarName, fieldLogBytesVarName);
+        append(context.body, "{}.logCollector.collect({}.class,\"{}\",{},{},\"{}\");\n",
+                FieldBuilder.varNameParser,
+                context.field.getDeclaringClass().getName(),
+                context.field.getName(), fieldLogBytesVarName,
+                boxing(FieldBuilder.varNameInstance + "." + context.field.getName(), context.field.getType()),
+                context.implCc.getSimpleName());
+    }
+
     public static String getFieldVarName(final BuilderContext context) {
         return context.field.getName();
     }
@@ -90,6 +121,24 @@ public class JavassistUtil {
             return num + ".floatValue()";
         } else if (clazz == double.class) {
             return num + ".doubleValue()";
+        } else {
+            return num;
+        }
+    }
+
+    public static String boxing(final String num, final Class clazz) {
+        if (clazz == byte.class) {
+            return "Byte.valueOf(" + num + ")";
+        } else if (clazz == short.class) {
+            return "Short.valueOf(" + num + ")";
+        } else if (clazz == int.class) {
+            return "Integer.valueOf(" + num + ")";
+        } else if (clazz == long.class) {
+            return "Long.valueOf(" + num + ")";
+        } else if (clazz == float.class) {
+            return "Float.valueOf(" + num + ")";
+        } else if (clazz == double.class) {
+            return "Double.valueOf(" + num + ")";
         } else {
             return num;
         }

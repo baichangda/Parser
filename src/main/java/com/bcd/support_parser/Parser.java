@@ -7,6 +7,7 @@ import com.bcd.support_parser.processor.Processor;
 import com.bcd.support_parser.processor.ProcessContext;
 import com.bcd.support_parser.util.JavassistUtil;
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufUtil;
 import javassist.*;
 import javassist.bytecode.SignatureAttribute;
 import org.slf4j.Logger;
@@ -40,6 +41,8 @@ public class Parser {
 
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+    public final boolean log = true;
+
     public final FieldBuilder__F_bean fieldBuilder__f_bean = new FieldBuilder__F_bean();
     public final FieldBuilder__F_bean_list fieldBuilder__f_bean_list = new FieldBuilder__F_bean_list();
     public final FieldBuilder__F_date fieldBuilder__f_date = new FieldBuilder__F_date();
@@ -50,6 +53,7 @@ public class Parser {
     public final FieldBuilder__F_skip fieldBuilder__f_skip = new FieldBuilder__F_skip();
     public final FieldBuilder__F_string fieldBuilder__f_string = new FieldBuilder__F_string();
     public final FieldBuilder__F_userDefine fieldBuilder__f_userDefine = new FieldBuilder__F_userDefine();
+
 
     public final Set<Class> annoSet = new HashSet<>();
 
@@ -79,7 +83,51 @@ public class Parser {
      * 是否在src/main/java下面生成class文件
      * 主要用于开发测试阶段、便于查看生成的结果
      */
-    public boolean generateClassField = true;
+    public boolean generateClassFile = false;
+
+    /**
+     * 是否打印javassist生成class的过程日志
+     */
+    public boolean printBuildLog = false;
+
+    public interface LogCollector {
+        void collect(Class fieldClass, String fieldName, byte[] content, Object val, String processorClassName);
+    }
+
+    /**
+     * 解析log采集器
+     * 需要注意的是、此功能用于调试、会在生成的class中加入日志代码、影响性能
+     * 而且此功能开启时候避免多线程调用解析、会产生日志混淆、不易调试
+     */
+    public LogCollector logCollector;
+
+    public final Parser enableGenerateClassFile() {
+        this.generateClassFile = true;
+        return this;
+    }
+
+    public final Parser enablePrintBuildLog() {
+        this.printBuildLog = true;
+        return this;
+    }
+
+    public final Parser withLogCollector(LogCollector logCollector) {
+        this.logCollector = logCollector;
+        return this;
+    }
+
+    public final Parser withDefaultLogCollector() {
+        this.logCollector = (fieldClass, fieldName, content, val, processorClassName) -> {
+            logger.info("[{}].[{}] [{}] [{}]->[{}]"
+                    , fieldClass.getSimpleName()
+                    , fieldName
+                    , processorClassName
+                    , ByteBufUtil.hexDump(content)
+                    , val
+            );
+        };
+        return this;
+    }
 
     public void init() {
         initFieldBuilder();
@@ -168,72 +216,84 @@ public class Parser {
                                 !Modifier.isStatic(e.getModifiers()) &&
                                 Modifier.isPublic(e.getModifiers()))
                 .collect(Collectors.toList());
+        if (fieldList.isEmpty()) {
+            return;
+        }
         //需要提前计算出F_integer_bit、F_float_bit的占用字节数、以及各个字段的在其中的偏移量
         context.fieldNameToBitInfo = calcBitField(fieldList, context);
 
         for (int i = 0; i < fieldList.size(); i++) {
             Field field = fieldList.get(i);
             context.field = field;
-
-            final F_integer f_integer = field.getAnnotation(F_integer.class);
-            if (f_integer != null) {
-                fieldBuilder__f_integer_.buildParse(context);
-                continue;
+            if (logCollector != null) {
+                JavassistUtil.prependLogCode(context);
             }
+            try {
+                final F_integer f_integer = field.getAnnotation(F_integer.class);
+                if (f_integer != null) {
+                    fieldBuilder__f_integer_.buildParse(context);
+                    continue;
+                }
 
-            final F_float f_float = field.getAnnotation(F_float.class);
-            if (f_float != null) {
-                fieldBuilder__f_float_.buildParse(context);
-                continue;
-            }
+                final F_float f_float = field.getAnnotation(F_float.class);
+                if (f_float != null) {
+                    fieldBuilder__f_float_.buildParse(context);
+                    continue;
+                }
 
-            final F_integer_array f_integer_array = field.getAnnotation(F_integer_array.class);
-            if (f_integer_array != null) {
-                fieldBuilder__f_integer_array.buildParse(context);
-                continue;
-            }
+                final F_integer_array f_integer_array = field.getAnnotation(F_integer_array.class);
+                if (f_integer_array != null) {
+                    fieldBuilder__f_integer_array.buildParse(context);
+                    continue;
+                }
 
-            final F_float_array f_float_array = field.getAnnotation(F_float_array.class);
-            if (f_float_array != null) {
-                fieldBuilder__f_float_array.buildParse(context);
-                continue;
-            }
+                final F_float_array f_float_array = field.getAnnotation(F_float_array.class);
+                if (f_float_array != null) {
+                    fieldBuilder__f_float_array.buildParse(context);
+                    continue;
+                }
 
-            final F_string f_string = field.getAnnotation(F_string.class);
-            if (f_string != null) {
-                fieldBuilder__f_string.buildParse(context);
-                continue;
-            }
+                final F_string f_string = field.getAnnotation(F_string.class);
+                if (f_string != null) {
+                    fieldBuilder__f_string.buildParse(context);
+                    continue;
+                }
 
-            final F_date f_date = field.getAnnotation(F_date.class);
-            if (f_date != null) {
-                fieldBuilder__f_date.buildParse(context);
-                continue;
-            }
+                final F_date f_date = field.getAnnotation(F_date.class);
+                if (f_date != null) {
+                    fieldBuilder__f_date.buildParse(context);
+                    continue;
+                }
 
-            final F_bean f_bean = field.getAnnotation(F_bean.class);
-            if (f_bean != null) {
-                fieldBuilder__f_bean.buildParse(context);
-                continue;
-            }
+                final F_bean f_bean = field.getAnnotation(F_bean.class);
+                if (f_bean != null) {
+                    fieldBuilder__f_bean.buildParse(context);
+                    continue;
+                }
 
-            final F_bean_list f_bean_list = field.getAnnotation(F_bean_list.class);
-            if (f_bean_list != null) {
-                fieldBuilder__f_bean_list.buildParse(context);
-                continue;
-            }
+                final F_bean_list f_bean_list = field.getAnnotation(F_bean_list.class);
+                if (f_bean_list != null) {
+                    fieldBuilder__f_bean_list.buildParse(context);
+                    continue;
+                }
 
-            final F_userDefine f_userDefine = field.getAnnotation(F_userDefine.class);
-            if (f_userDefine != null) {
-                fieldBuilder__f_userDefine.buildParse(context);
-            }
+                final F_userDefine f_userDefine = field.getAnnotation(F_userDefine.class);
+                if (f_userDefine != null) {
+                    fieldBuilder__f_userDefine.buildParse(context);
+                }
 
-            final F_skip f_skip = field.getAnnotation(F_skip.class);
-            if (f_skip != null) {
-                fieldBuilder__f_skip.buildParse(context);
-                continue;
+                final F_skip f_skip = field.getAnnotation(F_skip.class);
+                if (f_skip != null) {
+                    fieldBuilder__f_skip.buildParse(context);
+                    continue;
+                }
+            } finally {
+                if (logCollector != null) {
+                    JavassistUtil.appendLogCode(context);
+                }
             }
         }
+
     }
 
     public final void buildMethodBody_deParse(Class clazz, BuilderContext context) {
@@ -247,7 +307,9 @@ public class Parser {
                 .collect(Collectors.toList());
         //需要提前计算出F_integer_bit、F_float_bit的占用字节数、以及各个字段的在其中的偏移量
         context.fieldNameToBitInfo = calcBitField(fieldList, context);
-
+        if (fieldList.isEmpty()) {
+            return;
+        }
         for (int i = 0; i < fieldList.size(); i++) {
             Field field = fieldList.get(i);
             context.field = field;
@@ -349,7 +411,9 @@ public class Parser {
             initBody.append(JavassistUtil.format("this.{}.parser=$1;\n", processorVarName));
         }
         initBody.append("}\n");
-        logger.info("----------clazz[{}] constructor body-------------\n{}", clazz.getName(), initBody.toString());
+        if(printBuildLog) {
+            logger.info("----------clazz[{}] constructor body-------------\n{}", clazz.getName(), initBody.toString());
+        }
         constructor.setBody(initBody.toString());
         cc.addConstructor(constructor);
 
@@ -379,7 +443,9 @@ public class Parser {
         buildMethodBody_parse(clazz, parseContext);
         JavassistUtil.append(processBody, "return {};\n", FieldBuilder.varNameInstance);
         processBody.append("}");
-        logger.info("\n-----------class[{}] process-----------{}\n", clazz.getName(), processBody.toString());
+        if(printBuildLog) {
+            logger.info("\n-----------class[{}] process-----------{}\n", clazz.getName(), processBody.toString());
+        }
         process_cm.setBody(processBody.toString());
 
         //添加实现、定义deProcess方法
@@ -400,10 +466,12 @@ public class Parser {
         BuilderContext deParseContext = new BuilderContext(deProcessBody, this, cc, FieldBuilder.varNameInstance, null, classVarDefineToVarName);
         buildMethodBody_deParse(clazz, deParseContext);
         deProcessBody.append("}");
-        logger.info("\n-----------class[{}] deProcess-----------{}\n", clazz.getName(), deProcessBody.toString());
+        if(printBuildLog){
+            logger.info("\n-----------class[{}] deProcess-----------{}\n", clazz.getName(), deProcessBody.toString());
+        }
         deProcess_cm.setBody(deProcessBody.toString());
 
-        if (generateClassField) {
+        if (generateClassFile) {
             cc.writeFile("src/main/java");
         }
 //        return cc.toClass(Processor.class);
@@ -419,7 +487,6 @@ public class Parser {
                 if (processor == null) {
                     try {
                         final Class impl = buildClass(clazz);
-                        logger.info("build Impl [{}] succeed\n\n", impl.getName());
                         processor = (Processor<T>) (impl.getConstructor(Parser.class).newInstance(this));
                         beanClass_to_processor.put(clazz, processor);
                     } catch (Exception e) {
@@ -440,7 +507,6 @@ public class Parser {
                 if (processor == null) {
                     try {
                         final Class impl = buildClass(clazz);
-                        logger.info("build Impl [{}] succeed\n\n", impl.getName());
                         processor = (Processor) (impl.getConstructor(Parser.class).newInstance(this));
                         beanClass_to_processor.put(clazz, processor);
                     } catch (Exception e) {

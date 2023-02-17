@@ -52,5 +52,6 @@ public class FieldBuilder__F_bean_list extends FieldBuilder {
         JavassistUtil.append(body, "final {} {}=({}){}.get(i);\n", typeClassName, fieldVarNameTemp, typeClassName, varNameField);
         JavassistUtil.append(body, "{}.deParse({},{},{});\n", FieldBuilder.varNameParser, fieldVarNameTemp, FieldBuilder.varNameByteBuf, processContextVarName);
         JavassistUtil.append(body, "}\n");
+
     }
 }
