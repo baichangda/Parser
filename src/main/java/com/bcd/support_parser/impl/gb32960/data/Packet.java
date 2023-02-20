@@ -1,6 +1,7 @@
 package com.bcd.support_parser.impl.gb32960.data;
 
 import com.bcd.support_parser.anno.*;
+import com.bcd.support_parser.impl.gb32960.builder.PacketDataFieldBuilder;
 import com.bcd.support_parser.impl.gb32960.processor.PacketDataFieldProcessor;
 
 

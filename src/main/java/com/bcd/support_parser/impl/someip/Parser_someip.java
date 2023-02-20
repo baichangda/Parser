@@ -15,7 +15,8 @@ public class Parser_someip extends Parser {
     }
 
     public static void main(String[] args) {
-
+        Parser.enablePrintBuildLog();
+        Parser.enableGenerateClassFile();
         String hex = "000100e4000000ac0009000a0304000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a1";
 
         int threadNum=1;
@@ -25,7 +26,7 @@ public class Parser_someip extends Parser {
         logger.info("param threadNum[{}]",threadNum);
         int num=1000000000;
 
-        PerformanceUtil.testMultiThreadPerformance(hex,Packet.class,threadNum,num,false);
+        PerformanceUtil.testMultiThreadPerformance(hex,Packet.class,threadNum,num,true);
 
 
     }
