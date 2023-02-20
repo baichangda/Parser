@@ -1,12 +1,13 @@
 package com.bcd.support_parser.impl.gb32960.processor;
 
+import com.bcd.support_parser.Parser;
 import com.bcd.support_parser.impl.gb32960.data.*;
 import com.bcd.support_parser.processor.Processor;
 import com.bcd.support_parser.processor.ProcessContext;
 import io.netty.buffer.ByteBuf;
 
 
-public class PacketDataFieldProcessor extends Processor<PacketData> {
+public class PacketDataFieldProcessor implements Processor<PacketData> {
 
     @Override
     public PacketData process(final ByteBuf data, final ProcessContext parentContext) {
@@ -15,37 +16,37 @@ public class PacketDataFieldProcessor extends Processor<PacketData> {
         switch (packet.flag) {
             //车辆登入
             case 1 : {
-                packetData = parser.parse(VehicleLoginData.class, data, parentContext);
+                packetData = Parser.parse(VehicleLoginData.class, data, parentContext);
                 break;
             }
 
             //车辆实时信息
             case 2 : {
-                packetData = parser.parse(VehicleRealData.class, data, parentContext);
+                packetData = Parser.parse(VehicleRealData.class, data, parentContext);
                 break;
             }
 
             //补发信息上报
             case 3 : {
-                packetData = parser.parse(VehicleSupplementData.class, data, parentContext);
+                packetData = Parser.parse(VehicleSupplementData.class, data, parentContext);
                 break;
             }
 
             //车辆登出
             case 4 : {
-                packetData = parser.parse(VehicleLogoutData.class, data, parentContext);
+                packetData = Parser.parse(VehicleLogoutData.class, data, parentContext);
                 break;
             }
 
             //平台登入
             case 5 : {
-                packetData = parser.parse(PlatformLoginData.class, data, parentContext);
+                packetData = Parser.parse(PlatformLoginData.class, data, parentContext);
                 break;
             }
 
             //平台登出
             case 6 : {
-                packetData = parser.parse(PlatformLogoutData.class, data, parentContext);
+                packetData = Parser.parse(PlatformLogoutData.class, data, parentContext);
                 break;
             }
 
@@ -64,6 +65,6 @@ public class PacketDataFieldProcessor extends Processor<PacketData> {
 
     @Override
     public void deProcess(ByteBuf data, ProcessContext parentContext, PacketData instance) {
-        parser.deParse(instance, data, parentContext);
+        Parser.deParse(instance, data, parentContext);
     }
 }

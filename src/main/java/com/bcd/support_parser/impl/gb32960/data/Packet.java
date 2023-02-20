@@ -6,7 +6,7 @@ import com.bcd.support_parser.impl.gb32960.processor.PacketDataFieldProcessor;
 
 public class Packet {
     //头 0-2
-    @F_integer_array(len = 2, singleLen = 1,valExpr = "x-10")
+    @F_integer_array(len = 2, singleLen = 1)
     public byte[] header;
     //命令标识 2-3
     @F_integer(len = 1)

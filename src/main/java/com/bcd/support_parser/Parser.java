@@ -39,25 +39,23 @@ import java.util.stream.Collectors;
  */
 public class Parser {
 
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    public final static Logger logger = LoggerFactory.getLogger(Parser.class);
 
-    public final boolean log = true;
-
-    public final FieldBuilder__F_bean fieldBuilder__f_bean = new FieldBuilder__F_bean();
-    public final FieldBuilder__F_bean_list fieldBuilder__f_bean_list = new FieldBuilder__F_bean_list();
-    public final FieldBuilder__F_date fieldBuilder__f_date = new FieldBuilder__F_date();
-    public final FieldBuilder__F_float_array fieldBuilder__f_float_array = new FieldBuilder__F_float_array();
-    public final FieldBuilder__F_float fieldBuilder__f_float_ = new FieldBuilder__F_float();
-    public final FieldBuilder__F_integer_array fieldBuilder__f_integer_array = new FieldBuilder__F_integer_array();
-    public final FieldBuilder__F_integer fieldBuilder__f_integer_ = new FieldBuilder__F_integer();
-    public final FieldBuilder__F_skip fieldBuilder__f_skip = new FieldBuilder__F_skip();
-    public final FieldBuilder__F_string fieldBuilder__f_string = new FieldBuilder__F_string();
-    public final FieldBuilder__F_userDefine fieldBuilder__f_userDefine = new FieldBuilder__F_userDefine();
+    public final static FieldBuilder__F_bean fieldBuilder__f_bean = new FieldBuilder__F_bean();
+    public final static FieldBuilder__F_bean_list fieldBuilder__f_bean_list = new FieldBuilder__F_bean_list();
+    public final static FieldBuilder__F_date fieldBuilder__f_date = new FieldBuilder__F_date();
+    public final static FieldBuilder__F_float_array fieldBuilder__f_float_array = new FieldBuilder__F_float_array();
+    public final static FieldBuilder__F_float fieldBuilder__f_float_ = new FieldBuilder__F_float();
+    public final static FieldBuilder__F_integer_array fieldBuilder__f_integer_array = new FieldBuilder__F_integer_array();
+    public final static FieldBuilder__F_integer fieldBuilder__f_integer_ = new FieldBuilder__F_integer();
+    public final static FieldBuilder__F_skip fieldBuilder__f_skip = new FieldBuilder__F_skip();
+    public final static FieldBuilder__F_string fieldBuilder__f_string = new FieldBuilder__F_string();
+    public final static FieldBuilder__F_userDefine fieldBuilder__f_userDefine = new FieldBuilder__F_userDefine();
 
 
-    public final Set<Class> annoSet = new HashSet<>();
+    public final static Set<Class> annoSet = new HashSet<>();
 
-    {
+    static {
         annoSet.add(F_integer.class);
         annoSet.add(F_integer_array.class);
 
@@ -77,18 +75,18 @@ public class Parser {
     }
 
 
-    private final Map<Class, Processor> beanClass_to_processor = new HashMap<>();
+    private final static Map<Class, Processor> beanClass_to_processor = new HashMap<>();
 
     /**
      * 是否在src/main/java下面生成class文件
      * 主要用于开发测试阶段、便于查看生成的结果
      */
-    public boolean generateClassFile = false;
+    public static boolean generateClassFile = false;
 
     /**
      * 是否打印javassist生成class的过程日志
      */
-    public boolean printBuildLog = false;
+    public static boolean printBuildLog = false;
 
     public interface LogCollector {
         void collect(Class fieldClass, String fieldName, byte[] content, Object val, String processorClassName);
@@ -99,25 +97,10 @@ public class Parser {
      * 需要注意的是、此功能用于调试、会在生成的class中加入日志代码、影响性能
      * 而且此功能开启时候避免多线程调用解析、会产生日志混淆、不易调试
      */
-    public LogCollector logCollector;
+    public static LogCollector logCollector;
 
-    public final Parser enableGenerateClassFile() {
-        this.generateClassFile = true;
-        return this;
-    }
-
-    public final Parser enablePrintBuildLog() {
-        this.printBuildLog = true;
-        return this;
-    }
-
-    public final Parser withLogCollector(LogCollector logCollector) {
-        this.logCollector = logCollector;
-        return this;
-    }
-
-    public final Parser withDefaultLogCollector() {
-        this.logCollector = (fieldClass, fieldName, content, val, processorClassName) -> {
+    public static void withDefaultLogCollector() {
+        logCollector = (fieldClass, fieldName, content, val, processorClassName) -> {
             logger.info("[{}].[{}] [{}] [{}]->[{}]"
                     , fieldClass.getSimpleName()
                     , fieldName
@@ -126,30 +109,14 @@ public class Parser {
                     , val
             );
         };
-        return this;
     }
 
-    public void init() {
-        initFieldBuilder();
+    public static void enablePrintBuildLog() {
+        printBuildLog = true;
     }
 
-    /**
-     * 初始化所有的{@link FieldBuilder}实现
-     */
-    public void initFieldBuilder() {
-        try {
-            final Field[] fields = this.getClass().getFields();
-            for (Field declaredField : fields) {
-                if (FieldBuilder.class.isAssignableFrom(declaredField.getType())) {
-                    declaredField.setAccessible(true);
-                    final FieldBuilder fieldBuilder;
-                    fieldBuilder = (FieldBuilder) declaredField.get(this);
-                    fieldBuilder.parser = this;
-                }
-            }
-        } catch (IllegalAccessException e) {
-            throw BaseRuntimeException.getException(e);
-        }
+    public static void enableGenerateClassFile() {
+        generateClassFile = true;
     }
 
     /**
@@ -162,7 +129,7 @@ public class Parser {
      * @param builderContext
      * @return
      */
-    private Map<String, int[]> calcBitField(List<Field> fieldList, BuilderContext builderContext) {
+    private static Map<String, int[]> calcBitField(List<Field> fieldList, BuilderContext builderContext) {
         Map<String, int[]> fieldNameToBitInfo = new HashMap<>();
         List<int[]> tempList = new ArrayList<>();
         int bitSum = 0;
@@ -197,7 +164,7 @@ public class Parser {
         return fieldNameToBitInfo;
     }
 
-    private boolean needParse(Field field) {
+    private static boolean needParse(Field field) {
         final Annotation[] annotations = field.getAnnotations();
         for (Annotation annotation : annotations) {
             if (annoSet.contains(annotation.annotationType())) {
@@ -207,7 +174,7 @@ public class Parser {
         return false;
     }
 
-    public final void buildMethodBody_parse(Class clazz, BuilderContext context) {
+    public static void buildMethodBody_parse(Class clazz, BuilderContext context) {
         //过滤掉 final、static关键字修饰、@F_not注解修饰、且不是public的字段
         final List<Field> fieldList = Arrays.stream(clazz.getDeclaredFields())
                 .filter(e ->
@@ -296,7 +263,7 @@ public class Parser {
 
     }
 
-    public final void buildMethodBody_deParse(Class clazz, BuilderContext context) {
+    public static void buildMethodBody_deParse(Class clazz, BuilderContext context) {
         //过滤掉 final、static关键字修饰、@F_not注解修饰、且不是public的字段
         final List<Field> fieldList = Arrays.stream(clazz.getDeclaredFields())
                 .filter(e ->
@@ -375,32 +342,30 @@ public class Parser {
         }
     }
 
-    public final Class buildClass(Class clazz) throws CannotCompileException, NotFoundException, IOException {
+    static int processorIndex = 0;
+
+    public static Class buildClass(Class clazz) throws CannotCompileException, NotFoundException, IOException {
         final String processor_class_name = Processor.class.getName();
         final String byteBufClassName = ByteBuf.class.getName();
         final String clazzName = clazz.getName();
 
         final int lastIndexOf = processor_class_name.lastIndexOf(".");
-        String implProcessor_class_name = processor_class_name.substring(0, lastIndexOf) + "." + processor_class_name.substring(lastIndexOf + 1) + "_" + clazz.getSimpleName();
+        String implProcessor_class_name = processor_class_name.substring(0, lastIndexOf) + "." + processor_class_name.substring(lastIndexOf + 1) + "_" + clazz.getSimpleName() + "_" + processorIndex++;
         final CtClass cc = ClassPool.getDefault().makeClass(implProcessor_class_name);
 
         //添加泛型
-        SignatureAttribute.ClassSignature class_cs = new SignatureAttribute.ClassSignature(null, new SignatureAttribute.ClassType(processor_class_name, new SignatureAttribute.TypeArgument[]{
-                new SignatureAttribute.TypeArgument(new SignatureAttribute.ClassType(clazzName))
-        }), null);
+        SignatureAttribute.ClassSignature class_cs = new SignatureAttribute.ClassSignature(null, null, new SignatureAttribute.ClassType[]{
+                new SignatureAttribute.ClassType(processor_class_name, new SignatureAttribute.TypeArgument[]{
+                        new SignatureAttribute.TypeArgument(new SignatureAttribute.ClassType(clazzName))
+                })
+        });
         cc.setGenericSignature(class_cs.encode());
 
         cc.setModifiers(Modifier.FINAL | Modifier.PUBLIC);
 
         StringBuilder initBody = new StringBuilder();
-        //加parser字段
-        final String parserClassName = Parser.class.getName();
-        cc.addField(CtField.make("private final " + parserClassName + " " + FieldBuilder.varNameParser + ";", cc));
-        //初始化parser字段
-        final CtClass parser_cc = ClassPool.getDefault().get(parserClassName);
-        final CtConstructor constructor = CtNewConstructor.make(new CtClass[]{parser_cc}, null, cc);
+        final CtConstructor constructor = CtNewConstructor.make(new CtClass[]{}, null, cc);
         initBody.append("{\n");
-        initBody.append("this." + FieldBuilder.varNameParser + "=$1;\n");
         //加processorClass字段并初始化
         final List<Class> processorClassList = Arrays.stream(clazz.getDeclaredFields()).map(f -> f.getAnnotation(F_userDefine.class)).filter(Objects::nonNull).map(F_userDefine::processorClass).filter(e -> e != void.class).collect(Collectors.toList());
         for (Class processorClass : processorClassList) {
@@ -408,10 +373,9 @@ public class Parser {
             final String processorVarName = JavassistUtil.getProcessorVarName(processorClass);
             cc.addField(CtField.make("private final " + processorClassName + " " + processorVarName + ";", cc));
             initBody.append(JavassistUtil.format("this.{}=new {}();\n", processorVarName, processorClassName));
-            initBody.append(JavassistUtil.format("this.{}.parser=$1;\n", processorVarName));
         }
         initBody.append("}\n");
-        if(printBuildLog) {
+        if (printBuildLog) {
             logger.info("----------clazz[{}] constructor body-------------\n{}", clazz.getName(), initBody.toString());
         }
         constructor.setBody(initBody.toString());
@@ -420,8 +384,8 @@ public class Parser {
         final Map<String, String> classVarDefineToVarName = new HashMap<>();
 
         //添加实现、定义process方法
-        final CtClass super_cc = ClassPool.getDefault().get(processor_class_name);
-        cc.setSuperclass(super_cc);
+        final CtClass interface_cc = ClassPool.getDefault().get(processor_class_name);
+        cc.addInterface(interface_cc);
         final CtMethod process_cm = CtNewMethod.make(
                 /**
                  * 在这里定义返回值为Object类型
@@ -439,11 +403,11 @@ public class Parser {
         StringBuilder processBody = new StringBuilder();
         processBody.append("\n{\n");
         JavassistUtil.append(processBody, "final {} {}=new {}();\n", clazzName, FieldBuilder.varNameInstance, clazzName);
-        BuilderContext parseContext = new BuilderContext(processBody, this, cc, FieldBuilder.varNameInstance, null, classVarDefineToVarName);
+        BuilderContext parseContext = new BuilderContext(processBody, cc, null, classVarDefineToVarName);
         buildMethodBody_parse(clazz, parseContext);
         JavassistUtil.append(processBody, "return {};\n", FieldBuilder.varNameInstance);
         processBody.append("}");
-        if(printBuildLog) {
+        if (printBuildLog) {
             logger.info("\n-----------class[{}] process-----------{}\n", clazz.getName(), processBody.toString());
         }
         process_cm.setBody(processBody.toString());
@@ -463,10 +427,10 @@ public class Parser {
         StringBuilder deProcessBody = new StringBuilder();
         deProcessBody.append("\n{\n");
         JavassistUtil.append(deProcessBody, "final {} {}=({})$3;\n", clazzName, FieldBuilder.varNameInstance, clazzName);
-        BuilderContext deParseContext = new BuilderContext(deProcessBody, this, cc, FieldBuilder.varNameInstance, null, classVarDefineToVarName);
+        BuilderContext deParseContext = new BuilderContext(deProcessBody, cc, null, classVarDefineToVarName);
         buildMethodBody_deParse(clazz, deParseContext);
         deProcessBody.append("}");
-        if(printBuildLog){
+        if (printBuildLog) {
             logger.info("\n-----------class[{}] deProcess-----------{}\n", clazz.getName(), deProcessBody.toString());
         }
         deProcess_cm.setBody(deProcessBody.toString());
@@ -479,7 +443,7 @@ public class Parser {
     }
 
 
-    public final <T> T parse(Class<T> clazz, ByteBuf data, ProcessContext parentContext) {
+    public static <T> T parse(Class<T> clazz, ByteBuf data, ProcessContext parentContext) {
         Processor<T> processor = beanClass_to_processor.get(clazz);
         if (processor == null) {
             synchronized (beanClass_to_processor) {
@@ -487,7 +451,7 @@ public class Parser {
                 if (processor == null) {
                     try {
                         final Class impl = buildClass(clazz);
-                        processor = (Processor<T>) (impl.getConstructor(Parser.class).newInstance(this));
+                        processor = (Processor<T>) (impl.getConstructor().newInstance());
                         beanClass_to_processor.put(clazz, processor);
                     } catch (Exception e) {
                         throw BaseRuntimeException.getException(e);
@@ -498,7 +462,7 @@ public class Parser {
         return processor.process(data, parentContext);
     }
 
-    public final void deParse(Object instance, ByteBuf data, ProcessContext parentContext) {
+    public static void deParse(Object instance, ByteBuf data, ProcessContext parentContext) {
         final Class<?> clazz = instance.getClass();
         Processor processor = beanClass_to_processor.get(clazz);
         if (processor == null) {
@@ -507,7 +471,7 @@ public class Parser {
                 if (processor == null) {
                     try {
                         final Class impl = buildClass(clazz);
-                        processor = (Processor) (impl.getConstructor(Parser.class).newInstance(this));
+                        processor = (Processor) (impl.getConstructor().newInstance());
                         beanClass_to_processor.put(clazz, processor);
                     } catch (Exception e) {
                         throw BaseRuntimeException.getException(e);

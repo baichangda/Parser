@@ -2,13 +2,10 @@ package com.bcd.support_parser.builder;
 
 import com.bcd.support_parser.anno.F_date;
 import com.bcd.support_parser.util.JavassistUtil;
-import javassist.CtField;
 
 import java.lang.reflect.Field;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.format.TextStyle;
 import java.util.Date;
 
 public class FieldBuilder__F_date extends FieldBuilder {
@@ -19,6 +16,7 @@ public class FieldBuilder__F_date extends FieldBuilder {
         final int baseYear = anno.baseYear();
         final Field field = context.field;
         final String varNameInstance = FieldBuilder.varNameInstance;
+
         final Class<?> fieldTypeClass = field.getType();
         final String zoneDateTimeClassName = ZonedDateTime.class.getName();
         final String zoneIdVarName = JavassistUtil.defineClassVar(context, ZoneId.class, "{}.of(\"{}\")", ZoneId.class.getName(), anno.zoneId());
@@ -55,9 +53,8 @@ public class FieldBuilder__F_date extends FieldBuilder {
         final F_date anno = context.field.getAnnotation(F_date.class);
         final int baseYear = anno.baseYear();
         final Field field = context.field;
-        final String varNameInstance = FieldBuilder.varNameInstance;
         final Class<?> fieldTypeClass = field.getType();
-        final String valCode = varNameInstance + "." + field.getName();
+        final String valCode = FieldBuilder.varNameInstance + "." + field.getName();
         final String zoneDateTimeClassName = ZonedDateTime.class.getName();
         final String fieldVarName = JavassistUtil.getFieldVarName(context);
         final String fieldZoneDateTimeVarName = fieldVarName + "_zoneDateTime";

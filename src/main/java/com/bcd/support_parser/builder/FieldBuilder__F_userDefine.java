@@ -4,7 +4,6 @@ package com.bcd.support_parser.builder;
 import com.bcd.support_parser.anno.F_userDefine;
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.util.JavassistUtil;
-import javassist.CtField;
 
 import java.lang.reflect.Field;
 
@@ -52,11 +51,12 @@ public class FieldBuilder__F_userDefine extends FieldBuilder {
         final Class<?> processorClass = anno.processorClass();
         final StringBuilder body = context.body;
         final String varNameField = JavassistUtil.getFieldVarName(context);
+        final String varInstanceName = FieldBuilder.varNameInstance;
         final String valCode;
         if (anno.var() == '0') {
-            valCode = varNameInstance + "." + field.getName();
+            valCode = varInstanceName + "." + field.getName();
         } else {
-            JavassistUtil.append(body, "final {} {}={};\n", field.getType().getName(), varNameField, varNameInstance + "." + field.getName());
+            JavassistUtil.append(body, "final {} {}={};\n", field.getType().getName(), varNameField, varInstanceName + "." + field.getName());
             valCode = varNameField;
         }
         if (builderClass == void.class) {

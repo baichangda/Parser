@@ -1,11 +1,10 @@
 package com.bcd.support_parser.util;
 
 
+import com.bcd.support_parser.Parser;
 import com.bcd.support_parser.builder.FieldBuilder;
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.builder.BuilderContext;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufUtil;
 import javassist.CannotCompileException;
 import javassist.CtClass;
 import javassist.CtField;
@@ -80,7 +79,7 @@ public class JavassistUtil {
         append(context.body, "byte[] {}=new byte[{}.readerIndex()-{}];\n", fieldLogBytesVarName, FieldBuilder.varNameByteBuf, fieldByteBufReadIndexVarName);
         append(context.body, "{}.getBytes({},{});\n", FieldBuilder.varNameByteBuf, fieldByteBufReadIndexVarName, fieldLogBytesVarName);
         append(context.body, "{}.logCollector.collect({}.class,\"{}\",{},{},\"{}\");\n",
-                FieldBuilder.varNameParser,
+                Parser.class.getName(),
                 context.field.getDeclaringClass().getName(),
                 context.field.getName(), fieldLogBytesVarName,
                 boxing(FieldBuilder.varNameInstance + "." + context.field.getName(), context.field.getType()),

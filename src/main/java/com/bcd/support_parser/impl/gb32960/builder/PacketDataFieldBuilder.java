@@ -1,5 +1,6 @@
 package com.bcd.support_parser.impl.gb32960.builder;
 
+import com.bcd.support_parser.Parser;
 import com.bcd.support_parser.impl.gb32960.data.*;
 import com.bcd.support_parser.builder.BuilderContext;
 import com.bcd.support_parser.builder.FieldBuilder;
@@ -15,8 +16,9 @@ public class PacketDataFieldBuilder extends FieldBuilder {
         final StringBuilder body = context.body;
         final Field field = context.field;
         final String varNameField = JavassistUtil.getFieldVarName(context);
-        final String varNameInstance = context.varNameInstance;
+        final String varNameInstance = FieldBuilder.varNameInstance;
         final String fieldTypeClassName = field.getType().getName();
+        final String parserClassName = Parser.class.getName();
 
         JavassistUtil.append(body, "{} {}=null;\n", fieldTypeClassName, varNameField);
 
@@ -24,32 +26,32 @@ public class PacketDataFieldBuilder extends FieldBuilder {
 
         JavassistUtil.append(body, "switch ({}.flag){\n", varNameInstance);
         JavassistUtil.append(body, "case 1:{\n", varNameInstance);
-        JavassistUtil.append(body, "{}= {}.parse({}.class, {},{});\n", varNameField, FieldBuilder.varNameParser, VehicleLoginData.class.getName(), FieldBuilder.varNameByteBuf, parseContextVarName);
+        JavassistUtil.append(body, "{}= {}.parse({}.class, {},{});\n", varNameField, parserClassName, VehicleLoginData.class.getName(), FieldBuilder.varNameByteBuf, parseContextVarName);
         JavassistUtil.append(body, "break;\n");
         JavassistUtil.append(body, "}\n");
 
         JavassistUtil.append(body, "case 2:{\n");
-        JavassistUtil.append(body, "{}= {}.parse({}.class, {},{});\n", varNameField, FieldBuilder.varNameParser, VehicleRealData.class.getName(), FieldBuilder.varNameByteBuf, parseContextVarName);
+        JavassistUtil.append(body, "{}= {}.parse({}.class, {},{});\n", varNameField, parserClassName, VehicleRealData.class.getName(), FieldBuilder.varNameByteBuf, parseContextVarName);
         JavassistUtil.append(body, "break;\n");
         JavassistUtil.append(body, "}\n");
 
         JavassistUtil.append(body, "case 3:{\n");
-        JavassistUtil.append(body, "{}= {}.parse({}.class, {},{});\n", varNameField, FieldBuilder.varNameParser, VehicleSupplementData.class.getName(), FieldBuilder.varNameByteBuf, parseContextVarName);
+        JavassistUtil.append(body, "{}= {}.parse({}.class, {},{});\n", varNameField, parserClassName, VehicleSupplementData.class.getName(), FieldBuilder.varNameByteBuf, parseContextVarName);
         JavassistUtil.append(body, "break;\n");
         JavassistUtil.append(body, "}\n");
 
         JavassistUtil.append(body, "case 4:{\n");
-        JavassistUtil.append(body, "{}= {}.parse({}.class, {},{});\n", varNameField, FieldBuilder.varNameParser, VehicleLogoutData.class.getName(), FieldBuilder.varNameByteBuf, parseContextVarName);
+        JavassistUtil.append(body, "{}= {}.parse({}.class, {},{});\n", varNameField, parserClassName, VehicleLogoutData.class.getName(), FieldBuilder.varNameByteBuf, parseContextVarName);
         JavassistUtil.append(body, "break;\n");
         JavassistUtil.append(body, "}\n");
 
         JavassistUtil.append(body, "case 5:{\n");
-        JavassistUtil.append(body, "{}= {}.parse({}.class, {},{});\n", varNameField, FieldBuilder.varNameParser, PlatformLoginData.class.getName(), FieldBuilder.varNameByteBuf, parseContextVarName);
+        JavassistUtil.append(body, "{}= {}.parse({}.class, {},{});\n", varNameField, parserClassName, PlatformLoginData.class.getName(), FieldBuilder.varNameByteBuf, parseContextVarName);
         JavassistUtil.append(body, "break;\n");
         JavassistUtil.append(body, "}\n");
 
         JavassistUtil.append(body, "case 6:{\n");
-        JavassistUtil.append(body, "{}= {}.parse({}.class, {},{});\n", varNameField, FieldBuilder.varNameParser, PlatformLogoutData.class.getName(), FieldBuilder.varNameByteBuf, parseContextVarName);
+        JavassistUtil.append(body, "{}= {}.parse({}.class, {},{});\n", varNameField, parserClassName, PlatformLogoutData.class.getName(), FieldBuilder.varNameByteBuf, parseContextVarName);
         JavassistUtil.append(body, "break;\n");
         JavassistUtil.append(body, "}\n");
 

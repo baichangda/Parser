@@ -21,13 +21,12 @@ public class PerformanceUtil {
      * 测试多线程
      *
      * @param data
-     * @param parser
      * @param clazz
      * @param threadNum
      * @param num
      * @param <T>
      */
-    public static <T> void testMultiThreadPerformance(String data, Parser parser, Class<T> clazz, int threadNum, int num, boolean parse) {
+    public static <T> void testMultiThreadPerformance(String data,Class<T> clazz, int threadNum, int num, boolean parse) {
         logger.info("threadNum:{}", threadNum);
         final LongAdder count = new LongAdder();
         final ExecutorService[] pools = new ExecutorService[threadNum];
@@ -37,15 +36,15 @@ public class PerformanceUtil {
         if (parse) {
             for (int i = 0; i < pools.length; i++) {
                 pools[i].execute(() -> {
-                    testParse(data, parser, clazz, num, count);
+                    testParse(data, clazz, num, count);
                 });
             }
         } else {
             final ByteBuf buf = Unpooled.wrappedBuffer(ByteBufUtil.decodeHexDump(data));
-            final T t = parser.parse(clazz, buf, null);
+            final T t = Parser.parse(clazz, buf, null);
             for (int i = 0; i < pools.length; i++) {
                 pools[i].execute(() -> {
-                    testDeParse(t, parser, num, count);
+                    testDeParse(t, num, count);
                 });
             }
         }
@@ -69,7 +68,7 @@ public class PerformanceUtil {
         }
     }
 
-    public static <T> void testParse(String data, Parser parser, Class<T> clazz, int num, LongAdder count) {
+    public static <T> void testParse(String data, Class<T> clazz, int num, LongAdder count) {
         final byte[] bytes = ByteBufUtil.decodeHexDump(data);
         ByteBuf byteBuf = Unpooled.wrappedBuffer(bytes);
         byteBuf.markReaderIndex();
@@ -77,19 +76,19 @@ public class PerformanceUtil {
         for (int i = 1; i <= num; i++) {
             byteBuf.resetReaderIndex();
             byteBuf.resetWriterIndex();
-            final T t = parser.parse(clazz, byteBuf, null);
+            final T t = Parser.parse(clazz, byteBuf, null);
             count.increment();
         }
     }
 
-    public static <T> void testDeParse(Object obj, Parser parser, int num, LongAdder count) {
+    public static <T> void testDeParse(Object obj, int num, LongAdder count) {
         ByteBuf byteBuf = Unpooled.buffer();
         byteBuf.markReaderIndex();
         byteBuf.markWriterIndex();
         for (int i = 1; i <= num; i++) {
             byteBuf.resetReaderIndex();
             byteBuf.resetWriterIndex();
-            parser.deParse(obj, byteBuf, null);
+            Parser.deParse(obj, byteBuf, null);
             count.increment();
         }
     }

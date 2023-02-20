@@ -1,7 +1,6 @@
 package com.bcd.support_parser.builder;
 
 import com.bcd.support_parser.anno.F_userDefine;
-import com.bcd.support_parser.Parser;
 import com.bcd.support_parser.processor.Processor;
 import com.bcd.support_parser.processor.ProcessContext;
 import com.bcd.support_parser.util.JavassistUtil;
@@ -11,7 +10,6 @@ import javassist.CtClass;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class BuilderContext {
 
@@ -20,17 +18,9 @@ public class BuilderContext {
      */
     public final static Map<Class, FieldBuilder> fieldBuilderCache = new HashMap<>();
     /**
-     * 所属parser
-     */
-    public final Parser parser;
-    /**
      * parse方法体
      */
     public final StringBuilder body;
-    /**
-     * 实例对象名称
-     */
-    public final String varNameInstance;
     /**
      * 生产的{@link Processor}子类
      */
@@ -74,16 +64,9 @@ public class BuilderContext {
      */
     public final Map<String,String> classVarDefineToVarName;
 
-    /**
-     * log字符串采集器
-     */
-    public final StringBuilder logSb=new StringBuilder();
-
-    public BuilderContext(StringBuilder body, Parser parser, CtClass implCc, String varNameInstance, BuilderContext parentContext,Map<String,String> classVarDefineToVarName) {
+    public BuilderContext(StringBuilder body, CtClass implCc, BuilderContext parentContext,Map<String,String> classVarDefineToVarName) {
         this.body = body;
-        this.parser = parser;
         this.implCc = implCc;
-        this.varNameInstance = varNameInstance;
         this.parentContext = parentContext;
         this.classVarDefineToVarName=classVarDefineToVarName;
     }
@@ -91,11 +74,11 @@ public class BuilderContext {
     public final String getProcessContextVarName() {
         if (processContextVarName == null) {
             processContextVarName = "processContext";
-            final String fieldContextClassName = ProcessContext.class.getName();
+            final String proocessContextClassName = ProcessContext.class.getName();
             JavassistUtil.append(body, "final {} {}=new {}({},{});\n",
-                    fieldContextClassName,
+                    proocessContextClassName,
                     processContextVarName,
-                    fieldContextClassName,
+                    proocessContextClassName,
                     FieldBuilder.varNameInstance,
                     FieldBuilder.varNameParentProcessContext);
         }

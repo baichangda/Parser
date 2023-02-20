@@ -37,7 +37,6 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
         final StringBuilder body = context.body;
 
         final String varNameField = JavassistUtil.getFieldVarName(context);
-        final String varNameInstance = FieldBuilder.varNameInstance;
         final String arrLenRes;
         switch (anno.singleLen()) {
             case 1: {
@@ -91,7 +90,7 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
         }
         body.append("}\n");
 
-        JavassistUtil.append(body, "{}.{}={};\n", varNameInstance, field.getName(), arrVarName);
+        JavassistUtil.append(body, "{}.{}={};\n", FieldBuilder.varNameInstance, field.getName(), arrVarName);
     }
 
     @Override
@@ -101,9 +100,8 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
         final Class<?> fieldTypeClass = field.getType();
         final int singleLen = anno.singleLen();
         final StringBuilder body = context.body;
-        final String varNameInstance = context.varNameInstance;
         final String fieldName = field.getName();
-        final String valCode = varNameInstance + "." + fieldName;
+        final String valCode = FieldBuilder.varNameInstance + "." + fieldName;
         final String varNameField = JavassistUtil.getFieldVarName(context);
         final String varNameFieldArr;
         if (float[].class.isAssignableFrom(fieldTypeClass)) {

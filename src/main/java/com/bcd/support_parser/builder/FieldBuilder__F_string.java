@@ -8,7 +8,6 @@ import com.bcd.support_parser.util.JavassistUtil;
 
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 public class FieldBuilder__F_string extends FieldBuilder {
     @Override
@@ -28,7 +27,6 @@ public class FieldBuilder__F_string extends FieldBuilder {
         }
 
         final String varNameField = JavassistUtil.getFieldVarName(context);
-        final String varNameInstance = FieldBuilder.varNameInstance;
         String arrVarName = varNameField + "_arr";
         String discardLenVarName = varNameField + "_discardLen";
         JavassistUtil.append(body, "final byte[] {}=new byte[{}];\n", arrVarName, lenRes);
@@ -44,7 +42,7 @@ public class FieldBuilder__F_string extends FieldBuilder {
         final Charset charset = Charset.forName(anno.charset());
         final String charsetClassName = Charset.class.getName();
         final String charsetVarName = JavassistUtil.defineClassVar(context,Charset.class, "{}.forName(\"{}\")", charsetClassName, charset.name());
-        JavassistUtil.append(body, "{}.{}=new String({},0,{}.length-{},{});\n", varNameInstance, field.getName(), arrVarName, arrVarName, discardLenVarName, charsetVarName);
+        JavassistUtil.append(body, "{}.{}=new String({},0,{}.length-{},{});\n", FieldBuilder.varNameInstance, field.getName(), arrVarName, arrVarName, discardLenVarName, charsetVarName);
     }
 
     @Override
@@ -64,8 +62,7 @@ public class FieldBuilder__F_string extends FieldBuilder {
         }
 
         final String varNameField = JavassistUtil.getFieldVarName(context);
-        final String varNameInstance = FieldBuilder.varNameInstance;
-        final String valCode = varNameInstance + "." + field.getName();
+        final String valCode = FieldBuilder.varNameInstance + "." + field.getName();
         String arrVarName = varNameField + "_arr";
         String arrLeaveVarName = varNameField + "_leave";
 

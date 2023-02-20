@@ -21,8 +21,6 @@ public class Parser_gb32960 extends Parser {
 
 
     public static void main(String[] args) {
-        Parser parser = new Parser_gb32960();
-        parser.init();
         String data = "232303FE4C534A4132343033304853313932393639010135" +
                 "1403190F0507010203010000000469B00EE5271055020F1FFF000002010103424E1E4E2045FFFF2710050006BE437001CF306A060160FFFF0101FFFF0118FF01010E070000000000000000000801010EE527100060000160FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF09010100180EFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFED";
         int threadNum = 1;
@@ -31,7 +29,9 @@ public class Parser_gb32960 extends Parser {
         }
         logger.info("param threadNum[{}]", threadNum);
         int num = 1000000000;
-        PerformanceUtil.testMultiThreadPerformance(data,parser, Packet.class,threadNum,num,false);
+        Parser.enablePrintBuildLog();
+        Parser.enableGenerateClassFile();
+        PerformanceUtil.testMultiThreadPerformance(data, Packet.class, threadNum, num, true);
     }
 
     private static void parseToPacket(String data, int num, AtomicInteger count) {
@@ -46,11 +46,11 @@ public class Parser_gb32960 extends Parser {
 
             byte[] header = new byte[2];
             byteBuf.readBytes(header);
-            packet.header=header;
+            packet.header = header;
 
-            packet.flag=byteBuf.readUnsignedByte();
+            packet.flag = byteBuf.readUnsignedByte();
 
-            packet.replyFlag=byteBuf.readUnsignedByte();
+            packet.replyFlag = byteBuf.readUnsignedByte();
 
             int discardLen = 0;
             byte[] vinBytes = new byte[17];
@@ -63,17 +63,17 @@ public class Parser_gb32960 extends Parser {
                 }
             }
             String vin = new String(vinBytes, 0, vinBytes.length - discardLen);
-            packet.vin=vin;
+            packet.vin = vin;
 
-            packet.encodeWay=byteBuf.readUnsignedByte();
+            packet.encodeWay = byteBuf.readUnsignedByte();
 
-            packet.contentLength=byteBuf.readUnsignedShort();
+            packet.contentLength = byteBuf.readUnsignedShort();
 
             byte[] dataContent = new byte[packet.contentLength];
             byteBuf.readBytes(dataContent);
-            packet.dataContent=dataContent;
+            packet.dataContent = dataContent;
 
-            packet.code=byteBuf.readByte();
+            packet.code = byteBuf.readByte();
 
             count.incrementAndGet();
         }

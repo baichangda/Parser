@@ -110,7 +110,7 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
         } else {
             JavassistUtil.notSupport_fieldType(field, F_integer_array.class);
         }
-        JavassistUtil.append(body, "{}.{}={};\n", varNameInstance, field.getName(), arrVarName);
+        JavassistUtil.append(body, "{}.{}={};\n", FieldBuilder.varNameInstance, field.getName(), arrVarName);
     }
 
     @Override
@@ -120,7 +120,7 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
         final Class<?> fieldTypeClass = field.getType();
         final int singleLen = anno.singleLen();
         final StringBuilder body = context.body;
-        final String varNameInstance = context.varNameInstance;
+        final String varNameInstance = FieldBuilder.varNameInstance;
         final String fieldName = field.getName();
         final String valCode = varNameInstance + "." + fieldName;
         final String varNameField = JavassistUtil.getFieldVarName(context);

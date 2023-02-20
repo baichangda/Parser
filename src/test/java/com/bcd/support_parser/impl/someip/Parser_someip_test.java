@@ -10,18 +10,15 @@ import org.junit.jupiter.api.Test;
 public class Parser_someip_test {
     @Test
     public void test(){
-        Parser parser = new Parser_someip();
-        parser
-                .withDefaultLogCollector()
-                .enablePrintBuildLog()
-                .enableGenerateClassFile()
-                .init();
+        Parser.withDefaultLogCollector();
+        Parser.enableGenerateClassFile();
+        Parser.enablePrintBuildLog();
         String data = "000100e4000000ac0009000a0304000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a1";
         byte [] bytes= ByteBufUtil.decodeHexDump(data);
         ByteBuf byteBuf= Unpooled.wrappedBuffer(bytes);
-        final Packet packet = parser.parse(Packet.class, byteBuf, null);
+        final Packet packet = Parser.parse(Packet.class, byteBuf, null);
         ByteBuf dest=Unpooled.buffer();
-        parser.deParse(packet, dest,null);
+        Parser.deParse(packet, dest,null);
         System.out.println(data);
         System.out.println(ByteBufUtil.hexDump(dest));
         assert data.equalsIgnoreCase(ByteBufUtil.hexDump(dest));
