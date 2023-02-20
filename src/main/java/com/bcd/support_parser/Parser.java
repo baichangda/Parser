@@ -350,7 +350,7 @@ public class Parser {
         final String clazzName = clazz.getName();
 
         final int lastIndexOf = processor_class_name.lastIndexOf(".");
-        String implProcessor_class_name = processor_class_name.substring(0, lastIndexOf) + "." + processor_class_name.substring(lastIndexOf + 1) + "_" + clazz.getSimpleName() + "_" + processorIndex++;
+        String implProcessor_class_name = processor_class_name.substring(0, lastIndexOf) + "." + processor_class_name.substring(lastIndexOf + 1) + "_" + processorIndex++ + "_" + clazz.getSimpleName();
         final CtClass cc = ClassPool.getDefault().makeClass(implProcessor_class_name);
 
         //添加泛型
