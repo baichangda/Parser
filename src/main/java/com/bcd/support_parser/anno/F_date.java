@@ -22,6 +22,7 @@ public @interface F_date {
 
     /**
      * 所代表的时区
+     * 注意为什么用时区、因为如果使用偏移量、可能会存在夏令时问题
      */
     String zoneId() default "Asia/Shanghai";
 
