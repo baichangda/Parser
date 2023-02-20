@@ -58,9 +58,14 @@ public class JavassistUtil {
         });
     }
 
-    public static String getFieldByteBufReadIndexVarName(final BuilderContext context) {
+    public static String getFieldByteBufReaderIndexVarName(final BuilderContext context) {
         final String fieldVarName = getFieldVarName(context);
-        return fieldVarName + "_log_byteBuf_readIndex";
+        return fieldVarName + "_log_byteBuf_readerIndex";
+    }
+
+    public static String getFieldByteBufWriterIndexVarName(final BuilderContext context) {
+        final String fieldVarName = getFieldVarName(context);
+        return fieldVarName + "_log_byteBuf_writerIndex";
     }
 
     public static String getFieldLogBytesVarName(final BuilderContext context) {
@@ -68,20 +73,40 @@ public class JavassistUtil {
         return fieldVarName + "_log_bytes";
     }
 
-    public static void prependLogCode(final BuilderContext context) {
-        final String varName = getFieldByteBufReadIndexVarName(context);
-        append(context.body, "int {}={}.readerIndex();\n", varName, FieldBuilder.varNameByteBuf);
+    public static void prependLogCode_parse(final BuilderContext context) {
+        final String varName = getFieldByteBufReaderIndexVarName(context);
+        append(context.body, "final int {}={}.readerIndex();\n", varName, FieldBuilder.varNameByteBuf);
     }
 
-    public static void appendLogCode(final BuilderContext context) {
-        final String fieldByteBufReadIndexVarName = getFieldByteBufReadIndexVarName(context);
+    public static void appendLogCode_parse(final BuilderContext context) {
+        final String fieldByteBufReaderIndexVarName = getFieldByteBufReaderIndexVarName(context);
         final String fieldLogBytesVarName = getFieldLogBytesVarName(context);
-        append(context.body, "byte[] {}=new byte[{}.readerIndex()-{}];\n", fieldLogBytesVarName, FieldBuilder.varNameByteBuf, fieldByteBufReadIndexVarName);
-        append(context.body, "{}.getBytes({},{});\n", FieldBuilder.varNameByteBuf, fieldByteBufReadIndexVarName, fieldLogBytesVarName);
-        append(context.body, "{}.logCollector.collect({}.class,\"{}\",{},{},\"{}\");\n",
+        append(context.body, "byte[] {}=new byte[{}.readerIndex()-{}];\n", fieldLogBytesVarName, FieldBuilder.varNameByteBuf, fieldByteBufReaderIndexVarName);
+        append(context.body, "{}.getBytes({},{});\n", FieldBuilder.varNameByteBuf, fieldByteBufReaderIndexVarName, fieldLogBytesVarName);
+        append(context.body, "{}.logCollector_parse.collect({}.class,\"{}\",{},{},\"{}\");\n",
                 Parser.class.getName(),
                 context.field.getDeclaringClass().getName(),
-                context.field.getName(), fieldLogBytesVarName,
+                context.field.getName(),
+                fieldLogBytesVarName,
+                boxing(FieldBuilder.varNameInstance + "." + context.field.getName(), context.field.getType()),
+                context.implCc.getSimpleName());
+    }
+
+    public static void prependLogCode_deParse(final BuilderContext context) {
+        final String varName = getFieldByteBufWriterIndexVarName(context);
+        append(context.body, "final int {}={}.writerIndex();\n", varName, FieldBuilder.varNameByteBuf);
+    }
+
+    public static void appendLogCode_deParse(final BuilderContext context) {
+        final String fieldByteBufWriterIndexVarName = getFieldByteBufWriterIndexVarName(context);
+        final String fieldLogBytesVarName = getFieldLogBytesVarName(context);
+        append(context.body, "byte[] {}=new byte[{}.writerIndex()-{}];\n", fieldLogBytesVarName, FieldBuilder.varNameByteBuf, fieldByteBufWriterIndexVarName);
+        append(context.body, "{}.getBytes({},{});\n", FieldBuilder.varNameByteBuf, fieldByteBufWriterIndexVarName, fieldLogBytesVarName);
+        append(context.body, "{}.logCollector_deParse.collect({}.class,\"{}\",{},{},\"{}\");\n",
+                Parser.class.getName(),
+                context.field.getDeclaringClass().getName(),
+                context.field.getName(),
+                fieldLogBytesVarName,
                 boxing(FieldBuilder.varNameInstance + "." + context.field.getName(), context.field.getType()),
                 context.implCc.getSimpleName());
     }

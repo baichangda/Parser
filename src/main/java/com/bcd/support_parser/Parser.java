@@ -97,18 +97,29 @@ public class Parser {
      * 需要注意的是、此功能用于调试、会在生成的class中加入日志代码、影响性能
      * 而且此功能开启时候避免多线程调用解析、会产生日志混淆、不易调试
      */
-    public static LogCollector logCollector;
+    public static LogCollector logCollector_parse;
+    public static LogCollector logCollector_deParse;
 
-    public static void withDefaultLogCollector() {
-        logCollector = (fieldClass, fieldName, content, val, processorClassName) -> {
-            logger.info("[{}].[{}] [{}] [{}]->[{}]"
-                    , fieldClass.getSimpleName()
-                    , fieldName
-                    , processorClassName
-                    , ByteBufUtil.hexDump(content)
-                    , val
-            );
-        };
+
+
+    public static void withDefaultLogCollector_parse() {
+        logCollector_parse = (fieldClass, fieldName, content, val, processorClassName) -> logger.info("--parse--[{}].[{}] [{}] [{}]->[{}]"
+                , fieldClass.getSimpleName()
+                , fieldName
+                , processorClassName
+                , ByteBufUtil.hexDump(content)
+                , val
+        );
+    }
+
+    public static void withDefaultLogCollector_deParse() {
+        logCollector_deParse = (fieldClass, fieldName, content, val, processorClassName) -> logger.info("--deParse--[{}].[{}] [{}] [{}]->[{}]"
+                , fieldClass.getSimpleName()
+                , fieldName
+                , processorClassName
+                , val
+                , ByteBufUtil.hexDump(content)
+        );
     }
 
     public static void enablePrintBuildLog() {
@@ -192,8 +203,8 @@ public class Parser {
         for (int i = 0; i < fieldList.size(); i++) {
             Field field = fieldList.get(i);
             context.field = field;
-            if (logCollector != null) {
-                JavassistUtil.prependLogCode(context);
+            if (logCollector_parse != null) {
+                JavassistUtil.prependLogCode_parse(context);
             }
             try {
                 final F_integer f_integer = field.getAnnotation(F_integer.class);
@@ -255,8 +266,8 @@ public class Parser {
                     continue;
                 }
             } finally {
-                if (logCollector != null) {
-                    JavassistUtil.appendLogCode(context);
+                if (logCollector_parse != null) {
+                    JavassistUtil.appendLogCode_parse(context);
                 }
             }
         }
@@ -280,64 +291,72 @@ public class Parser {
         for (int i = 0; i < fieldList.size(); i++) {
             Field field = fieldList.get(i);
             context.field = field;
+            try {
+                if (logCollector_deParse != null) {
+                    JavassistUtil.prependLogCode_deParse(context);
+                }
+                final F_integer f_integer = field.getAnnotation(F_integer.class);
+                if (f_integer != null) {
+                    fieldBuilder__f_integer_.buildDeParse(context);
+                    continue;
+                }
 
-            final F_integer f_integer = field.getAnnotation(F_integer.class);
-            if (f_integer != null) {
-                fieldBuilder__f_integer_.buildDeParse(context);
-                continue;
-            }
+                final F_float f_float = field.getAnnotation(F_float.class);
+                if (f_float != null) {
+                    fieldBuilder__f_float_.buildDeParse(context);
+                    continue;
+                }
 
-            final F_float f_float = field.getAnnotation(F_float.class);
-            if (f_float != null) {
-                fieldBuilder__f_float_.buildDeParse(context);
-                continue;
-            }
+                final F_integer_array f_integer_array = field.getAnnotation(F_integer_array.class);
+                if (f_integer_array != null) {
+                    fieldBuilder__f_integer_array.buildDeParse(context);
+                    continue;
+                }
 
-            final F_integer_array f_integer_array = field.getAnnotation(F_integer_array.class);
-            if (f_integer_array != null) {
-                fieldBuilder__f_integer_array.buildDeParse(context);
-                continue;
-            }
+                final F_float_array f_float_array = field.getAnnotation(F_float_array.class);
+                if (f_float_array != null) {
+                    fieldBuilder__f_float_array.buildDeParse(context);
+                    continue;
+                }
 
-            final F_float_array f_float_array = field.getAnnotation(F_float_array.class);
-            if (f_float_array != null) {
-                fieldBuilder__f_float_array.buildDeParse(context);
-                continue;
-            }
+                final F_string f_string = field.getAnnotation(F_string.class);
+                if (f_string != null) {
+                    fieldBuilder__f_string.buildDeParse(context);
+                    continue;
+                }
 
-            final F_string f_string = field.getAnnotation(F_string.class);
-            if (f_string != null) {
-                fieldBuilder__f_string.buildDeParse(context);
-                continue;
-            }
+                final F_date f_date = field.getAnnotation(F_date.class);
+                if (f_date != null) {
+                    fieldBuilder__f_date.buildDeParse(context);
+                    continue;
+                }
 
-            final F_date f_date = field.getAnnotation(F_date.class);
-            if (f_date != null) {
-                fieldBuilder__f_date.buildDeParse(context);
-                continue;
-            }
+                final F_bean f_bean = field.getAnnotation(F_bean.class);
+                if (f_bean != null) {
+                    fieldBuilder__f_bean.buildDeParse(context);
+                    continue;
+                }
 
-            final F_bean f_bean = field.getAnnotation(F_bean.class);
-            if (f_bean != null) {
-                fieldBuilder__f_bean.buildDeParse(context);
-                continue;
-            }
+                final F_bean_list f_bean_list = field.getAnnotation(F_bean_list.class);
+                if (f_bean_list != null) {
+                    fieldBuilder__f_bean_list.buildDeParse(context);
+                    continue;
+                }
 
-            final F_bean_list f_bean_list = field.getAnnotation(F_bean_list.class);
-            if (f_bean_list != null) {
-                fieldBuilder__f_bean_list.buildDeParse(context);
-                continue;
-            }
+                final F_userDefine f_userDefine = field.getAnnotation(F_userDefine.class);
+                if (f_userDefine != null) {
+                    fieldBuilder__f_userDefine.buildDeParse(context);
+                }
 
-            final F_userDefine f_userDefine = field.getAnnotation(F_userDefine.class);
-            if (f_userDefine != null) {
-                fieldBuilder__f_userDefine.buildDeParse(context);
-            }
-
-            final F_skip f_skip = field.getAnnotation(F_skip.class);
-            if (f_skip != null) {
-                fieldBuilder__f_skip.buildDeParse(context);
-                continue;
+                final F_skip f_skip = field.getAnnotation(F_skip.class);
+                if (f_skip != null) {
+                    fieldBuilder__f_skip.buildDeParse(context);
+                    continue;
+                }
+            } finally {
+                if (logCollector_deParse != null) {
+                    JavassistUtil.appendLogCode_deParse(context);
+                }
             }
         }
     }
