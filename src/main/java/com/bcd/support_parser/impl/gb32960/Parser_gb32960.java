@@ -15,7 +15,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class Parser_gb32960 extends Parser {
+public class Parser_gb32960{
 
     static Logger logger = LoggerFactory.getLogger(Parser_gb32960.class);
 

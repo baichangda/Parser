@@ -7,7 +7,7 @@ import com.bcd.support_parser.util.PerformanceUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class Parser_someip extends Parser {
+public class Parser_someip{
 
     static Logger logger= LoggerFactory.getLogger(Parser_someip.class);
 
