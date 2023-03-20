@@ -84,6 +84,7 @@ public class FieldBuilder__F_float_ieee754 extends FieldBuilder {
         final String fieldName = field.getName();
         final String varNameInstance = FieldBuilder.varNameInstance;
         String funcName = null;
+        String funcParamTypeName = null;
         switch (anno.type()) {
             case FLOAT: {
                 switch (anno.order()) {
@@ -99,7 +100,7 @@ public class FieldBuilder__F_float_ieee754 extends FieldBuilder {
                         JavassistUtil.notSupport_order(field, annoClass);
                     }
                 }
-
+                funcParamTypeName = "float";
                 break;
             }
             case DOUBLE: {
@@ -116,12 +117,13 @@ public class FieldBuilder__F_float_ieee754 extends FieldBuilder {
                         JavassistUtil.notSupport_order(field, annoClass);
                     }
                 }
+                funcParamTypeName = "double";
                 break;
             }
             default: {
                 JavassistUtil.notSupport_type(field, annoClass);
             }
         }
-        JavassistUtil.append(body, "{}.{}({}.{});\n", varNameByteBuf, funcName, varNameInstance, fieldName);
+        JavassistUtil.append(body, "{}.{}(({})({}.{}));\n", varNameByteBuf, funcName, funcParamTypeName, varNameInstance, fieldName);
     }
 }
