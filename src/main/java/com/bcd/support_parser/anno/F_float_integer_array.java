@@ -65,4 +65,9 @@ public @interface F_float_array {
      * -1、代表不进行格式化精度
      */
     int valPrecision() default -1;
+
+    /**
+     * 字节序模式
+     */
+    ByteOrder order() default ByteOrder.BigEndian;
 }

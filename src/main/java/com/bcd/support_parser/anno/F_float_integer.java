@@ -25,6 +25,8 @@ public @interface F_float {
      * 占用bit位
      * 和{@link #len()}互斥
      * 1-32
+     *
+     * 注意:当此属性生效时候、{@link #order()}无效
      */
     int bit() default 0;
 
@@ -47,4 +49,9 @@ public @interface F_float {
      * -1代表不进行格式化精度
      */
     int valPrecision() default -1;
+
+    /**
+     * 字节序模式
+     */
+    ByteOrder order() default ByteOrder.BigEndian;
 }

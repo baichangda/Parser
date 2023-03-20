@@ -1,6 +1,6 @@
 package com.bcd.support_parser.builder;
 
-import com.bcd.support_parser.anno.F_float;
+import com.bcd.support_parser.anno.F_float_integer;
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.util.JavassistUtil;
 import com.bcd.support_parser.util.RpnUtil;
@@ -11,7 +11,7 @@ import java.util.Map;
 public class FieldBuilder__F_float extends FieldBuilder {
     @Override
     public void buildParse(BuilderContext context) {
-        final Class<F_float> annoClass = F_float.class;
+        final Class<F_float_integer> annoClass = F_float_integer.class;
         final Field field = context.field;
         final Class<?> fieldTypeClass = field.getType();
         final String fieldType;
@@ -23,7 +23,7 @@ public class FieldBuilder__F_float extends FieldBuilder {
             JavassistUtil.notSupport_fieldType(field, annoClass);
             fieldType = "";
         }
-        final F_float anno = context.field.getAnnotation(annoClass);
+        final F_float_integer anno = context.field.getAnnotation(annoClass);
         final StringBuilder body = context.body;
         final String varNameInstance = FieldBuilder.varNameInstance;
         final String varNameField = JavassistUtil.getFieldVarName(context);
@@ -82,9 +82,9 @@ public class FieldBuilder__F_float extends FieldBuilder {
 
     @Override
     public void buildDeParse(BuilderContext context) {
-        final Class<F_float> annoClass = F_float.class;
+        final Class<F_float_integer> annoClass = F_float_integer.class;
         final Field field = context.field;
-        final F_float anno = context.field.getAnnotation(annoClass);
+        final F_float_integer anno = context.field.getAnnotation(annoClass);
         final StringBuilder body = context.body;
         final String fieldName = field.getName();
         final String varNameInstance = FieldBuilder.varNameInstance;

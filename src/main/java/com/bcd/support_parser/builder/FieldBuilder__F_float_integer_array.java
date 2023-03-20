@@ -1,6 +1,6 @@
 package com.bcd.support_parser.builder;
 
-import com.bcd.support_parser.anno.F_float_array;
+import com.bcd.support_parser.anno.F_float_integer_array;
 import com.bcd.support_parser.anno.F_skip;
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.util.JavassistUtil;
@@ -12,7 +12,7 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
     @Override
     public void buildParse(BuilderContext context) {
         final Field field = context.field;
-        final F_float_array anno = context.field.getAnnotation(F_float_array.class);
+        final F_float_integer_array anno = context.field.getAnnotation(F_float_integer_array.class);
         final String lenRes;
         if (anno.len() == 0) {
             if (anno.lenExpr().isEmpty()) {
@@ -31,7 +31,7 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
         } else if (double[].class.isAssignableFrom(fieldTypeClass)) {
             arrayElementType = "double";
         } else {
-            JavassistUtil.notSupport_fieldType(field, F_float_array.class);
+            JavassistUtil.notSupport_fieldType(field, F_float_integer_array.class);
             arrayElementType = "";
         }
         final StringBuilder body = context.body;
@@ -56,7 +56,7 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
                 break;
             }
             default: {
-                JavassistUtil.notSupport_singleLen(field, F_float_array.class);
+                JavassistUtil.notSupport_singleLen(field, F_float_integer_array.class);
                 arrLenRes = "";
                 break;
             }
@@ -96,7 +96,7 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
     @Override
     public void buildDeParse(BuilderContext context) {
         final Field field = context.field;
-        final F_float_array anno = context.field.getAnnotation(F_float_array.class);
+        final F_float_integer_array anno = context.field.getAnnotation(F_float_integer_array.class);
         final Class<?> fieldTypeClass = field.getType();
         final int singleLen = anno.singleLen();
         final StringBuilder body = context.body;
@@ -111,7 +111,7 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
             varNameFieldArr = varNameField + "_arr";
             JavassistUtil.append(body, "final double[] {}={};\n", varNameFieldArr, valCode);
         } else {
-            JavassistUtil.notSupport_fieldType(field, F_float_array.class);
+            JavassistUtil.notSupport_fieldType(field, F_float_integer_array.class);
             varNameFieldArr = "";
         }
         switch (singleLen) {
@@ -159,7 +159,7 @@ public class FieldBuilder__F_float_array extends FieldBuilder {
                 break;
             }
             default: {
-                JavassistUtil.notSupport_singleLen(field, F_float_array.class);
+                JavassistUtil.notSupport_singleLen(field, F_float_integer_array.class);
             }
         }
     }
