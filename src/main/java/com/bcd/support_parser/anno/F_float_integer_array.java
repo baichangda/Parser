@@ -12,10 +12,14 @@ import java.lang.annotation.Target;
  * 数组长度=总字节数/singleLen
  * <p>
  * {@link #len()}和{@link #lenExpr()} 二选一、代表字段所占用总字节数
+ *
+ * 通过如下方式解析float
+ * 首先得到整型数字、然后通过{@link #valExpr()}得到浮点数
+ *
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface F_float_array {
+public @interface F_float_integer_array {
     /**
      * 占用字节数
      * 与{@link #lenExpr()}互斥

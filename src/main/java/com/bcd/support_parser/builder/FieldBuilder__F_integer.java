@@ -65,7 +65,19 @@ public class FieldBuilder__F_integer extends FieldBuilder {
                         break;
                     }
                     case 2: {
-                        JavassistUtil.append(body, "final short {}={}.readShort();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        switch (anno.order()) {
+                            case BigEndian: {
+                                JavassistUtil.append(body, "final short {}={}.readShort();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            case SmallEndian: {
+                                JavassistUtil.append(body, "final short {}={}.readShortLE();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            default: {
+                                JavassistUtil.notSupport_order(field, annoClass);
+                            }
+                        }
                         break;
                     }
                     default: {
@@ -76,11 +88,35 @@ public class FieldBuilder__F_integer extends FieldBuilder {
             } else if (int.class.isAssignableFrom(fieldTypeClass)) {
                 switch (anno.len()) {
                     case 2: {
-                        JavassistUtil.append(body, "final int {}={}.readUnsignedShort();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        switch (anno.order()) {
+                            case BigEndian: {
+                                JavassistUtil.append(body, "final int {}={}.readUnsignedShort();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            case SmallEndian: {
+                                JavassistUtil.append(body, "final int {}={}.readUnsignedShortLE();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            default: {
+                                JavassistUtil.notSupport_order(field, annoClass);
+                            }
+                        }
                         break;
                     }
                     case 4: {
-                        JavassistUtil.append(body, "final int {}={}.readInt();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        switch (anno.order()) {
+                            case BigEndian: {
+                                JavassistUtil.append(body, "final int {}={}.readInt();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            case SmallEndian: {
+                                JavassistUtil.append(body, "final int {}={}.readIntLE();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            default: {
+                                JavassistUtil.notSupport_order(field, annoClass);
+                            }
+                        }
                         break;
                     }
                     default: {
@@ -91,11 +127,35 @@ public class FieldBuilder__F_integer extends FieldBuilder {
             } else if (long.class.isAssignableFrom(fieldTypeClass)) {
                 switch (anno.len()) {
                     case 4: {
-                        JavassistUtil.append(body, "final long {}={}.readUnsignedInt();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        switch (anno.order()) {
+                            case BigEndian: {
+                                JavassistUtil.append(body, "final long {}={}.readUnsignedInt();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            case SmallEndian: {
+                                JavassistUtil.append(body, "final long {}={}.readUnsignedIntLE();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            default: {
+                                JavassistUtil.notSupport_order(field, annoClass);
+                            }
+                        }
                         break;
                     }
                     case 8: {
-                        JavassistUtil.append(body, "final long {}={}.readLong();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        switch (anno.order()) {
+                            case BigEndian: {
+                                JavassistUtil.append(body, "final long {}={}.readLong();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            case SmallEndian: {
+                                JavassistUtil.append(body, "final long {}={}.readLongLE();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            default: {
+                                JavassistUtil.notSupport_order(field, annoClass);
+                            }
+                        }
                         break;
                     }
                     default: {
@@ -110,11 +170,35 @@ public class FieldBuilder__F_integer extends FieldBuilder {
                         break;
                     }
                     case 2: {
-                        JavassistUtil.append(body, "final int {}={}.readUnsignedShort();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        switch (anno.order()) {
+                            case BigEndian: {
+                                JavassistUtil.append(body, "final int {}={}.readUnsignedShort();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            case SmallEndian: {
+                                JavassistUtil.append(body, "final int {}={}.readUnsignedShortLE();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            default: {
+                                JavassistUtil.notSupport_order(field, annoClass);
+                            }
+                        }
                         break;
                     }
                     case 4: {
-                        JavassistUtil.append(body, "final int {}={}.readInt();\n", varNameField, FieldBuilder.varNameByteBuf);
+                        switch (anno.order()) {
+                            case BigEndian: {
+                                JavassistUtil.append(body, "final int {}={}.readInt();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            case SmallEndian: {
+                                JavassistUtil.append(body, "final int {}={}.readIntLE();\n", varNameField, FieldBuilder.varNameByteBuf);
+                                break;
+                            }
+                            default: {
+                                JavassistUtil.notSupport_order(field, annoClass);
+                            }
+                        }
                         break;
                     }
                     default: {
@@ -160,7 +244,7 @@ public class FieldBuilder__F_integer extends FieldBuilder {
         }
 
         //最后判断是否用了值表达式、如果用了、进行表达式处理
-        if(!anno.valExpr().isEmpty()){
+        if (!anno.valExpr().isEmpty()) {
             valCode = JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), valCode);
         }
 
@@ -193,15 +277,51 @@ public class FieldBuilder__F_integer extends FieldBuilder {
                     break;
                 }
                 case 2: {
-                    JavassistUtil.append(body, "{}.writeShort((short)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                    switch (anno.order()) {
+                        case BigEndian: {
+                            JavassistUtil.append(body, "{}.writeShort((short)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                            break;
+                        }
+                        case SmallEndian: {
+                            JavassistUtil.append(body, "{}.writeShortLE((short)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                            break;
+                        }
+                        default: {
+                            JavassistUtil.notSupport_order(field, annoClass);
+                        }
+                    }
                     break;
                 }
                 case 4: {
-                    JavassistUtil.append(body, "{}.writeInt((int)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                    switch (anno.order()) {
+                        case BigEndian: {
+                            JavassistUtil.append(body, "{}.writeInt((int)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                            break;
+                        }
+                        case SmallEndian: {
+                            JavassistUtil.append(body, "{}.writeIntLE((int)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                            break;
+                        }
+                        default: {
+                            JavassistUtil.notSupport_order(field, annoClass);
+                        }
+                    }
                     break;
                 }
                 case 8: {
-                    JavassistUtil.append(body, "{}.writeLong((long)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                    switch (anno.order()) {
+                        case BigEndian: {
+                            JavassistUtil.append(body, "{}.writeLong((long)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                            break;
+                        }
+                        case SmallEndian: {
+                            JavassistUtil.append(body, "{}.writeLongLE((long)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                            break;
+                        }
+                        default: {
+                            JavassistUtil.notSupport_order(field, annoClass);
+                        }
+                    }
                     break;
                 }
                 default: {

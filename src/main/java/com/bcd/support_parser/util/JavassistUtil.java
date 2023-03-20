@@ -15,6 +15,15 @@ import java.util.Arrays;
 import java.util.Map;
 
 public class JavassistUtil {
+
+    public static void notSupport_type(final Field field, Class annoClass) {
+        throw BaseRuntimeException.getException("class[{}] field[{}] anno[{}] type not support", field.getDeclaringClass().getName(), field.getName(), annoClass.getName());
+    }
+
+    public static void notSupport_order(final Field field, Class annoClass) {
+        throw BaseRuntimeException.getException("class[{}] field[{}] anno[{}] order not support", field.getDeclaringClass().getName(), field.getName(), annoClass.getName());
+    }
+
     public static void notSupport_fieldType(final Field field, Class annoClass) {
         throw BaseRuntimeException.getException("class[{}] field[{}] anno[{}] not support", field.getDeclaringClass().getName(), field.getName(), annoClass.getName());
     }

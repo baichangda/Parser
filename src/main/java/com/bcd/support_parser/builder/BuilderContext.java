@@ -1,5 +1,6 @@
 package com.bcd.support_parser.builder;
 
+import com.bcd.support_parser.anno.F_float_integer;
 import com.bcd.support_parser.anno.F_userDefine;
 import com.bcd.support_parser.processor.Processor;
 import com.bcd.support_parser.processor.ProcessContext;
@@ -39,7 +40,7 @@ public class BuilderContext {
     /**
      * 主要用于处理
      * {@link com.bcd.support_parser.anno.F_integer}
-     * {@link com.bcd.support_parser.anno.F_float}
+     * {@link F_float_integer}
      * 使用bit时候
      */
     public Map<String, int[]> fieldNameToBitInfo = new HashMap<>();

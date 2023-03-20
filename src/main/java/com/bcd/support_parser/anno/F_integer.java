@@ -8,15 +8,14 @@ import java.lang.annotation.Target;
 /**
  * 适用如下字段类型
  * byte、short、int、long、枚举类
- *
+ * <p>
  * 枚举类
  * 仅支持当{@link #len()}为1、2、4时候、因为默认类型为int、8会产生精度丢失
  * 要求枚举类必有如下静态方法、例如
  * public enum Example{
- *     public static Example fromInteger(int i){}
- *     public int toInteger(){}
+ * public static Example fromInteger(int i){}
+ * public int toInteger(){}
  * }
- *
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -36,6 +35,8 @@ public @interface F_integer {
      * 占用bit位
      * 和{@link #len()}互斥
      * 1-32
+     *
+     * 注意:当此属性生效时候、{@link #order()}无效
      */
     int bit() default 0;
 
@@ -59,4 +60,9 @@ public @interface F_integer {
      * 例如: m,n,a
      */
     char var() default '0';
+
+    /**
+     * 字节序模式
+     */
+    ByteOrder order() default ByteOrder.BigEndian;
 }

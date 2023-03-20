@@ -44,8 +44,10 @@ public class Parser {
     public final static FieldBuilder__F_bean fieldBuilder__f_bean = new FieldBuilder__F_bean();
     public final static FieldBuilder__F_bean_list fieldBuilder__f_bean_list = new FieldBuilder__F_bean_list();
     public final static FieldBuilder__F_date fieldBuilder__f_date = new FieldBuilder__F_date();
-    public final static FieldBuilder__F_float_array fieldBuilder__f_float_array = new FieldBuilder__F_float_array();
-    public final static FieldBuilder__F_float fieldBuilder__f_float_ = new FieldBuilder__F_float();
+    public final static FieldBuilder__F_float_integer_array fieldBuilder__f_float_integer_array = new FieldBuilder__F_float_integer_array();
+    public final static FieldBuilder__F_float_integer fieldBuilder__f_float_integer = new FieldBuilder__F_float_integer();
+    public final static FieldBuilder__F_float_ieee754_array fieldBuilder__F_float_ieee754_array = new FieldBuilder__F_float_ieee754_array();
+    public final static FieldBuilder__F_float_ieee754 fieldBuilder__F_float_ieee754 = new FieldBuilder__F_float_ieee754();
     public final static FieldBuilder__F_integer_array fieldBuilder__f_integer_array = new FieldBuilder__F_integer_array();
     public final static FieldBuilder__F_integer fieldBuilder__f_integer_ = new FieldBuilder__F_integer();
     public final static FieldBuilder__F_skip fieldBuilder__f_skip = new FieldBuilder__F_skip();
@@ -59,8 +61,11 @@ public class Parser {
         annoSet.add(F_integer.class);
         annoSet.add(F_integer_array.class);
 
-        annoSet.add(F_float.class);
-        annoSet.add(F_float_array.class);
+        annoSet.add(F_float_integer.class);
+        annoSet.add(F_float_integer_array.class);
+
+        annoSet.add(F_float_ieee754.class);
+        annoSet.add(F_float_ieee754_array.class);
 
         annoSet.add(F_string.class);
 
@@ -154,12 +159,12 @@ public class Parser {
                 bitSum += f_integer.bit();
                 continue;
             }
-            final F_float f_float = field.getAnnotation(F_float.class);
-            if (f_float != null && f_float.bit() > 0) {
+            final F_float_integer f_floatInteger = field.getAnnotation(F_float_integer.class);
+            if (f_floatInteger != null && f_floatInteger.bit() > 0) {
                 final int[] ints = new int[]{bitSum, 0, 0};
                 tempList.add(ints);
                 fieldNameToBitInfo.put(field.getName(), ints);
-                bitSum += f_float.len();
+                bitSum += f_floatInteger.len();
                 continue;
             }
             if (!tempList.isEmpty()) {
@@ -186,7 +191,7 @@ public class Parser {
     }
 
     public static void buildMethodBody_parse(Class clazz, BuilderContext context) {
-        //过滤掉 final、static关键字修饰、@F_not注解修饰、且不是public的字段
+        //过滤掉 final、static关键字修饰、且不是public的字段
         final List<Field> fieldList = Arrays.stream(clazz.getDeclaredFields())
                 .filter(e ->
                         needParse(e) &&
@@ -213,9 +218,15 @@ public class Parser {
                     continue;
                 }
 
-                final F_float f_float = field.getAnnotation(F_float.class);
-                if (f_float != null) {
-                    fieldBuilder__f_float_.buildParse(context);
+                final F_float_integer f_floatInteger = field.getAnnotation(F_float_integer.class);
+                if (f_floatInteger != null) {
+                    fieldBuilder__f_float_integer.buildParse(context);
+                    continue;
+                }
+
+                final F_float_ieee754 f_float_ieee754 = field.getAnnotation(F_float_ieee754.class);
+                if (f_float_ieee754 != null) {
+                    fieldBuilder__F_float_ieee754.buildParse(context);
                     continue;
                 }
 
@@ -225,9 +236,15 @@ public class Parser {
                     continue;
                 }
 
-                final F_float_array f_float_array = field.getAnnotation(F_float_array.class);
-                if (f_float_array != null) {
-                    fieldBuilder__f_float_array.buildParse(context);
+                final F_float_integer_array f_float_integer_array = field.getAnnotation(F_float_integer_array.class);
+                if (f_float_integer_array != null) {
+                    fieldBuilder__f_float_integer_array.buildParse(context);
+                    continue;
+                }
+
+                final F_float_ieee754_array f_float_ieee754_array = field.getAnnotation(F_float_ieee754_array.class);
+                if (f_float_ieee754_array != null) {
+                    fieldBuilder__F_float_ieee754_array.buildParse(context);
                     continue;
                 }
 
@@ -275,7 +292,7 @@ public class Parser {
     }
 
     public static void buildMethodBody_deParse(Class clazz, BuilderContext context) {
-        //过滤掉 final、static关键字修饰、@F_not注解修饰、且不是public的字段
+        //过滤掉 final、static关键字修饰、且不是public的字段
         final List<Field> fieldList = Arrays.stream(clazz.getDeclaredFields())
                 .filter(e ->
                         needParse(e) &&
@@ -301,9 +318,15 @@ public class Parser {
                     continue;
                 }
 
-                final F_float f_float = field.getAnnotation(F_float.class);
-                if (f_float != null) {
-                    fieldBuilder__f_float_.buildDeParse(context);
+                final F_float_integer f_floatInteger = field.getAnnotation(F_float_integer.class);
+                if (f_floatInteger != null) {
+                    fieldBuilder__f_float_integer.buildDeParse(context);
+                    continue;
+                }
+
+                final F_float_ieee754 f_float_ieee754 = field.getAnnotation(F_float_ieee754.class);
+                if (f_float_ieee754 != null) {
+                    fieldBuilder__F_float_ieee754.buildDeParse(context);
                     continue;
                 }
 
@@ -313,9 +336,15 @@ public class Parser {
                     continue;
                 }
 
-                final F_float_array f_float_array = field.getAnnotation(F_float_array.class);
-                if (f_float_array != null) {
-                    fieldBuilder__f_float_array.buildDeParse(context);
+                final F_float_integer_array f_float_integer_array = field.getAnnotation(F_float_integer_array.class);
+                if (f_float_integer_array != null) {
+                    fieldBuilder__f_float_integer_array.buildDeParse(context);
+                    continue;
+                }
+
+                final F_float_ieee754_array f_float_ieee754_array = field.getAnnotation(F_float_ieee754_array.class);
+                if (f_float_ieee754_array != null) {
+                    fieldBuilder__F_float_ieee754_array.buildDeParse(context);
                     continue;
                 }
 

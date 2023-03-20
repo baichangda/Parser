@@ -10,10 +10,13 @@ import java.lang.annotation.Target;
  * float、double
  * 且值以多少个字节表示
  *
+ * 通过如下方式解析float
+ * 首先得到整型数字、然后通过{@link #valExpr()}得到浮点数
+ *
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface F_float {
+public @interface F_float_integer {
     /**
      * 占用字节数
      * 和{@link #bit()}互斥

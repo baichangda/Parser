@@ -8,7 +8,7 @@ import com.bcd.support_parser.util.RpnUtil;
 import java.lang.reflect.Field;
 import java.util.Map;
 
-public class FieldBuilder__F_float extends FieldBuilder {
+public class FieldBuilder__F_float_integer extends FieldBuilder {
     @Override
     public void buildParse(BuilderContext context) {
         final Class<F_float_integer> annoClass = F_float_integer.class;
@@ -56,15 +56,51 @@ public class FieldBuilder__F_float extends FieldBuilder {
                     break;
                 }
                 case 2: {
-                    JavassistUtil.append(body, "{} {}=({}){}.readUnsignedShort();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                    switch (anno.order()){
+                        case BigEndian:{
+                            JavassistUtil.append(body, "{} {}=({}){}.readUnsignedShort();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                            break;
+                        }
+                        case SmallEndian:{
+                            JavassistUtil.append(body, "{} {}=({}){}.readUnsignedShortLE();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                            break;
+                        }
+                        default:{
+                            JavassistUtil.notSupport_order(field,annoClass);
+                        }
+                    }
                     break;
                 }
                 case 4: {
-                    JavassistUtil.append(body, "{} {}=({}){}.readUnsignedInt();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                    switch (anno.order()){
+                        case BigEndian:{
+                            JavassistUtil.append(body, "{} {}=({}){}.readUnsignedInt();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                            break;
+                        }
+                        case SmallEndian:{
+                            JavassistUtil.append(body, "{} {}=({}){}.readUnsignedIntLE();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                            break;
+                        }
+                        default:{
+                            JavassistUtil.notSupport_order(field,annoClass);
+                        }
+                    }
                     break;
                 }
                 case 8: {
-                    JavassistUtil.append(body, "{} {}=({}){}.readLong();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                    switch (anno.order()){
+                        case BigEndian:{
+                            JavassistUtil.append(body, "{} {}=({}){}.readLong();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                            break;
+                        }
+                        case SmallEndian:{
+                            JavassistUtil.append(body, "{} {}=({}){}.readLongLE();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                            break;
+                        }
+                        default:{
+                            JavassistUtil.notSupport_order(field,annoClass);
+                        }
+                    }
                     break;
                 }
                 default: {
@@ -125,15 +161,52 @@ public class FieldBuilder__F_float extends FieldBuilder {
                     break;
                 }
                 case 2: {
-                    JavassistUtil.append(body, "{}.writeShort((short)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                    switch (anno.order()){
+                        case BigEndian:{
+                            JavassistUtil.append(body, "{}.writeShort((short)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                            break;
+                        }
+                        case SmallEndian:{
+                            JavassistUtil.append(body, "{}.writeShortLE((short)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                            break;
+                        }
+                        default:{
+                            JavassistUtil.notSupport_order(field,annoClass);
+                        }
+                    }
                     break;
                 }
                 case 4: {
-                    JavassistUtil.append(body, "{}.writeInt((int)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                    switch (anno.order()){
+                        case BigEndian:{
+                            JavassistUtil.append(body, "{}.writeInt((int)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                            break;
+                        }
+                        case SmallEndian:{
+                            JavassistUtil.append(body, "{}.writeIntLE((int)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                            break;
+                        }
+                        default:{
+                            JavassistUtil.notSupport_order(field,annoClass);
+                        }
+                    }
+
                     break;
                 }
                 case 8: {
-                    JavassistUtil.append(body, "{}.writeLong((long)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                    switch (anno.order()){
+                        case BigEndian:{
+                            JavassistUtil.append(body, "{}.writeLong((long)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                            break;
+                        }
+                        case SmallEndian:{
+                            JavassistUtil.append(body, "{}.writeLongLE((long)({}));\n", FieldBuilder.varNameByteBuf, valCode);
+                            break;
+                        }
+                        default:{
+                            JavassistUtil.notSupport_order(field,annoClass);
+                        }
+                    }
                     break;
                 }
                 default: {

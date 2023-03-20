@@ -1,7 +1,6 @@
 package com.bcd.support_parser.impl.gb32960.data;
 
-import com.bcd.support_parser.anno.F_integer_array;
-import com.bcd.support_parser.anno.F_integer;
+import com.bcd.support_parser.anno.*;
 
 /**
  * 报警数据
@@ -45,7 +44,7 @@ public class VehicleAlarmData {
 
     //其他故障代码列表
     @F_integer_array(lenExpr = "d*4", singleLen = 4)
-    public long[] otherBadCodes;
+    public float[] otherBadCodes;
 
 
 }

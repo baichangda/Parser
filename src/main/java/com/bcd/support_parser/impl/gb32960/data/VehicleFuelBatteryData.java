@@ -1,6 +1,6 @@
 package com.bcd.support_parser.impl.gb32960.data;
 
-import com.bcd.support_parser.anno.F_float;
+import com.bcd.support_parser.anno.F_float_integer;
 import com.bcd.support_parser.anno.F_integer_array;
 import com.bcd.support_parser.anno.F_integer;
 
@@ -9,15 +9,15 @@ import com.bcd.support_parser.anno.F_integer;
  */
 public class VehicleFuelBatteryData {
     //燃料电池电压
-    @F_float(len = 2, valExpr = "x/10")
+    @F_float_integer(len = 2, valExpr = "x/10")
     public float voltage;
 
     //燃料电池电流
-    @F_float(len = 2, valExpr = "x/10")
+    @F_float_integer(len = 2, valExpr = "x/10")
     public float current;
 
     //燃料消耗率
-    @F_float(len = 2, valExpr = "x/100")
+    @F_float_integer(len = 2, valExpr = "x/100")
     public float consumptionRate;
 
     //燃料电池温度探针总数
@@ -29,7 +29,7 @@ public class VehicleFuelBatteryData {
     public short[] temperatures;
 
     //氢系统中最高温度
-    @F_float(len = 2, valExpr = "x/10-40")
+    @F_float_integer(len = 2, valExpr = "x/10-40")
     public float maxTemperature;
 
     //氢系统中最高温度探针代号
@@ -45,7 +45,7 @@ public class VehicleFuelBatteryData {
     public short maxConcentrationCode;
 
     //氢气最高压力
-    @F_float(len = 2, valExpr = "x/10")
+    @F_float_integer(len = 2, valExpr = "x/10")
     public float maxPressure;
 
     //氢气最高压力传感器代号
