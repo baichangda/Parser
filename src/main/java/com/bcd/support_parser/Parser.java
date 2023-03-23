@@ -486,8 +486,8 @@ public class Parser {
         if (generateClassFile) {
             cc.writeFile("src/main/java");
         }
-//        return cc.toClass(Processor.class);
-        return cc.toClass();
+        return cc.toClass(Processor.class);
+//        return cc.toClass();
     }
 
 

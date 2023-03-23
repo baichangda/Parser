@@ -277,6 +277,25 @@ public class JavassistUtil {
         }
     }
 
+    public static String prepend_2_0(int num) {
+        return prepend(num + "", 2, "0");
+    }
+
+    public static String prepend_2_0(String str) {
+        return prepend(str, 2, "0");
+    }
+
+    public static String prepend(String str, int len, String s) {
+        final int length = str.length();
+        if (length == len) {
+            return str;
+        } else if (length < len) {
+            return s.repeat(len - length) + str;
+        } else {
+            return s.substring(0, len);
+        }
+    }
+
     public static void main(String[] args) {
 //        byte[] bytes = new byte[]{(byte) 0};
 //        System.out.println(getBitVal(bytes, 0, 1));

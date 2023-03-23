@@ -2,6 +2,7 @@ package com.bcd.support_parser.builder;
 
 import com.bcd.support_parser.anno.F_date;
 import com.bcd.support_parser.util.JavassistUtil;
+import io.netty.buffer.ByteBuf;
 
 import java.lang.reflect.Field;
 import java.time.*;
@@ -22,26 +23,50 @@ public class FieldBuilder__F_date extends FieldBuilder {
         final String zoneIdVarName = JavassistUtil.defineClassVar(context, ZoneId.class, "{}.of(\"{}\")", ZoneId.class.getName(), anno.zoneId());
         if (Date.class.isAssignableFrom(fieldTypeClass)) {
             final String dateClassName = Date.class.getName();
-            JavassistUtil.append(body, "{}.{}={}.from({}.of({}+{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),0,{}).toInstant());\n",
+            JavassistUtil.append(body, "{}.{}={}.from({}.of({}+{}.readUnsignedByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),0,{}).toInstant());\n",
                     varNameInstance, field.getName(), dateClassName, zoneDateTimeClassName, baseYear
                     , FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf
                     , FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, zoneIdVarName);
         } else if (long.class.isAssignableFrom(fieldTypeClass)) {
-            JavassistUtil.append(body, "{}.{}={}.of({}+{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),0,{}).toInstant().toEpochMilli();\n",
+            JavassistUtil.append(body, "{}.{}={}.of({}+{}.readUnsignedByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),0,{}).toInstant().toEpochMilli();\n",
                     varNameInstance, field.getName(), zoneDateTimeClassName, baseYear
                     , FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf
                     , FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, zoneIdVarName);
         } else if (int.class.isAssignableFrom(fieldTypeClass)) {
-            JavassistUtil.append(body, "{}.{}=(int)({}.of({}+{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),0,{}).toInstant().getEpochSecond());\n",
+            JavassistUtil.append(body, "{}.{}=(int)({}.of({}+{}.readUnsignedByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),0,{}).toInstant().getEpochSecond());\n",
                     varNameInstance, field.getName(), zoneDateTimeClassName, baseYear
                     , FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf
                     , FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, zoneIdVarName);
         } else if (String.class.isAssignableFrom(fieldTypeClass)) {
-            final String dateTimeFormatterVarName = JavassistUtil.defineClassVar(context, DateTimeFormatter.class, "{}.ofPattern(\"{}\").withZone({})", DateTimeFormatter.class.getName(), anno.formatWhenString(), zoneIdVarName);
-            JavassistUtil.append(body, "{}.{}=({}.of({}+{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),{}.readByte(),0,{})).format({});\n",
-                    varNameInstance, field.getName(), zoneDateTimeClassName, baseYear
-                    , FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf
-                    , FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, zoneIdVarName, dateTimeFormatterVarName);
+            switch (anno.formatWhenString()) {
+                case "yyyyMMddHHmmss" -> {
+                    final String javassistUtilClassName = JavassistUtil.class.getName();
+                    JavassistUtil.append(body, "{}.{}=\"\"+({}+{}.readUnsignedByte())+{}.prepend_2_0({}.readByte())+{}.prepend_2_0({}.readByte())+{}.prepend_2_0({}.readByte())+{}.prepend_2_0({}.readByte())+{}.prepend_2_0({}.readByte());\n",
+                            varNameInstance,field.getName(),baseYear,FieldBuilder.varNameByteBuf,
+                            javassistUtilClassName,FieldBuilder.varNameByteBuf,
+                            javassistUtilClassName,FieldBuilder.varNameByteBuf,
+                            javassistUtilClassName,FieldBuilder.varNameByteBuf,
+                            javassistUtilClassName,FieldBuilder.varNameByteBuf,
+                            javassistUtilClassName,FieldBuilder.varNameByteBuf);
+                }
+                case "yyyy-MM-dd HH:mm:ss" -> {
+                    final String javassistUtilClassName = JavassistUtil.class.getName();
+                    JavassistUtil.append(body, "{}.{}=({}+{}.readUnsignedByte())+\"-\"+{}.prepend_2_0({}.readByte())+\"-\"+{}.prepend_2_0({}.readByte())+\" \"+{}.prepend_2_0({}.readByte())+\":\"+{}.prepend_2_0({}.readByte())+\":\"+{}.prepend_2_0({}.readByte());\n",
+                            varNameInstance,field.getName(),baseYear,FieldBuilder.varNameByteBuf,
+                            javassistUtilClassName,FieldBuilder.varNameByteBuf,
+                            javassistUtilClassName,FieldBuilder.varNameByteBuf,
+                            javassistUtilClassName,FieldBuilder.varNameByteBuf,
+                            javassistUtilClassName,FieldBuilder.varNameByteBuf,
+                            javassistUtilClassName,FieldBuilder.varNameByteBuf);
+                }
+                default -> {
+                    final String dateTimeFormatterVarName = JavassistUtil.defineClassVar(context, DateTimeFormatter.class, "{}.ofPattern(\"{}\").withZone({})", DateTimeFormatter.class.getName(), anno.formatWhenString(), zoneIdVarName);
+                    JavassistUtil.append(body, "{}.{}=({}.of({}+{}.readUnsignedByte(),{}.readUnsignedByte(),{}.readUnsignedByte(),{}.readUnsignedByte(),{}.readUnsignedByte(),{}.readUnsignedByte(),0,{})).format({});\n",
+                            varNameInstance, field.getName(), zoneDateTimeClassName, baseYear
+                            , FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf
+                            , FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, zoneIdVarName, dateTimeFormatterVarName);
+                }
+            }
         } else {
             JavassistUtil.notSupport_fieldType(field, F_date.class);
         }

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 public class Parser_gb32960_test {
     @Test
     public void test(){
-//        Parser.withDefaultLogCollector_parse();
+        Parser.withDefaultLogCollector_parse();
 //        Parser.withDefaultLogCollector_deParse();
         Parser.enableGenerateClassFile();
         Parser.enablePrintBuildLog();

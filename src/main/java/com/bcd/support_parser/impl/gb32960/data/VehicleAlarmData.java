@@ -44,7 +44,7 @@ public class VehicleAlarmData {
 
     //其他故障代码列表
     @F_integer_array(lenExpr = "d*4", singleLen = 4)
-    public float[] otherBadCodes;
+    public long[] otherBadCodes;
 
 
 }

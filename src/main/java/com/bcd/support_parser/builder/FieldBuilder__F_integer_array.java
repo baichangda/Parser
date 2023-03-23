@@ -51,7 +51,7 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
                 }
             }
         } else if (short[].class.isAssignableFrom(fieldTypeClass)) {
-            JavassistUtil.append(body, "final short[] {}=new short[{}];\n", arrVarName, "(" + lenRes + ")/" + singleLen);
+            JavassistUtil.append(body, "final short[] {}=new short[{}];\n", arrVarName, "(" + lenRes + ")" + (singleLen == 1 ? "" : ("/" + singleLen)));
             final String varNameArrayElement = varNameField + "_arrEle";
             JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", arrVarName);
             switch (singleLen) {
