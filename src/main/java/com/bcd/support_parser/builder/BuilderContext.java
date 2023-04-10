@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BuilderContext {
-
     /**
      * 主要用于{@link F_userDefine#builderClass()}缓存、避免在生成解析类的过程中生成多个实例
      */
@@ -26,12 +25,10 @@ public class BuilderContext {
      * 生产的{@link Processor}子类
      */
     public final CtClass implCc;
-
     /**
      * 父构造环境
      */
     public final BuilderContext parentContext;
-
     /**
      * 当前字段
      */
@@ -63,13 +60,20 @@ public class BuilderContext {
      * 类全局变量定义内容对应变量名称
      * 避免重复定义类变量
      */
-    public final Map<String,String> classVarDefineToVarName;
+    public final Map<String, String> classVarDefineToVarName;
 
-    public BuilderContext(StringBuilder body, CtClass implCc, BuilderContext parentContext,Map<String,String> classVarDefineToVarName) {
+
+    /**
+     * 类字节对齐
+     */
+    public final Class clazz;
+
+    public BuilderContext(StringBuilder body, Class clazz, CtClass implCc, BuilderContext parentContext, Map<String, String> classVarDefineToVarName) {
         this.body = body;
+        this.clazz = clazz;
         this.implCc = implCc;
         this.parentContext = parentContext;
-        this.classVarDefineToVarName=classVarDefineToVarName;
+        this.classVarDefineToVarName = classVarDefineToVarName;
     }
 
     public final String getProcessContextVarName() {

@@ -5,6 +5,7 @@ import com.bcd.support_parser.impl.gb32960.builder.PacketDataFieldBuilder;
 import com.bcd.support_parser.impl.gb32960.processor.PacketDataFieldProcessor;
 
 
+
 public class Packet {
     //头 0-2
     @F_integer_array(len = 2, singleLen = 1)

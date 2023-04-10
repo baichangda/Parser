@@ -92,7 +92,7 @@ public class JavassistUtil {
         final String fieldLogBytesVarName = getFieldLogBytesVarName(context);
         append(context.body, "byte[] {}=new byte[{}.readerIndex()-{}];\n", fieldLogBytesVarName, FieldBuilder.varNameByteBuf, fieldByteBufReaderIndexVarName);
         append(context.body, "{}.getBytes({},{});\n", FieldBuilder.varNameByteBuf, fieldByteBufReaderIndexVarName, fieldLogBytesVarName);
-        append(context.body, "{}.logCollector_parse.collect({}.class,\"{}\",{},{},\"{}\");\n",
+        append(context.body, "{}.logCollector_parse.collect_field({}.class,\"{}\",{},{},\"{}\");\n",
                 Parser.class.getName(),
                 context.field.getDeclaringClass().getName(),
                 context.field.getName(),
@@ -111,12 +111,12 @@ public class JavassistUtil {
         final String fieldLogBytesVarName = getFieldLogBytesVarName(context);
         append(context.body, "byte[] {}=new byte[{}.writerIndex()-{}];\n", fieldLogBytesVarName, FieldBuilder.varNameByteBuf, fieldByteBufWriterIndexVarName);
         append(context.body, "{}.getBytes({},{});\n", FieldBuilder.varNameByteBuf, fieldByteBufWriterIndexVarName, fieldLogBytesVarName);
-        append(context.body, "{}.logCollector_deParse.collect({}.class,\"{}\",{},{},\"{}\");\n",
+        append(context.body, "{}.logCollector_deParse.collect_field({}.class,\"{}\",{},{},\"{}\");\n",
                 Parser.class.getName(),
                 context.field.getDeclaringClass().getName(),
                 context.field.getName(),
-                fieldLogBytesVarName,
                 boxing(FieldBuilder.varNameInstance + "." + context.field.getName(), context.field.getType()),
+                fieldLogBytesVarName,
                 context.implCc.getSimpleName());
     }
 

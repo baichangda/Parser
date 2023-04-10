@@ -12,7 +12,7 @@ public class Parser_gb32960_test {
     @Test
     public void test(){
         Parser.withDefaultLogCollector_parse();
-//        Parser.withDefaultLogCollector_deParse();
+        Parser.withDefaultLogCollector_deParse();
         Parser.enableGenerateClassFile();
         Parser.enablePrintBuildLog();
         String data = "232303FE4C534A4132343033304853313932393639010135" +
@@ -22,8 +22,8 @@ public class Parser_gb32960_test {
         Packet packet = Parser.parse(Packet.class, byteBuf, null);
         ByteBuf dest=Unpooled.buffer();
         Parser.deParse(packet, dest,null);
-        System.out.println(data);
-        System.out.println(ByteBufUtil.hexDump(dest));
+        System.out.println(data.toUpperCase());
+        System.out.println(ByteBufUtil.hexDump(dest).toUpperCase());
         assert data.equalsIgnoreCase(ByteBufUtil.hexDump(dest));
     }
 }
