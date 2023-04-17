@@ -7,8 +7,8 @@ import java.lang.annotation.Target;
 
 /**
  * 适用于实体类集合字段、支持如下类型
- * List<T>
- * T[]
+ * T[] 数组
+ * List<T> 集合、默认实例是ArrayList类型
  * {@link #listLen()}和{@link #listLenExpr()} 二选一、代表字段所占用总字节数
  *
  */
