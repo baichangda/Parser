@@ -6,8 +6,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * 适用于实体类集合字段
- *
+ * 适用于实体类集合字段、支持如下类型
+ * List<T>
+ * T[]
  * {@link #listLen()}和{@link #listLenExpr()} 二选一、代表字段所占用总字节数
  *
  */
