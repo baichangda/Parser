@@ -47,12 +47,12 @@ public class Parser {
     public final static FieldBuilder__F_float_integer_array fieldBuilder__f_float_integer_array = new FieldBuilder__F_float_integer_array();
     public final static FieldBuilder__F_float_integer fieldBuilder__f_float_integer = new FieldBuilder__F_float_integer();
     public final static FieldBuilder__F_float_ieee754_array fieldBuilder__F_float_ieee754_array = new FieldBuilder__F_float_ieee754_array();
-    public final static FieldBuilder__F_float_ieee754 fieldBuilder__F_float_ieee754 = new FieldBuilder__F_float_ieee754();
+    public final static FieldBuilder__F_float_ieee754 fieldbuilder__f_float_ieee754 = new FieldBuilder__F_float_ieee754();
     public final static FieldBuilder__F_integer_array fieldBuilder__f_integer_array = new FieldBuilder__F_integer_array();
     public final static FieldBuilder__F_integer fieldBuilder__f_integer_ = new FieldBuilder__F_integer();
     public final static FieldBuilder__F_skip fieldBuilder__f_skip = new FieldBuilder__F_skip();
     public final static FieldBuilder__F_string fieldBuilder__f_string = new FieldBuilder__F_string();
-    public final static FieldBuilder__F_userDefine fieldBuilder__f_userDefine = new FieldBuilder__F_userDefine();
+    public final static FieldBuilder__F_customize fieldBuilder__f_customize = new FieldBuilder__F_customize();
 
 
     public final static Set<Class> annoSet = new HashSet<>();
@@ -74,7 +74,7 @@ public class Parser {
         annoSet.add(F_bean.class);
         annoSet.add(F_bean_list.class);
 
-        annoSet.add(F_userDefine.class);
+        annoSet.add(F_customize.class);
 
         annoSet.add(F_skip.class);
     }
@@ -283,7 +283,7 @@ public class Parser {
 
                 final F_float_ieee754 f_float_ieee754 = field.getAnnotation(F_float_ieee754.class);
                 if (f_float_ieee754 != null) {
-                    fieldBuilder__F_float_ieee754.buildParse(context);
+                    fieldbuilder__f_float_ieee754.buildParse(context);
                     continue;
                 }
 
@@ -329,9 +329,9 @@ public class Parser {
                     continue;
                 }
 
-                final F_userDefine f_userDefine = field.getAnnotation(F_userDefine.class);
-                if (f_userDefine != null) {
-                    fieldBuilder__f_userDefine.buildParse(context);
+                final F_customize f_customize = field.getAnnotation(F_customize.class);
+                if (f_customize != null) {
+                    fieldBuilder__f_customize.buildParse(context);
                 }
 
                 final F_skip f_skip = field.getAnnotation(F_skip.class);
@@ -383,7 +383,7 @@ public class Parser {
 
                 final F_float_ieee754 f_float_ieee754 = field.getAnnotation(F_float_ieee754.class);
                 if (f_float_ieee754 != null) {
-                    fieldBuilder__F_float_ieee754.buildDeParse(context);
+                    fieldbuilder__f_float_ieee754.buildDeParse(context);
                     continue;
                 }
 
@@ -429,9 +429,9 @@ public class Parser {
                     continue;
                 }
 
-                final F_userDefine f_userDefine = field.getAnnotation(F_userDefine.class);
-                if (f_userDefine != null) {
-                    fieldBuilder__f_userDefine.buildDeParse(context);
+                final F_customize f_customize = field.getAnnotation(F_customize.class);
+                if (f_customize != null) {
+                    fieldBuilder__f_customize.buildDeParse(context);
                 }
 
                 final F_skip f_skip = field.getAnnotation(F_skip.class);
@@ -474,7 +474,7 @@ public class Parser {
         final CtConstructor constructor = CtNewConstructor.make(new CtClass[]{}, null, cc);
         initBody.append("{\n");
         //加processorClass字段并初始化
-        final List<Class> processorClassList = Arrays.stream(clazz.getDeclaredFields()).map(f -> f.getAnnotation(F_userDefine.class)).filter(Objects::nonNull).map(F_userDefine::processorClass).filter(e -> e != void.class).collect(Collectors.toList());
+        final List<Class> processorClassList = Arrays.stream(clazz.getDeclaredFields()).map(f -> f.getAnnotation(F_customize.class)).filter(Objects::nonNull).map(F_customize::processorClass).filter(e -> e != void.class).collect(Collectors.toList());
         for (Class processorClass : processorClassList) {
             final String processorClassName = processorClass.getName();
             final String processorVarName = JavassistUtil.getProcessorVarName(processorClass);

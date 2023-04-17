@@ -1,7 +1,7 @@
 package com.bcd.support_parser.builder;
 
 import com.bcd.support_parser.anno.F_float_integer;
-import com.bcd.support_parser.anno.F_userDefine;
+import com.bcd.support_parser.anno.F_customize;
 import com.bcd.support_parser.processor.Processor;
 import com.bcd.support_parser.processor.ProcessContext;
 import com.bcd.support_parser.util.JavassistUtil;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 public class BuilderContext {
     /**
-     * 主要用于{@link F_userDefine#builderClass()}缓存、避免在生成解析类的过程中生成多个实例
+     * 主要用于{@link F_customize#builderClass()}缓存、避免在生成解析类的过程中生成多个实例
      */
     public final static Map<Class, FieldBuilder> fieldBuilderCache = new HashMap<>();
     /**

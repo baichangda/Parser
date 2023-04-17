@@ -1,22 +1,22 @@
 package com.bcd.support_parser.builder;
 
 
-import com.bcd.support_parser.anno.F_userDefine;
+import com.bcd.support_parser.anno.F_customize;
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.util.JavassistUtil;
 
 import java.lang.reflect.Field;
 
-public class FieldBuilder__F_userDefine extends FieldBuilder {
+public class FieldBuilder__F_customize extends FieldBuilder {
     @Override
     public void buildParse(BuilderContext context) {
         final Field field = context.field;
-        final F_userDefine anno = field.getAnnotation(F_userDefine.class);
+        final F_customize anno = field.getAnnotation(F_customize.class);
         final Class<?> builderClass = anno.builderClass();
         final Class<?> processorClass = anno.processorClass();
         if (builderClass == void.class) {
             if (processorClass == void.class) {
-                throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have builderClass or processorClass", field.getDeclaringClass().getName(), field.getName(), F_userDefine.class.getName());
+                throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have builderClass or processorClass", field.getDeclaringClass().getName(), field.getName(), F_customize.class.getName());
             } else {
                 final StringBuilder body = context.body;
                 final String varNameField = JavassistUtil.getFieldVarName(context);
@@ -46,7 +46,7 @@ public class FieldBuilder__F_userDefine extends FieldBuilder {
     @Override
     public void buildDeParse(BuilderContext context) {
         final Field field = context.field;
-        final F_userDefine anno = field.getAnnotation(F_userDefine.class);
+        final F_customize anno = field.getAnnotation(F_customize.class);
         final Class<?> builderClass = anno.builderClass();
         final Class<?> processorClass = anno.processorClass();
         final StringBuilder body = context.body;
@@ -61,7 +61,7 @@ public class FieldBuilder__F_userDefine extends FieldBuilder {
         }
         if (builderClass == void.class) {
             if (processorClass == void.class) {
-                throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have builderClass or processorClass", field.getDeclaringClass().getName(), field.getName(), F_userDefine.class.getName());
+                throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have builderClass or processorClass", field.getDeclaringClass().getName(), field.getName(), F_customize.class.getName());
             } else {
                 final String processorClassVarName = JavassistUtil.getProcessorVarName(processorClass);
                 JavassistUtil.append(body, "{}.deProcess({},{},{});\n", processorClassVarName, FieldBuilder.varNameByteBuf, context.getProcessContextVarName(), valCode);

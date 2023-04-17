@@ -1,7 +1,6 @@
 package com.bcd.support_parser.impl.gb32960.data;
 
 import com.bcd.support_parser.anno.*;
-import com.bcd.support_parser.impl.gb32960.builder.PacketDataFieldBuilder;
 import com.bcd.support_parser.impl.gb32960.processor.PacketDataFieldProcessor;
 
 
@@ -28,7 +27,7 @@ public class Packet {
     //数据单元
 //    @F_integer_array(lenExpr = "a", singleLen = 1)
     public byte[] dataContent;
-    @F_userDefine(
+    @F_customize(
             processorClass = PacketDataFieldProcessor.class
 //            builderClass = PacketDataFieldBuilder.class
     )

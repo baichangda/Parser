@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 
-public @interface F_userDefine {
+public @interface F_customize {
     /**
      * 处理类
      * 与{@link #builderClass()}互斥
