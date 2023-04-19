@@ -2,6 +2,8 @@ package com.bcd.support_parser.builder;
 
 import com.bcd.support_parser.anno.F_float_integer;
 import com.bcd.support_parser.anno.F_customize;
+import com.bcd.support_parser.anno.F_skip;
+import com.bcd.support_parser.anno.SkipMode;
 import com.bcd.support_parser.processor.Processor;
 import com.bcd.support_parser.processor.ProcessContext;
 import com.bcd.support_parser.util.JavassistUtil;
@@ -9,8 +11,7 @@ import io.netty.buffer.ByteBuf;
 import javassist.CtClass;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class BuilderContext {
     /**
@@ -66,12 +67,46 @@ public class BuilderContext {
      */
     public final Map<String, String> classVarDefineToVarName;
 
+    /**
+     * 用于{@link F_skip#mode()} 为 {@link com.bcd.support_parser.anno.SkipMode#ReservedFromPrevReserved} 时候
+     * <p>
+     * 此变量名称代表相同bean内上一个字段
+     * {@link F_skip#mode()}为
+     * {@link com.bcd.support_parser.anno.SkipMode#ReservedFromStart} 或
+     * {@link com.bcd.support_parser.anno.SkipMode#ReservedFromPrevReserved}
+     * 时候索引的位置变量名称
+     * 如果没有上一个这样的字段、则取值是{@link FieldBuilder#startIndexVarName}
+     */
+    public String prevSkipReservedIndexVarName = FieldBuilder.startIndexVarName;
+    public final Set<String> indexFieldNameSet = new HashSet<>();
+
+    private void initIndexFieldNameSet() {
+        String prevSkipReservedFieldName = null;
+        for (Field declaredField : clazz.getDeclaredFields()) {
+            final F_skip f_skip = declaredField.getAnnotation(F_skip.class);
+            if (f_skip != null) {
+                switch (f_skip.mode()){
+                    case ReservedFromStart -> {
+                        prevSkipReservedFieldName = declaredField.getName();
+                    }
+                    case ReservedFromPrevReserved -> {
+                        if (prevSkipReservedFieldName != null) {
+                            indexFieldNameSet.add(prevSkipReservedFieldName);
+                        }
+                        prevSkipReservedFieldName = declaredField.getName();
+                    }
+                }
+            }
+        }
+    }
+
     public BuilderContext(StringBuilder body, Class clazz, CtClass implCc, BuilderContext parentContext, Map<String, String> classVarDefineToVarName) {
         this.body = body;
         this.clazz = clazz;
         this.implCc = implCc;
         this.parentContext = parentContext;
         this.classVarDefineToVarName = classVarDefineToVarName;
+        initIndexFieldNameSet();
     }
 
     public final String getProcessContextVarName() {

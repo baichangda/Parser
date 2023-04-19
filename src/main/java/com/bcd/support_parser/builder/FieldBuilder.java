@@ -11,7 +11,7 @@ public abstract class FieldBuilder {
 
     public final static String varNameInstance = "_instance";
     /**
-     * 如果bean存在字段注解{@link F_skip#mode()} 为 {@link com.bcd.support_parser.anno.SkipMode#Reserved} 时候、会有如下操作
+     * 如果bean存在字段注解{@link F_skip#mode()} 为 {@link com.bcd.support_parser.anno.SkipMode#ReservedFromStart} 时候、会有如下操作
      * 解析bean开始时候、记录{@link ByteBuf#readerIndex()}
      * 反解析bean开始时候、记录{@link ByteBuf#writerIndex()}
      */

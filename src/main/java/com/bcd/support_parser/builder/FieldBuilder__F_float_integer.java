@@ -52,17 +52,17 @@ public class FieldBuilder__F_float_integer extends FieldBuilder {
         } else {
             switch (anno.len()) {
                 case 1: {
-                    JavassistUtil.append(body, "{} {}=({}){}.readUnsignedByte();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                    JavassistUtil.append(body, "final {} {}=({}){}.readUnsignedByte();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
                     break;
                 }
                 case 2: {
                     switch (anno.order()){
                         case BigEndian:{
-                            JavassistUtil.append(body, "{} {}=({}){}.readUnsignedShort();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                            JavassistUtil.append(body, "final {} {}=({}){}.readUnsignedShort();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
                             break;
                         }
                         case SmallEndian:{
-                            JavassistUtil.append(body, "{} {}=({}){}.readUnsignedShortLE();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                            JavassistUtil.append(body, "final {} {}=({}){}.readUnsignedShortLE();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
                             break;
                         }
                         default:{
@@ -74,11 +74,11 @@ public class FieldBuilder__F_float_integer extends FieldBuilder {
                 case 4: {
                     switch (anno.order()){
                         case BigEndian:{
-                            JavassistUtil.append(body, "{} {}=({}){}.readUnsignedInt();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                            JavassistUtil.append(body, "final {} {}=({}){}.readUnsignedInt();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
                             break;
                         }
                         case SmallEndian:{
-                            JavassistUtil.append(body, "{} {}=({}){}.readUnsignedIntLE();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                            JavassistUtil.append(body, "final {} {}=({}){}.readUnsignedIntLE();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
                             break;
                         }
                         default:{
@@ -90,11 +90,11 @@ public class FieldBuilder__F_float_integer extends FieldBuilder {
                 case 8: {
                     switch (anno.order()){
                         case BigEndian:{
-                            JavassistUtil.append(body, "{} {}=({}){}.readLong();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                            JavassistUtil.append(body, "final {} {}=({}){}.readLong();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
                             break;
                         }
                         case SmallEndian:{
-                            JavassistUtil.append(body, "{} {}=({}){}.readLongLE();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
+                            JavassistUtil.append(body, "final {} {}=({}){}.readLongLE();", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf);
                             break;
                         }
                         default:{

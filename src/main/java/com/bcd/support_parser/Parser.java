@@ -491,7 +491,7 @@ public class Parser {
             if (f_skip == null) {
                 return false;
             } else {
-                return f_skip.mode() == SkipMode.Reserved;
+                return f_skip.mode() == SkipMode.ReservedFromStart || f_skip.mode() == SkipMode.ReservedFromPrevReserved;
             }
         });
         if (hasFieldSkipModeReserved) {
