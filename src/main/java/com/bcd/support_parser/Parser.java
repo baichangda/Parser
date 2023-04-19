@@ -105,13 +105,6 @@ public class Parser {
          */
         void collect_field(Class fieldClass, String fieldName, byte[] content, Object val, String processorClassName);
 
-        /**
-         * 收集类解析的逻辑日志、主要用于{@link T_align}的日志
-         *
-         * @param beanClass 解析实体类的类型
-         * @param log       附加日志信息
-         */
-        void collect_class(Class beanClass, String log);
     }
 
     public interface LogCollector_deParse {
@@ -126,13 +119,6 @@ public class Parser {
          */
         void collect_field(Class fieldClass, String fieldName, Object val, byte[] content, String processorClassName);
 
-        /**
-         * 收集类解析的逻辑日志、主要用于{@link T_align}的日志
-         *
-         * @param beanClass 解析实体类的类型
-         * @param log       附加日志信息
-         */
-        void collect_class(Class beanClass, String log);
     }
 
     /**
@@ -157,10 +143,6 @@ public class Parser {
                 );
             }
 
-            @Override
-            public void collect_class(Class fieldClass, String log) {
-                logger.info("--parse class--[{}] {}", fieldClass.getSimpleName(), log);
-            }
         };
     }
 
@@ -177,10 +159,6 @@ public class Parser {
                 );
             }
 
-            @Override
-            public void collect_class(Class fieldClass, String log) {
-                logger.info("--deParse class--[{}] {}", fieldClass.getSimpleName(), log);
-            }
         };
     }
 
@@ -454,8 +432,6 @@ public class Parser {
         final String byteBufClassName = ByteBuf.class.getName();
         final String clazzName = clazz.getName();
 
-        final T_align t_align = (T_align) clazz.getAnnotation(T_align.class);
-
         final int lastIndexOf = processor_class_name.lastIndexOf(".");
         String implProcessor_class_name = processor_class_name.substring(0, lastIndexOf) + "." + processor_class_name.substring(lastIndexOf + 1) + "_" + processorIndex++ + "_" + clazz.getSimpleName();
         final CtClass cc = ClassPool.getDefault().makeClass(implProcessor_class_name);
@@ -510,21 +486,19 @@ public class Parser {
         StringBuilder processBody = new StringBuilder();
         processBody.append("\n{\n");
         JavassistUtil.append(processBody, "final {} {}=new {}();\n", clazzName, FieldBuilder.varNameInstance, clazzName);
-        if (t_align != null) {
-            JavassistUtil.append(processBody, "final int align_start={}.readerIndex();\n", FieldBuilder.varNameByteBuf);
+        boolean hasFieldSkipModeReserved = Arrays.stream(clazz.getDeclaredFields()).anyMatch(e -> {
+            final F_skip f_skip = e.getAnnotation(F_skip.class);
+            if (f_skip == null) {
+                return false;
+            } else {
+                return f_skip.mode() == SkipMode.Reserved;
+            }
+        });
+        if (hasFieldSkipModeReserved) {
+            JavassistUtil.append(processBody, "final int {}={}.readerIndex();\n", FieldBuilder.startIndexVarName, FieldBuilder.varNameByteBuf);
         }
         BuilderContext parseContext = new BuilderContext(processBody, clazz, cc, null, classVarDefineToVarName);
         buildMethodBody_parse(clazz, parseContext);
-        if (t_align != null) {
-            JavassistUtil.append(processBody, "final int align_actual={}.readerIndex()-align_start;\n", FieldBuilder.varNameByteBuf);
-            JavassistUtil.append(processBody, "final int align_skip={}-align_actual;\n", t_align.len());
-            JavassistUtil.append(processBody, "if(align_skip>0){\n");
-            if (logCollector_parse != null) {
-                JavassistUtil.append(processBody, "{}.logCollector_parse.collect_class({}.class,\"align[" + t_align.len() + "] actual[\"+align_actual+\"] skip[\"+align_skip+\"]\");\n", Parser.class.getName(), clazz.getName());
-            }
-            JavassistUtil.append(processBody, "{}.skipBytes(align_skip);\n", FieldBuilder.varNameByteBuf);
-            JavassistUtil.append(processBody, "}\n");
-        }
         JavassistUtil.append(processBody, "return {};\n", FieldBuilder.varNameInstance);
         processBody.append("}");
         if (printBuildLog) {
@@ -547,21 +521,11 @@ public class Parser {
         StringBuilder deProcessBody = new StringBuilder();
         deProcessBody.append("\n{\n");
         JavassistUtil.append(deProcessBody, "final {} {}=({})$3;\n", clazzName, FieldBuilder.varNameInstance, clazzName);
-        if (t_align != null) {
-            JavassistUtil.append(deProcessBody, "final int align_start={}.writerIndex();\n", FieldBuilder.varNameByteBuf);
+        if (hasFieldSkipModeReserved) {
+            JavassistUtil.append(deProcessBody, "final int {}={}.writerIndex();\n", FieldBuilder.startIndexVarName, FieldBuilder.varNameByteBuf);
         }
         BuilderContext deParseContext = new BuilderContext(deProcessBody, clazz, cc, null, classVarDefineToVarName);
         buildMethodBody_deParse(clazz, deParseContext);
-        if (t_align != null) {
-            JavassistUtil.append(deProcessBody, "final int align_actual={}.writerIndex()-align_start;\n", FieldBuilder.varNameByteBuf);
-            JavassistUtil.append(deProcessBody, "final int align_append={}-align_actual;\n", t_align.len());
-            JavassistUtil.append(deProcessBody, "if(align_append>0){\n");
-            if (logCollector_parse != null) {
-                JavassistUtil.append(deProcessBody, "{}.logCollector_deParse.collect_class({}.class,\"align[" + t_align.len() + "] actual[\"+align_actual+\"] append[\"+align_append+\"]\");\n", Parser.class.getName(), clazz.getName());
-            }
-            JavassistUtil.append(deProcessBody, "{}.writeBytes(new byte[align_append]);\n", FieldBuilder.varNameByteBuf);
-            JavassistUtil.append(deProcessBody, "}\n");
-        }
         deProcessBody.append("}");
         if (printBuildLog) {
             logger.info("\n-----------class[{}] deProcess-----------{}\n", clazz.getName(), deProcessBody.toString());

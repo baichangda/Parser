@@ -22,6 +22,10 @@ public class BuilderContext {
      */
     public final StringBuilder body;
     /**
+     * 类
+     */
+    public final Class clazz;
+    /**
      * 生产的{@link Processor}子类
      */
     public final CtClass implCc;
@@ -61,12 +65,6 @@ public class BuilderContext {
      * 避免重复定义类变量
      */
     public final Map<String, String> classVarDefineToVarName;
-
-
-    /**
-     * 类字节对齐
-     */
-    public final Class clazz;
 
     public BuilderContext(StringBuilder body, Class clazz, CtClass implCc, BuilderContext parentContext, Map<String, String> classVarDefineToVarName) {
         this.body = body;

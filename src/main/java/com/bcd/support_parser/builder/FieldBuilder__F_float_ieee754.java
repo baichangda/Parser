@@ -1,14 +1,9 @@
 package com.bcd.support_parser.builder;
 
 import com.bcd.support_parser.anno.F_float_ieee754;
-import com.bcd.support_parser.anno.F_float_integer;
-import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.util.JavassistUtil;
-import com.bcd.support_parser.util.RpnUtil;
-import io.netty.buffer.ByteBuf;
 
 import java.lang.reflect.Field;
-import java.util.Map;
 
 public class FieldBuilder__F_float_ieee754 extends FieldBuilder {
     @Override
@@ -31,7 +26,7 @@ public class FieldBuilder__F_float_ieee754 extends FieldBuilder {
 
         String funcName = null;
         switch (anno.type()) {
-            case FLOAT: {
+            case Float: {
                 switch (anno.order()) {
                     case BigEndian: {
                         funcName = "readFloat";
@@ -48,7 +43,7 @@ public class FieldBuilder__F_float_ieee754 extends FieldBuilder {
 
                 break;
             }
-            case DOUBLE: {
+            case Double: {
                 switch (anno.order()) {
                     case BigEndian: {
                         funcName = "readDouble";
@@ -86,7 +81,7 @@ public class FieldBuilder__F_float_ieee754 extends FieldBuilder {
         String funcName = null;
         String funcParamTypeName = null;
         switch (anno.type()) {
-            case FLOAT: {
+            case Float: {
                 switch (anno.order()) {
                     case BigEndian: {
                         funcName = "writeFloat";
@@ -103,7 +98,7 @@ public class FieldBuilder__F_float_ieee754 extends FieldBuilder {
                 funcParamTypeName = "float";
                 break;
             }
-            case DOUBLE: {
+            case Double: {
                 switch (anno.order()) {
                     case BigEndian: {
                         funcName = "writeDouble";

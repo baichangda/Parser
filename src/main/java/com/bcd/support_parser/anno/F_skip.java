@@ -13,6 +13,13 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface F_skip {
     /**
+     * 跳过字节模式
+     * {@link SkipMode#Skip} 直接跳过当前指定长度的字节数
+     * {@link SkipMode#Reserved} 从当前字段所属对象开始、计算到当前字段的字节数、跳过(规定长度-已经计入的字节数)
+     */
+    SkipMode mode() default SkipMode.Skip;
+
+    /**
      * 占用字节数
      * 1-8
      * 与{@link #lenExpr()}互斥
