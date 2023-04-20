@@ -5,7 +5,6 @@ import com.bcd.support_parser.anno.F_skip;
 import com.bcd.support_parser.anno.F_string;
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.util.JavassistUtil;
-import io.netty.buffer.ByteBuf;
 
 import java.lang.reflect.Field;
 import java.nio.charset.Charset;
@@ -74,7 +73,7 @@ public class FieldBuilder__F_string extends FieldBuilder {
         JavassistUtil.append(body, "{}.writeBytes({});\n", varNameByteBuf, arrVarName);
         JavassistUtil.append(body, "final int {}={}-{}.length;\n", arrLeaveVarName, lenRes, arrVarName);
         JavassistUtil.append(body, "if({}>0){\n", arrLeaveVarName);
-        JavassistUtil.append(body, "{}.writeBytes(new byte[{}]);\n", varNameByteBuf, arrLeaveVarName);
+        JavassistUtil.append(body, "{}.writeZero({});\n", varNameByteBuf, arrLeaveVarName);
         JavassistUtil.append(body, "}\n");
     }
 }

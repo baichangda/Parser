@@ -4,7 +4,6 @@ package com.bcd.support_parser.builder;
 import com.bcd.support_parser.anno.F_skip;
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.util.JavassistUtil;
-import io.netty.buffer.ByteBuf;
 
 import java.lang.reflect.Field;
 
@@ -85,7 +84,7 @@ public class FieldBuilder__F_skip extends FieldBuilder {
                 final String skipVarName = varNameField + "_skip";
                 JavassistUtil.append(body, "final int {}={}-{}.writerIndex()+{};\n", skipVarName, lenValCode, FieldBuilder.varNameByteBuf, FieldBuilder.startIndexVarName);
                 JavassistUtil.append(body, "if({}>0){\n", skipVarName);
-                JavassistUtil.append(body, "{}.writeBytes(new byte[{}]);\n", FieldBuilder.varNameByteBuf, skipVarName);
+                JavassistUtil.append(body, "{}.writeZero({});\n", FieldBuilder.varNameByteBuf, skipVarName);
                 JavassistUtil.append(body, "}\n");
                 //完成后记录索引
                 if (context.indexFieldNameSet.contains(fieldName)) {
@@ -98,7 +97,7 @@ public class FieldBuilder__F_skip extends FieldBuilder {
                 final String skipVarName = varNameField + "_skip";
                 JavassistUtil.append(body, "final int {}={}-{}.writerIndex()+{};\n", skipVarName, lenValCode, FieldBuilder.varNameByteBuf, context.prevSkipReservedIndexVarName);
                 JavassistUtil.append(body, "if({}>0){\n", skipVarName);
-                JavassistUtil.append(body, "{}.writeBytes(new byte[{}]);\n", FieldBuilder.varNameByteBuf, skipVarName);
+                JavassistUtil.append(body, "{}.writeZero({});\n", FieldBuilder.varNameByteBuf, skipVarName);
                 JavassistUtil.append(body, "}\n");
                 //完成后记录索引
                 if (context.indexFieldNameSet.contains(fieldName)) {
