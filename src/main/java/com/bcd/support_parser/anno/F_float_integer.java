@@ -57,4 +57,20 @@ public @interface F_float_integer {
      * 字节序模式
      */
     ByteOrder order() default ByteOrder.BigEndian;
+
+    /**
+     * 对原始值的解析视为无符号数字解析
+     * 在获取原始值表现不同
+     * 如果为true
+     * 1字节 byteBuf.readByte()
+     * 2字节 byteBuf.readShort()
+     * 4字节 byteBuf.readInt()
+     * 8字节 byteBuf.readLong()
+     * 如果为false
+     * 1字节 byteBuf.readUnsignedByte()
+     * 2字节 byteBuf.readUnsignedShort()
+     * 4字节 byteBuf.readUnsignedInt()
+     * 8字节 byteBuf.readLong()
+     */
+    boolean unsigned() default true;
 }

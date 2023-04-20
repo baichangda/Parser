@@ -68,17 +68,20 @@ public class FieldBuilder__F_float_integer_array extends FieldBuilder {
         final String varNameArrayElement = varNameField + "_arrEle";
         switch (anno.singleLen()) {
             case 1: {
-                JavassistUtil.append(body, "final {} {}=({}){}.readUnsignedByte();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf);
+                final String readFuncName = anno.unsigned() ? "readUnsignedByte" : "readByte";
+                JavassistUtil.append(body, "final {} {}=({}){}.{}();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf,readFuncName);
                 break;
             }
             case 2: {
                 switch (anno.order()) {
                     case BigEndian: {
-                        JavassistUtil.append(body, "final {} {}=({}){}.readUnsignedShort();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf);
+                        final String readFuncName = anno.unsigned() ? "readUnsignedShort" : "readShort";
+                        JavassistUtil.append(body, "final {} {}=({}){}.{}();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf,readFuncName);
                         break;
                     }
                     case SmallEndian: {
-                        JavassistUtil.append(body, "final {} {}=({}){}.readUnsignedShortLE();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf);
+                        final String readFuncName = anno.unsigned() ? "readUnsignedShortLE" : "readShortLE";
+                        JavassistUtil.append(body, "final {} {}=({}){}.{}();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf,readFuncName);
                         break;
                     }
                     default: {
@@ -90,11 +93,13 @@ public class FieldBuilder__F_float_integer_array extends FieldBuilder {
             case 4: {
                 switch (anno.order()) {
                     case BigEndian: {
-                        JavassistUtil.append(body, "final {} {}=({}){}.readUnsignedInt();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf);
+                        final String readFuncName = anno.unsigned() ? "readUnsignedInt" : "readInt";
+                        JavassistUtil.append(body, "final {} {}=({}){}.{}();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf,readFuncName);
                         break;
                     }
                     case SmallEndian: {
-                        JavassistUtil.append(body, "final {} {}=({}){}.readUnsignedIntLE();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf);
+                        final String readFuncName = anno.unsigned() ? "readUnsignedIntLE" : "readIntLE";
+                        JavassistUtil.append(body, "final {} {}=({}){}.{}();\n", arrayElementType, varNameArrayElement, arrayElementType, FieldBuilder.varNameByteBuf,readFuncName);
                         break;
                     }
                     default: {
@@ -159,9 +164,9 @@ public class FieldBuilder__F_float_integer_array extends FieldBuilder {
                 JavassistUtil.append(body, "final byte[] {}=new byte[{}.length];\n", varNameFieldRes, varNameFieldArr);
                 JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", varNameFieldRes);
                 if (anno.valExpr().isEmpty()) {
-                    JavassistUtil.append(body, "{}[i]=(byte){};\n", varNameFieldRes, varNameFieldArr + "[i]");
+                    JavassistUtil.append(body, "{}[i]=(int){};\n", varNameFieldRes, varNameFieldArr + "[i]");
                 } else {
-                    JavassistUtil.append(body, "{}[i]=(byte)({});\n", varNameFieldRes, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                    JavassistUtil.append(body, "{}[i]=(int)({});\n", varNameFieldRes, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                 }
                 JavassistUtil.append(body, "}\n");
                 JavassistUtil.append(body, "{}.writeBytes({});\n", FieldBuilder.varNameByteBuf, varNameFieldRes);
@@ -184,9 +189,9 @@ public class FieldBuilder__F_float_integer_array extends FieldBuilder {
                 }
                 JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", varNameFieldArr);
                 if (anno.valExpr().isEmpty()) {
-                    JavassistUtil.append(body, "{}.{}((short){});\n", FieldBuilder.varNameByteBuf, funcName, varNameFieldArr + "[i]");
+                    JavassistUtil.append(body, "{}.{}((int){});\n", FieldBuilder.varNameByteBuf, funcName, varNameFieldArr + "[i]");
                 } else {
-                    JavassistUtil.append(body, "{}.{}((short)({}));\n", FieldBuilder.varNameByteBuf, funcName, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                    JavassistUtil.append(body, "{}.{}((int)({}));\n", FieldBuilder.varNameByteBuf, funcName, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                 }
                 JavassistUtil.append(body, "}\n");
                 break;
