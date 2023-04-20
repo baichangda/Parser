@@ -26,7 +26,7 @@ public class FieldBuilder__F_float_ieee754 extends FieldBuilder {
 
         String funcName = null;
         switch (anno.type()) {
-            case Float: {
+            case Float32: {
                 switch (anno.order()) {
                     case BigEndian: {
                         funcName = "readFloat";
@@ -43,7 +43,7 @@ public class FieldBuilder__F_float_ieee754 extends FieldBuilder {
 
                 break;
             }
-            case Double: {
+            case Float64: {
                 switch (anno.order()) {
                     case BigEndian: {
                         funcName = "readDouble";
@@ -81,7 +81,7 @@ public class FieldBuilder__F_float_ieee754 extends FieldBuilder {
         String funcName = null;
         String funcParamTypeName = null;
         switch (anno.type()) {
-            case Float: {
+            case Float32: {
                 switch (anno.order()) {
                     case BigEndian: {
                         funcName = "writeFloat";
@@ -98,7 +98,7 @@ public class FieldBuilder__F_float_ieee754 extends FieldBuilder {
                 funcParamTypeName = "float";
                 break;
             }
-            case Double: {
+            case Float64: {
                 switch (anno.order()) {
                     case BigEndian: {
                         funcName = "writeDouble";

@@ -43,7 +43,7 @@ public class Parser {
 
     public final static FieldBuilder__F_bean fieldBuilder__f_bean = new FieldBuilder__F_bean();
     public final static FieldBuilder__F_bean_list fieldBuilder__f_bean_list = new FieldBuilder__F_bean_list();
-    public final static FieldBuilder__F_date fieldBuilder__f_date = new FieldBuilder__F_date();
+    public final static FieldBuilder__F_date field_builder__f_date = new FieldBuilder__F_date();
     public final static FieldBuilder__F_float_integer_array fieldBuilder__f_float_integer_array = new FieldBuilder__F_float_integer_array();
     public final static FieldBuilder__F_float_integer fieldBuilder__f_float_integer = new FieldBuilder__F_float_integer();
     public final static FieldBuilder__F_float_ieee754_array fieldBuilder__F_float_ieee754_array = new FieldBuilder__F_float_ieee754_array();
@@ -291,7 +291,7 @@ public class Parser {
 
                 final F_date f_date = field.getAnnotation(F_date.class);
                 if (f_date != null) {
-                    fieldBuilder__f_date.buildParse(context);
+                    field_builder__f_date.buildParse(context);
                     continue;
                 }
 
@@ -391,7 +391,7 @@ public class Parser {
 
                 final F_date f_date = field.getAnnotation(F_date.class);
                 if (f_date != null) {
-                    fieldBuilder__f_date.buildDeParse(context);
+                    field_builder__f_date.buildDeParse(context);
                     continue;
                 }
 

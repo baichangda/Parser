@@ -15,8 +15,8 @@ public @interface F_float_ieee754 {
 
     /**
      * 浮点数类型
-     * {@link FloatType_ieee754#Float}占用4字节
-     * {@link FloatType_ieee754#Double}占用8字节
+     * {@link FloatType_ieee754#Float32}占用4字节
+     * {@link FloatType_ieee754#Float64}占用8字节
      */
     FloatType_ieee754 type();
 

@@ -1,5 +1,6 @@
 package com.bcd.support_parser.impl.gb32960.data;
 
+import com.bcd.support_parser.anno.DateMode;
 import com.bcd.support_parser.anno.F_date;
 import com.bcd.support_parser.anno.F_integer;
 import com.bcd.support_parser.anno.F_string;
@@ -8,7 +9,7 @@ import java.util.Date;
 
 public class PlatformLoginData implements PacketData {
     //平台登入时间
-    @F_date
+    @F_date(mode = DateMode.Bytes_yyMMddHHmmss, baseYear = 2000)
     public Date collectTime;
 
     //登入流水号
