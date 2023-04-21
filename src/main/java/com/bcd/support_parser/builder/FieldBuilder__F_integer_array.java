@@ -55,27 +55,14 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
             final String varNameArrayElement = varNameField + "_arrEle";
             JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", arrVarName);
             switch (singleLen) {
-                case 1: {
+                case 1 -> {
                     JavassistUtil.append(body, "final short {}={}.readUnsignedByte();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
-                    break;
                 }
-                case 2: {
-                    switch (anno.order()) {
-                        case BigEndian: {
-                            JavassistUtil.append(body, "final short {}={}.readShort();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
-                            break;
-                        }
-                        case SmallEndian: {
-                            JavassistUtil.append(body, "final short {}={}.readShortLE();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
-                            break;
-                        }
-                        default: {
-                            JavassistUtil.notSupport_order(field, annoClass);
-                        }
-                    }
-                    break;
+                case 2 -> {
+                    final String funcName = anno.bigEndian() ? "readShort" : "readShortLE";
+                    JavassistUtil.append(body, "final short {}={}.{}();\n", varNameArrayElement, FieldBuilder.varNameByteBuf, funcName);
                 }
-                default: {
+                default -> {
                     JavassistUtil.notSupport_singleLen(field, annoClass);
                 }
             }
@@ -86,39 +73,15 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
             final String varNameArrayElement = varNameField + "_arrEle";
             JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", arrVarName);
             switch (singleLen) {
-                case 2: {
-                    switch (anno.order()) {
-                        case BigEndian: {
-                            JavassistUtil.append(body, "final int {}={}.readUnsignedShort();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
-                            break;
-                        }
-                        case SmallEndian: {
-                            JavassistUtil.append(body, "final int {}={}.readUnsignedShortLE();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
-                            break;
-                        }
-                        default: {
-                            JavassistUtil.notSupport_order(field, annoClass);
-                        }
-                    }
-                    break;
+                case 2 -> {
+                    final String funcName = anno.bigEndian() ? "readUnsignedShort" : "readUnsignedShortLE";
+                    JavassistUtil.append(body, "final int {}={}.{}();\n", varNameArrayElement, FieldBuilder.varNameByteBuf, funcName);
                 }
-                case 4: {
-                    switch (anno.order()) {
-                        case BigEndian: {
-                            JavassistUtil.append(body, "final int {}={}.readInt();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
-                            break;
-                        }
-                        case SmallEndian: {
-                            JavassistUtil.append(body, "final int {}={}.readIntLE();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
-                            break;
-                        }
-                        default: {
-                            JavassistUtil.notSupport_order(field, annoClass);
-                        }
-                    }
-                    break;
+                case 4 -> {
+                    final String funcName = anno.bigEndian() ? "readInt" : "readIntLE";
+                    JavassistUtil.append(body, "final int {}={}.{}();\n", varNameArrayElement, FieldBuilder.varNameByteBuf, funcName);
                 }
-                default: {
+                default -> {
                     JavassistUtil.notSupport_singleLen(field, annoClass);
                 }
             }
@@ -129,40 +92,15 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
             final String varNameArrayElement = varNameField + "_arrEle";
             JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", arrVarName);
             switch (singleLen) {
-                case 4: {
-                    switch (anno.order()) {
-                        case BigEndian: {
-                            JavassistUtil.append(body, "final long {}={}.readUnsignedInt();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
-                            break;
-                        }
-                        case SmallEndian: {
-                            JavassistUtil.append(body, "final long {}={}.readUnsignedIntLE();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
-                            break;
-                        }
-                        default: {
-                            JavassistUtil.notSupport_order(field, annoClass);
-                        }
-                    }
-                    break;
+                case 4 -> {
+                    final String funcName = anno.bigEndian() ? "readUnsignedInt" : "readUnsignedIntLE";
+                    JavassistUtil.append(body, "final long {}={}.{}();\n", varNameArrayElement, FieldBuilder.varNameByteBuf, funcName);
                 }
-                case 8: {
-                    switch (anno.order()) {
-                        case BigEndian: {
-                            JavassistUtil.append(body, "final long {}={}.readLong();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
-                            break;
-                        }
-                        case SmallEndian: {
-                            JavassistUtil.append(body, "final long {}={}.readLongLE();\n", varNameArrayElement, FieldBuilder.varNameByteBuf);
-                            break;
-                        }
-                        default: {
-                            JavassistUtil.notSupport_order(field, annoClass);
-                        }
-                    }
-
-                    break;
+                case 8 -> {
+                    final String funcName = anno.bigEndian() ? "readLong" : "readLongLE";
+                    JavassistUtil.append(body, "final long {}={}.{}();\n", varNameArrayElement, FieldBuilder.varNameByteBuf, funcName);
                 }
-                default: {
+                default -> {
                     JavassistUtil.notSupport_singleLen(field, annoClass);
                 }
             }
@@ -188,62 +126,43 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
         final String valCode = varNameInstance + "." + fieldName;
         final String varNameField = JavassistUtil.getFieldVarName(context);
         if (byte[].class.isAssignableFrom(fieldTypeClass)) {
-            switch (singleLen) {
-                case 1: {
-                    if (anno.valExpr().isEmpty()) {
-                        JavassistUtil.append(body, "{}.writeBytes({});\n", FieldBuilder.varNameByteBuf, valCode);
-                    } else {
-                        String varNameFieldArr = varNameField + "_arr";
-                        String varNameFieldRes = varNameField + "_res";
-                        JavassistUtil.append(body, "final byte[] {}={};\n", varNameFieldArr, valCode);
-                        JavassistUtil.append(body, "final byte[] {}=new byte[{}.length];\n", varNameFieldRes, varNameFieldArr);
-                        JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", varNameFieldRes);
-                        JavassistUtil.append(body, "{}[i]={};\n", varNameFieldRes, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
-                        JavassistUtil.append(body, "}\n");
-                        JavassistUtil.append(body, "{}.writeBytes({});\n", FieldBuilder.varNameByteBuf, varNameFieldRes);
-                    }
-                    break;
+            if (singleLen == 1) {
+                if (anno.valExpr().isEmpty()) {
+                    JavassistUtil.append(body, "{}.writeBytes({});\n", FieldBuilder.varNameByteBuf, valCode);
+                } else {
+                    String varNameFieldArr = varNameField + "_arr";
+                    String varNameFieldRes = varNameField + "_res";
+                    JavassistUtil.append(body, "final byte[] {}={};\n", varNameFieldArr, valCode);
+                    JavassistUtil.append(body, "final byte[] {}=new byte[{}.length];\n", varNameFieldRes, varNameFieldArr);
+                    JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", varNameFieldRes);
+                    JavassistUtil.append(body, "{}[i]={};\n", varNameFieldRes, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
+                    JavassistUtil.append(body, "}\n");
+                    JavassistUtil.append(body, "{}.writeBytes({});\n", FieldBuilder.varNameByteBuf, varNameFieldRes);
                 }
-                default: {
-                    JavassistUtil.notSupport_singleLen(field, annoClass);
-                }
+            } else {
+                JavassistUtil.notSupport_singleLen(field, annoClass);
             }
         } else if (short[].class.isAssignableFrom(fieldTypeClass)) {
             String varNameFieldArr = varNameField + "_arr";
             JavassistUtil.append(body, "final short[] {}={};\n", varNameFieldArr, valCode);
             JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", varNameFieldArr);
             switch (singleLen) {
-                case 1: {
+                case 1 -> {
                     if (anno.valExpr().isEmpty()) {
                         JavassistUtil.append(body, "{}.writeByte((byte){});\n", FieldBuilder.varNameByteBuf, varNameFieldArr + "[i]");
                     } else {
                         JavassistUtil.append(body, "{}.writeByte((byte)({}));\n", FieldBuilder.varNameByteBuf, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                     }
-                    break;
                 }
-                case 2: {
-                    String funcName = null;
-                    switch (anno.order()) {
-                        case BigEndian: {
-                            funcName = "writeShort";
-                            break;
-                        }
-                        case SmallEndian: {
-                            funcName = "writeShortLE";
-                            break;
-                        }
-                        default: {
-                            JavassistUtil.notSupport_order(field, annoClass);
-                        }
-                    }
+                case 2 -> {
+                    final String funcName = anno.bigEndian() ? "writeShort" : "writeShortLE";
                     if (anno.valExpr().isEmpty()) {
                         JavassistUtil.append(body, "{}.{}({});\n", FieldBuilder.varNameByteBuf, funcName, varNameFieldArr + "[i]");
                     } else {
                         JavassistUtil.append(body, "{}.{}((short)({}));\n", FieldBuilder.varNameByteBuf, funcName, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                     }
-                    break;
                 }
-                default: {
+                default -> {
                     JavassistUtil.notSupport_singleLen(field, annoClass);
                 }
             }
@@ -253,51 +172,23 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
             JavassistUtil.append(body, "final int[] {}={};\n", varNameFieldArr, valCode);
             JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", varNameFieldArr);
             switch (singleLen) {
-                case 2: {
-                    String funcName = null;
-                    switch (anno.order()) {
-                        case BigEndian: {
-                            funcName = "writeShort";
-                            break;
-                        }
-                        case SmallEndian: {
-                            funcName = "writeShortLE";
-                            break;
-                        }
-                        default: {
-                            JavassistUtil.notSupport_order(field, annoClass);
-                        }
-                    }
+                case 2 -> {
+                    final String funcName = anno.bigEndian() ? "writeShort" : "writeShortLE";
                     if (anno.valExpr().isEmpty()) {
                         JavassistUtil.append(body, "{}.{}((short){});\n", FieldBuilder.varNameByteBuf, funcName, varNameFieldArr + "[i]");
                     } else {
                         JavassistUtil.append(body, "{}.{}((short)({}));\n", FieldBuilder.varNameByteBuf, funcName, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                     }
-                    break;
                 }
-                case 4: {
-                    String funcName = null;
-                    switch (anno.order()) {
-                        case BigEndian: {
-                            funcName = "writeInt";
-                            break;
-                        }
-                        case SmallEndian: {
-                            funcName = "writeIntLE";
-                            break;
-                        }
-                        default: {
-                            JavassistUtil.notSupport_order(field, annoClass);
-                        }
-                    }
+                case 4 -> {
+                    final String funcName = anno.bigEndian() ? "writeInt" : "writeIntLE";
                     if (anno.valExpr().isEmpty()) {
                         JavassistUtil.append(body, "{}.{}({});\n", FieldBuilder.varNameByteBuf, funcName, varNameFieldArr + "[i]");
                     } else {
                         JavassistUtil.append(body, "{}.{}((int)({}));\n", FieldBuilder.varNameByteBuf, funcName, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                     }
-                    break;
                 }
-                default: {
+                default -> {
                     JavassistUtil.notSupport_singleLen(field, annoClass);
                 }
             }
@@ -307,51 +198,23 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
             JavassistUtil.append(body, "final long[] {}={};\n", varNameFieldArr, valCode);
             JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", varNameFieldArr);
             switch (singleLen) {
-                case 4: {
-                    String funcName = null;
-                    switch (anno.order()) {
-                        case BigEndian: {
-                            funcName = "writeInt";
-                            break;
-                        }
-                        case SmallEndian: {
-                            funcName = "writeIntLE";
-                            break;
-                        }
-                        default: {
-                            JavassistUtil.notSupport_order(field, annoClass);
-                        }
-                    }
+                case 4 -> {
+                    final String funcName = anno.bigEndian() ? "writeInt" : "writeIntLE";
                     if (anno.valExpr().isEmpty()) {
                         JavassistUtil.append(body, "{}.{}((int){});\n", FieldBuilder.varNameByteBuf, funcName, varNameFieldArr + "[i]");
                     } else {
                         JavassistUtil.append(body, "{}.{}((int)({}));\n", FieldBuilder.varNameByteBuf, funcName, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                     }
-                    break;
                 }
-                case 8: {
-                    String funcName = null;
-                    switch (anno.order()) {
-                        case BigEndian: {
-                            funcName = "writeLong";
-                            break;
-                        }
-                        case SmallEndian: {
-                            funcName = "writeLongLE";
-                            break;
-                        }
-                        default: {
-                            JavassistUtil.notSupport_order(field, annoClass);
-                        }
-                    }
+                case 8 -> {
+                    final String funcName = anno.bigEndian() ? "writeLong" : "writeLongLE";
                     if (anno.valExpr().isEmpty()) {
                         JavassistUtil.append(body, "{}.{}({});\n", FieldBuilder.varNameByteBuf, funcName, varNameFieldArr + "[i]");
                     } else {
                         JavassistUtil.append(body, "{}.{}((long)({}));\n", FieldBuilder.varNameByteBuf, funcName, JavassistUtil.replaceValExprToCode(RpnUtil.reverseExpr(anno.valExpr()), varNameFieldArr + "[i]"));
                     }
-                    break;
                 }
-                default: {
+                default -> {
                     JavassistUtil.notSupport_singleLen(field, annoClass);
                 }
             }

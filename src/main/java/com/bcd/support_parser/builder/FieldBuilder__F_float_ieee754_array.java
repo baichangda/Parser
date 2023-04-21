@@ -37,42 +37,17 @@ public class FieldBuilder__F_float_ieee754_array extends FieldBuilder {
         }
 
 
-        String funcName = null;
+        final String funcName;
         switch (anno.type()) {
-            case Float32: {
-                switch (anno.order()) {
-                    case BigEndian: {
-                        funcName = "readFloat";
-                        break;
-                    }
-                    case SmallEndian: {
-                        funcName = "readFloatLE";
-                        break;
-                    }
-                    default: {
-                        JavassistUtil.notSupport_order(field, annoClass);
-                    }
-                }
-                break;
+            case Float32 -> {
+                funcName = anno.bigEndian() ? "readFloat" : "readFloatLE";
             }
-            case Float64: {
-                switch (anno.order()) {
-                    case BigEndian: {
-                        funcName = "readDouble";
-                        break;
-                    }
-                    case SmallEndian: {
-                        funcName = "readDoubleLE";
-                        break;
-                    }
-                    default: {
-                        JavassistUtil.notSupport_order(field, annoClass);
-                    }
-                }
-                break;
+            case Float64 -> {
+                funcName = anno.bigEndian() ? "readDouble" : "readDoubleLE";
             }
-            default: {
+            default -> {
                 JavassistUtil.notSupport_type(field, annoClass);
+                funcName = null;
             }
         }
         final String varNameInstance = FieldBuilder.varNameInstance;
@@ -110,45 +85,21 @@ public class FieldBuilder__F_float_ieee754_array extends FieldBuilder {
             arrayElementType = "";
         }
 
-        String funcName = null;
-        String funcParamTypeName = null;
+        final String funcName;
+        final String funcParamTypeName;
         switch (anno.type()) {
-            case Float32: {
-                switch (anno.order()) {
-                    case BigEndian: {
-                        funcName = "writeFloat";
-                        break;
-                    }
-                    case SmallEndian: {
-                        funcName = "writeFloatLE";
-                        break;
-                    }
-                    default: {
-                        JavassistUtil.notSupport_order(field, annoClass);
-                    }
-                }
+            case Float32 -> {
+                funcName = anno.bigEndian() ? "writeFloat" : "writeFloatLE";
                 funcParamTypeName = "float";
-                break;
             }
-            case Float64: {
-                switch (anno.order()) {
-                    case BigEndian: {
-                        funcName = "writeDouble";
-                        break;
-                    }
-                    case SmallEndian: {
-                        funcName = "writeDoubleLE";
-                        break;
-                    }
-                    default: {
-                        JavassistUtil.notSupport_order(field, annoClass);
-                    }
-                }
+            case Float64 -> {
+                funcName = anno.bigEndian() ? "writeDouble" : "writeDoubleLE";
                 funcParamTypeName = "double";
-                break;
             }
-            default: {
+            default -> {
                 JavassistUtil.notSupport_type(field, annoClass);
+                funcName = null;
+                funcParamTypeName = null;
             }
         }
 

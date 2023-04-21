@@ -29,7 +29,7 @@ public @interface F_float_integer {
      * 和{@link #len()}互斥
      * 1-32
      *
-     * 注意:当此属性生效时候、{@link #order()}无效
+     * 注意:当此属性生效时候、{@link #bigEndian()}无效
      */
     int bit() default 0;
 
@@ -54,9 +54,9 @@ public @interface F_float_integer {
     int valPrecision() default -1;
 
     /**
-     * 字节序模式
+     * 是则大端模式、否则小端模式
      */
-    ByteOrder order() default ByteOrder.BigEndian;
+    boolean bigEndian() default true;
 
     /**
      * 对原始值的解析视为无符号数字解析

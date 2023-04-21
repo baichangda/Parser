@@ -27,7 +27,7 @@ public @interface F_float_ieee754 {
     int valPrecision() default -1;
 
     /**
-     * 字节序模式
+     * 是则大端模式、否则小端模式
      */
-    ByteOrder order() default ByteOrder.BigEndian;
+    boolean bigEndian() default true;
 }

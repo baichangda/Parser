@@ -71,9 +71,9 @@ public @interface F_float_integer_array {
     int valPrecision() default -1;
 
     /**
-     * 字节序模式
+     * 是则大端模式、否则小端模式
      */
-    ByteOrder order() default ByteOrder.BigEndian;
+    boolean bigEndian() default true;
 
     /**
      * 对原始值的解析视为无符号数字解析

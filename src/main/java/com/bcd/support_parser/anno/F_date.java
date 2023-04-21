@@ -12,14 +12,49 @@ import java.lang.annotation.Target;
  * long 此时代表时间戳毫秒
  * {@link String} 此时使用{@link #stringFormat()}、{@link #stringZoneId()}格式化
  *
- * {@link DateMode#Bytes_yyMMddHHmmss} 协议定义6字节、分别代表 年月日时分秒 、年需要加上{@link #baseYear()}、需要结合时区{@link #zoneId()}完成解析
- * {@link DateMode#Bytes_yyyyMMddHHmmss} 协议定义7字节、分别代表 年月日时分秒、年占用2字节、需要结合时区{@link #zoneId()}完成解析
- * {@link DateMode#Uint64_millisecond} 协议定义uint64、代表毫秒
- * {@link DateMode#Uint64_second} 协议定义uint64、代表秒、转换为毫秒要*1000
- * {@link DateMode#Uint32_second} 协议定义uint32、代表秒、转换为毫秒要*1000
- * {@link DateMode#Float64_millisecond} 协议定义float64、代表毫秒
- * {@link DateMode#Float64_second} 协议定义float64、代表秒、精度为0.001、转换为毫秒要*1000
  *
+ * 解析过程、分为两个步骤
+ * 1、首先所有的输入数据源都会转换为时间戳毫秒(long类型)
+ * 2、然后将时间戳转换为字段值
+ *
+ * 以下是步骤1不同{@link #mode()}的过程
+ * {@link DateMode#Bytes_yyMMddHHmmss} 协议定义6字节、分别代表 年月日时分秒
+ * 1、首先读取源数据获取 年月日时分秒、对 年加上{@link #baseYear()}
+ * 2、根据{@link #zoneId()}转换为{@link java.time.ZonedDateTime}
+ * 3、{@link java.time.ZonedDateTime}转换为时间戳毫秒
+ *
+ * {@link DateMode#Bytes_yyyyMMddHHmmss} 协议定义7字节、分别代表 年月日时分秒、年占用2字节
+ * 1、首先读取源数据获取 年月日时分秒、读取年时候会使用{@link #bigEndian()}
+ * 2、根据{@link #zoneId()}转换为{@link java.time.ZonedDateTime}
+ * 3、{@link java.time.ZonedDateTime}转换为时间戳毫秒
+ *
+ * {@link DateMode#Uint64_millisecond} 协议定义uint64、代表时间戳毫秒
+ * 1、读取源数据(会使用{@link #bigEndian()})、直接读出来为时间戳毫秒(long类型)
+ *
+ * {@link DateMode#Uint64_second} 协议定义uint64、代表时间戳秒
+ * 1、读取源数据(会使用{@link #bigEndian()})、直接读出来为时间戳秒(long类型)
+ * 2、时间戳秒*1000得到时间戳毫秒
+ *
+ * {@link DateMode#Uint32_second} 协议定义uint32、代表时间戳秒
+ * 1、读取源数据(会使用{@link #bigEndian()})、直接读出来为时间戳秒(long类型)
+ * 2、时间戳秒*1000得到时间戳毫秒
+ *
+ * {@link DateMode#Float64_millisecond} 协议定义float64、代表时间戳毫秒
+ * 1、读取源数据(会使用{@link #bigEndian()})、直接读出来为时间戳毫秒(double类型)、转换数据类型为long类型
+ *
+ * {@link DateMode#Float64_second} 协议定义float64、代表秒、精度为0.001
+ * 1、读取源数据(会使用{@link #bigEndian()})、直接读出来为时间戳秒(double类型)
+ * 2、时间戳秒*1000得到时间戳毫秒(double类型)、转换数据类型为long类型
+ *
+ * 步骤2过程
+ * 根据步骤1得到的时间戳毫秒、针对不同数据类型进行转换
+ * {@link java.util.Date} new Date(long)
+ * long 无需转换
+ * int (int)(long/1000)
+ * {@link String} 先转换为{@link java.time.ZonedDateTime}、然后使用{@link #stringFormat()}、{@link #stringZoneId()}格式化成字符串
+ *
+ *
+ * 反解析步骤与解析过程相反
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
@@ -43,6 +78,7 @@ public @interface F_date {
     int baseYear() default 2000;
 
     /**
+     * 是则大端模式、否则小端模式
      * 如下模式时候
      * {@link DateMode#Bytes_yyyyMMddHHmmss} 此时只针对年才有大小端问题
      * {@link DateMode#Uint64_millisecond}
