@@ -27,14 +27,17 @@ public @interface F_date {
     DateMode mode();
 
     /**
-     * {@link DateMode#Bytes_yyMMddHHmmss}、{@link DateMode#Bytes_yyyyMMddHHmmss} 格式时候
+     * 如下模式时候
+     * {@link DateMode#Bytes_yyMMddHHmmss}
+     * {@link DateMode#Bytes_yyyyMMddHHmmss}
      * 用于表示原始值的时区
      * 注意时区可以为offset、例如+8、但是此时需要考虑夏令时问题
      */
     String zoneId() default "Asia/Shanghai";
 
     /**
-     * {@link DateMode#Bytes_yyMMddHHmmss}格式时候
+     * 如下模式时候
+     * {@link DateMode#Bytes_yyMMddHHmmss}
      * 年份偏移量、结果年份=baseYear+原始值
      */
     int baseYear() default 2000;
