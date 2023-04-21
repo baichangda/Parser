@@ -10,8 +10,8 @@ import java.util.Date;
 
 public class VehicleSupplementData implements PacketData {
     //数据采集时间
-    @F_date(mode = DateMode.Bytes_yyMMddHHmmss, baseYear = 2000,stringZoneId = "+8")
-    public String collectTime;
+    @F_date(mode = DateMode.Bytes_yyMMddHHmmss)
+    public Date collectTime;
 
     //车辆运行通用数据
     @F_customize(processorClass = VehicleCommonDataFieldProcessor.class)
