@@ -16,7 +16,7 @@ public class FieldBuilder__F_integer extends FieldBuilder {
         final Class<?> fieldTypeClass = field.getType();
         final String fieldTypeName = fieldTypeClass.getName();
         final F_integer anno = context.field.getAnnotation(annoClass);
-        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.clazz);
         final StringBuilder body = context.body;
         final String varNameInstance = FieldBuilder.varNameInstance;
         final String varNameField = JavassistUtil.getFieldVarName(context);
@@ -134,7 +134,7 @@ public class FieldBuilder__F_integer extends FieldBuilder {
         final Class<F_integer> annoClass = F_integer.class;
         final Field field = context.field;
         final F_integer anno = context.field.getAnnotation(annoClass);
-        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.clazz);
         final String varNameInstance = FieldBuilder.varNameInstance;
         final StringBuilder body = context.body;
         final String fieldName = field.getName();

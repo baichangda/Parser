@@ -20,7 +20,7 @@ public class FieldBuilder__F_date extends FieldBuilder {
         final String varNameLongField = varNameField + "_long";
         final String zoneDateTimeClassName = ZonedDateTime.class.getName();
         final String varNameZoneId = JavassistUtil.defineClassVar(context, ZoneId.class, "{}.of(\"{}\")", ZoneId.class.getName(), anno.zoneId());
-        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.clazz);
         //先转换为毫秒
         switch (anno.mode()) {
             case Bytes_yyMMddHHmmss -> {
@@ -91,7 +91,7 @@ public class FieldBuilder__F_date extends FieldBuilder {
         final String varNameZoneId = JavassistUtil.defineClassVar(context, ZoneId.class, "{}.of(\"{}\")", ZoneId.class.getName(), anno.zoneId());
         final String varNameLongField = varNameField + "_long";
         final String zoneDateTimeClassName = ZonedDateTime.class.getName();
-        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.clazz);
         //根据字段类型获取long
         if (Date.class.isAssignableFrom(fieldTypeClass)) {
             JavassistUtil.append(body, "final long {}={}.getTime();\n", varNameLongField, valCode);

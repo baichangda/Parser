@@ -24,26 +24,26 @@ import java.lang.annotation.Target;
  * 3、{@link java.time.ZonedDateTime}转换为时间戳毫秒
  *
  * {@link DateMode#Bytes_yyyyMMddHHmmss} 协议定义7字节、分别代表 年月日时分秒、年占用2字节
- * 1、首先读取源数据获取 年月日时分秒、读取年时候会使用{@link #bigEndian()}
+ * 1、首先读取源数据获取 年月日时分秒、读取年时候会使用{@link #order()}
  * 2、根据{@link #zoneId()}转换为{@link java.time.ZonedDateTime}
  * 3、{@link java.time.ZonedDateTime}转换为时间戳毫秒
  *
  * {@link DateMode#Uint64_millisecond} 协议定义uint64、代表时间戳毫秒
- * 1、读取源数据(会使用{@link #bigEndian()})、直接读出来为时间戳毫秒(long类型)
+ * 1、读取源数据(会使用{@link #order()})、直接读出来为时间戳毫秒(long类型)
  *
  * {@link DateMode#Uint64_second} 协议定义uint64、代表时间戳秒
- * 1、读取源数据(会使用{@link #bigEndian()})、直接读出来为时间戳秒(long类型)
+ * 1、读取源数据(会使用{@link #order()})、直接读出来为时间戳秒(long类型)
  * 2、时间戳秒*1000得到时间戳毫秒
  *
  * {@link DateMode#Uint32_second} 协议定义uint32、代表时间戳秒
- * 1、读取源数据(会使用{@link #bigEndian()})、直接读出来为时间戳秒(long类型)
+ * 1、读取源数据(会使用{@link #order()})、直接读出来为时间戳秒(long类型)
  * 2、时间戳秒*1000得到时间戳毫秒
  *
  * {@link DateMode#Float64_millisecond} 协议定义float64、代表时间戳毫秒
- * 1、读取源数据(会使用{@link #bigEndian()})、直接读出来为时间戳毫秒(double类型)、转换数据类型为long类型
+ * 1、读取源数据(会使用{@link #order()})、直接读出来为时间戳毫秒(double类型)、转换数据类型为long类型
  *
  * {@link DateMode#Float64_second} 协议定义float64、代表秒、精度为0.001
- * 1、读取源数据(会使用{@link #bigEndian()})、直接读出来为时间戳秒(double类型)
+ * 1、读取源数据(会使用{@link #order()})、直接读出来为时间戳秒(double类型)
  * 2、时间戳秒*1000得到时间戳毫秒(double类型)、转换数据类型为long类型
  *
  * 步骤2过程

@@ -3,7 +3,6 @@ package com.bcd.support_parser.util;
 
 import com.bcd.support_parser.Parser;
 import com.bcd.support_parser.anno.ByteOrder;
-import com.bcd.support_parser.anno.T_order;
 import com.bcd.support_parser.builder.FieldBuilder;
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.builder.BuilderContext;
@@ -47,32 +46,34 @@ public class JavassistUtil {
     }
 
     /**
-     * @param fieldOrder
-     * @param contextOrder 可能为null
+     * @param order
+     * @param clazz
      * @return
      */
-    public static boolean bigEndian(ByteOrder fieldOrder, ByteOrder contextOrder) {
-        if (contextOrder == null) {
-            if (fieldOrder == ByteOrder.Default) {
+    public static boolean bigEndian(ByteOrder order, Class clazz) {
+        ByteOrder configOrder = null;
+        final String className = clazz.getName();
+        for (Parser.ByteOrderConfig config : Parser.byteOrderConfigs) {
+            if (className.startsWith(config.classPrefix())) {
+                configOrder = config.order();
+            }
+        }
+
+        if (configOrder == null) {
+            if (order == ByteOrder.Default) {
                 return true;
             } else {
-                return fieldOrder == ByteOrder.BigEndian;
+                return order == ByteOrder.BigEndian;
             }
         } else {
-            /**
-             * 优先级为
-             * 1、字段注解{@link ByteOrder}!={@link ByteOrder#Default}
-             * 2、环境注解{@link ByteOrder}!={@link ByteOrder#Default}
-             * 3、字段注解{@link ByteOrder#Default}、此时值即是{@link ByteOrder#BigEndian}
-             */
-            if (fieldOrder == ByteOrder.Default) {
-                if (contextOrder == ByteOrder.Default) {
+            if (order == ByteOrder.Default) {
+                if (configOrder == ByteOrder.Default) {
                     return true;
                 } else {
-                    return contextOrder == ByteOrder.BigEndian;
+                    return configOrder == ByteOrder.BigEndian;
                 }
             } else {
-                return fieldOrder == ByteOrder.BigEndian;
+                return order == ByteOrder.BigEndian;
             }
         }
     }

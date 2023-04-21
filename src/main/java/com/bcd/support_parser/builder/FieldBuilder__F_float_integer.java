@@ -24,7 +24,7 @@ public class FieldBuilder__F_float_integer extends FieldBuilder {
             fieldType = "";
         }
         final F_float_integer anno = context.field.getAnnotation(annoClass);
-        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.clazz);
         final StringBuilder body = context.body;
         final String varNameInstance = FieldBuilder.varNameInstance;
         final String varNameField = JavassistUtil.getFieldVarName(context);
@@ -100,7 +100,7 @@ public class FieldBuilder__F_float_integer extends FieldBuilder {
         final Class<F_float_integer> annoClass = F_float_integer.class;
         final Field field = context.field;
         final F_float_integer anno = context.field.getAnnotation(annoClass);
-        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.clazz);
         final StringBuilder body = context.body;
         final String fieldName = field.getName();
         final String varNameInstance = FieldBuilder.varNameInstance;

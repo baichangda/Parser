@@ -29,10 +29,6 @@ public class BuilderContext {
      */
     public final CtClass implCc;
     /**
-     * 父构造环境
-     */
-    public final BuilderContext parentContext;
-    /**
      * 当前字段
      */
     public Field field;
@@ -78,12 +74,6 @@ public class BuilderContext {
     public String prevSkipReservedIndexVarName = FieldBuilder.startIndexVarName;
     public final Set<String> indexFieldNameSet = new HashSet<>();
 
-    /**
-     * {@link T_order#order()}的字节序模式
-     * 如果本类没有使用{@link T_order}注解、则从父类继承
-     */
-    public final ByteOrder order;
-
     private void initIndexFieldNameSet() {
         String prevSkipReservedFieldName = null;
         for (Field declaredField : clazz.getDeclaredFields()) {
@@ -104,23 +94,12 @@ public class BuilderContext {
         }
     }
 
-    private ByteOrder initOrder() {
-        final T_order t_order = (T_order) clazz.getAnnotation(T_order.class);
-        if (t_order == null) {
-            return parentContext == null ? null : parentContext.order;
-        } else {
-            return t_order.order();
-        }
-    }
-
-    public BuilderContext(StringBuilder body, Class clazz, CtClass implCc, BuilderContext parentContext, Map<String, String> classVarDefineToVarName) {
+    public BuilderContext(StringBuilder body, Class clazz, CtClass implCc, Map<String, String> classVarDefineToVarName) {
         this.body = body;
         this.clazz = clazz;
         this.implCc = implCc;
-        this.parentContext = parentContext;
         this.classVarDefineToVarName = classVarDefineToVarName;
         initIndexFieldNameSet();
-        order = initOrder();
     }
 
     public final String getProcessContextVarName() {

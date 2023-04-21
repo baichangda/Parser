@@ -93,6 +93,8 @@ public class Parser {
      */
     public static boolean printBuildLog = false;
 
+
+
     public interface LogCollector_parse {
         /**
          * 收集每个字段解析的详情
@@ -168,6 +170,54 @@ public class Parser {
 
     public static void enableGenerateClassFile() {
         generateClassFile = true;
+    }
+
+
+    public static ArrayList<ByteOrderConfig> byteOrderConfigs = new ArrayList<>();
+
+    public record ByteOrderConfig(ByteOrder order, String classPrefix) implements Comparable<ByteOrderConfig> {
+        @Override
+        public int compareTo(ByteOrderConfig o) {
+            return Integer.compare(classPrefix.length(), o.classPrefix.length());
+        }
+    }
+
+    /**
+     * 配置包级别的{@link ByteOrder}定义
+     *
+     * 用于该包下所有带如下注解的属性覆盖
+     * {@link F_float_ieee754#order()}
+     * {@link F_float_ieee754_array#order()}
+     * {@link F_float_integer#order()}
+     * {@link F_float_integer_array#order()}
+     * {@link F_integer#order()}
+     * {@link F_integer_array#order()}
+     * {@link F_date#order()}
+     *
+     * 可以配置重复的包、优先使用前缀匹配更多的规则
+     * 例如有如下目录、目录下都有class
+     * com.bcd、com.bcd.test1、com.bcd.test2、com.bcd.test3、
+     * 配置如下
+     * 1、{@link ByteOrder#BigEndian} -> com.bcd
+     * 2、{@link ByteOrder#SmallEndian} -> com.bcd.test1
+     * 3、{@link ByteOrder#BigEndian} -> com.bcd.test2
+     * 此时
+     * com.bcd、com.bcd.test3 会使用规则1
+     * com.bcd.test1 会使用规则1
+     * com.bcd.test2 会使用规则1
+     *
+     * 注意:
+     * 优先级说明
+     * 1、字段注解{@link ByteOrder}!={@link ByteOrder#Default}
+     * 2、{@link #append(ByteOrder, String)}!={@link ByteOrder#Default}
+     * 3、此时为{@link ByteOrder#BigEndian}
+     *
+     * @param order
+     * @param classPrefix
+     */
+    public static void append(ByteOrder order,String classPrefix){
+        byteOrderConfigs.add(new ByteOrderConfig(order, classPrefix));
+        Collections.sort(byteOrderConfigs);
     }
 
     /**
@@ -497,7 +547,7 @@ public class Parser {
         if (hasFieldSkipModeReserved) {
             JavassistUtil.append(processBody, "final int {}={}.readerIndex();\n", FieldBuilder.startIndexVarName, FieldBuilder.varNameByteBuf);
         }
-        BuilderContext parseContext = new BuilderContext(processBody, clazz, cc, null, classVarDefineToVarName);
+        BuilderContext parseContext = new BuilderContext(processBody, clazz, cc, classVarDefineToVarName);
         buildMethodBody_parse(clazz, parseContext);
         JavassistUtil.append(processBody, "return {};\n", FieldBuilder.varNameInstance);
         processBody.append("}");
@@ -524,7 +574,7 @@ public class Parser {
         if (hasFieldSkipModeReserved) {
             JavassistUtil.append(deProcessBody, "final int {}={}.writerIndex();\n", FieldBuilder.startIndexVarName, FieldBuilder.varNameByteBuf);
         }
-        BuilderContext deParseContext = new BuilderContext(deProcessBody, clazz, cc, null, classVarDefineToVarName);
+        BuilderContext deParseContext = new BuilderContext(deProcessBody, clazz, cc, classVarDefineToVarName);
         buildMethodBody_deParse(clazz, deParseContext);
         deProcessBody.append("}");
         if (printBuildLog) {

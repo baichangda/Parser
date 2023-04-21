@@ -14,7 +14,7 @@ public class FieldBuilder__F_float_integer_array extends FieldBuilder {
         final Field field = context.field;
         final Class<F_float_integer_array> annoClass = F_float_integer_array.class;
         final F_float_integer_array anno = context.field.getAnnotation(annoClass);
-        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.clazz);
         final String lenRes;
         if (anno.len() == 0) {
             if (anno.lenExpr().isEmpty()) {
@@ -114,7 +114,7 @@ public class FieldBuilder__F_float_integer_array extends FieldBuilder {
         final Field field = context.field;
         final Class<F_float_integer_array> annoClass = F_float_integer_array.class;
         final F_float_integer_array anno = context.field.getAnnotation(annoClass);
-        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.clazz);
         final Class<?> fieldTypeClass = field.getType();
         final int singleLen = anno.singleLen();
         final StringBuilder body = context.body;

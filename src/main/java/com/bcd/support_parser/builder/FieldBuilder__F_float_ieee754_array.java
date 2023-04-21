@@ -25,7 +25,7 @@ public class FieldBuilder__F_float_ieee754_array extends FieldBuilder {
         }
 
         final F_float_ieee754_array anno = context.field.getAnnotation(annoClass);
-        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.clazz);
         
         final String lenRes;
         if (anno.len() == 0) {
@@ -73,7 +73,7 @@ public class FieldBuilder__F_float_ieee754_array extends FieldBuilder {
         final Field field = context.field;
         final Class<?> fieldType = field.getType();
         final F_float_ieee754_array anno = context.field.getAnnotation(annoClass);
-        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.clazz);
         final StringBuilder body = context.body;
         final String fieldName = field.getName();
         final String varNameInstance = FieldBuilder.varNameInstance;
