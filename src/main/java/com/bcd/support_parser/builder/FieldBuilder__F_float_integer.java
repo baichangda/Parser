@@ -24,6 +24,7 @@ public class FieldBuilder__F_float_integer extends FieldBuilder {
             fieldType = "";
         }
         final F_float_integer anno = context.field.getAnnotation(annoClass);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
         final StringBuilder body = context.body;
         final String varNameInstance = FieldBuilder.varNameInstance;
         final String varNameField = JavassistUtil.getFieldVarName(context);
@@ -58,7 +59,7 @@ public class FieldBuilder__F_float_integer extends FieldBuilder {
                 }
                 case 2: {
                     final String funcName;
-                    if (anno.bigEndian()) {
+                    if (bigEndian) {
                         funcName = anno.unsigned() ? "readUnsignedShort" : "readShort";
                     } else {
                         funcName = anno.unsigned() ? "readUnsignedShortLE" : "readShortLE";
@@ -68,7 +69,7 @@ public class FieldBuilder__F_float_integer extends FieldBuilder {
                 }
                 case 4: {
                     final String funcName;
-                    if (anno.bigEndian()) {
+                    if (bigEndian) {
                         funcName = anno.unsigned() ? "readUnsignedInt" : "readInt";
                     } else {
                         funcName = anno.unsigned() ? "readUnsignedIntLE" : "readIntLE";
@@ -77,7 +78,7 @@ public class FieldBuilder__F_float_integer extends FieldBuilder {
                     break;
                 }
                 case 8: {
-                    final String funcName = anno.bigEndian() ? "readLong" : "readLongLE";
+                    final String funcName = bigEndian ? "readLong" : "readLongLE";
                     JavassistUtil.append(body, "final {} {}=({}){}.{}();\n", fieldType, varNameField, fieldType, FieldBuilder.varNameByteBuf, funcName);
                     break;
                 }
@@ -99,6 +100,7 @@ public class FieldBuilder__F_float_integer extends FieldBuilder {
         final Class<F_float_integer> annoClass = F_float_integer.class;
         final Field field = context.field;
         final F_float_integer anno = context.field.getAnnotation(annoClass);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
         final StringBuilder body = context.body;
         final String fieldName = field.getName();
         final String varNameInstance = FieldBuilder.varNameInstance;
@@ -138,15 +140,15 @@ public class FieldBuilder__F_float_integer extends FieldBuilder {
                     JavassistUtil.append(body, "{}.writeByte((int)({}));\n", FieldBuilder.varNameByteBuf, valCode);
                 }
                 case 2 -> {
-                    final String funcName = anno.bigEndian() ? "writeShort" : "writeShortLE";
+                    final String funcName = bigEndian ? "writeShort" : "writeShortLE";
                     JavassistUtil.append(body, "{}.{}((int)({}));\n", FieldBuilder.varNameByteBuf, funcName, valCode);
                 }
                 case 4 -> {
-                    final String funcName = anno.bigEndian() ? "writeInt" : "writeIntLE";
+                    final String funcName = bigEndian ? "writeInt" : "writeIntLE";
                     JavassistUtil.append(body, "{}.{}((int)({}));\n", FieldBuilder.varNameByteBuf, funcName, valCode);
                 }
                 case 8 -> {
-                    final String funcName = anno.bigEndian() ? "writeLong" : "writeLongLE";
+                    final String funcName = bigEndian ? "writeLong" : "writeLongLE";
                     JavassistUtil.append(body, "{}.{}((long)({}));\n", FieldBuilder.varNameByteBuf, funcName, valCode);
                 }
                 default -> {

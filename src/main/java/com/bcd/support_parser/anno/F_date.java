@@ -78,7 +78,7 @@ public @interface F_date {
     int baseYear() default 2000;
 
     /**
-     * 是则大端模式、否则小端模式
+     * 字节序模式
      * 如下模式时候
      * {@link DateMode#Bytes_yyyyMMddHHmmss} 此时只针对年才有大小端问题
      * {@link DateMode#Uint64_millisecond}
@@ -88,7 +88,7 @@ public @interface F_date {
      * {@link DateMode#Float64_second}
      * 是否大端模式、否则小端模式
      */
-    boolean bigEndian() default true;
+    ByteOrder order() default ByteOrder.Default;
 
     /**
      * 当字段为string类型时候

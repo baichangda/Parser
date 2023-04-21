@@ -20,6 +20,7 @@ public class FieldBuilder__F_date extends FieldBuilder {
         final String varNameLongField = varNameField + "_long";
         final String zoneDateTimeClassName = ZonedDateTime.class.getName();
         final String varNameZoneId = JavassistUtil.defineClassVar(context, ZoneId.class, "{}.of(\"{}\")", ZoneId.class.getName(), anno.zoneId());
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
         //先转换为毫秒
         switch (anno.mode()) {
             case Bytes_yyMMddHHmmss -> {
@@ -35,23 +36,23 @@ public class FieldBuilder__F_date extends FieldBuilder {
                         , FieldBuilder.varNameByteBuf, FieldBuilder.varNameByteBuf, varNameZoneId);
             }
             case Uint64_millisecond -> {
-                final String readFuncName = anno.bigEndian() ? "readLong" : "readLongLE";
+                final String readFuncName = bigEndian ? "readLong" : "readLongLE";
                 JavassistUtil.append(body, "final long {}={}.{}();\n", varNameLongField, FieldBuilder.varNameByteBuf, readFuncName);
             }
             case Uint64_second -> {
-                final String readFuncName = anno.bigEndian() ? "readLong" : "readLongLE";
+                final String readFuncName = bigEndian ? "readLong" : "readLongLE";
                 JavassistUtil.append(body, "final long {}={}.{}()*1000;\n", varNameLongField, FieldBuilder.varNameByteBuf, readFuncName);
             }
             case Uint32_second -> {
-                final String readFuncName = anno.bigEndian() ? "readUnsignedInt" : "readUnsignedIntLE";
+                final String readFuncName = bigEndian ? "readUnsignedInt" : "readUnsignedIntLE";
                 JavassistUtil.append(body, "final long {}={}.{}()*1000;\n", varNameLongField, FieldBuilder.varNameByteBuf, readFuncName);
             }
             case Float64_millisecond -> {
-                final String readFuncName = anno.bigEndian() ? "readDouble" : "readDoubleLE";
+                final String readFuncName = bigEndian ? "readDouble" : "readDoubleLE";
                 JavassistUtil.append(body, "final long {}=(long){}.{}();\n", varNameLongField, FieldBuilder.varNameByteBuf, readFuncName);
             }
             case Float64_second -> {
-                final String readFuncName = anno.bigEndian() ? "readDouble" : "readDoubleLE";
+                final String readFuncName = bigEndian ? "readDouble" : "readDoubleLE";
                 JavassistUtil.append(body, "final long {}=(long)({}.{}()*1000);\n", varNameLongField, FieldBuilder.varNameByteBuf, readFuncName);
             }
         }
@@ -90,6 +91,7 @@ public class FieldBuilder__F_date extends FieldBuilder {
         final String varNameZoneId = JavassistUtil.defineClassVar(context, ZoneId.class, "{}.of(\"{}\")", ZoneId.class.getName(), anno.zoneId());
         final String varNameLongField = varNameField + "_long";
         final String zoneDateTimeClassName = ZonedDateTime.class.getName();
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
         //根据字段类型获取long
         if (Date.class.isAssignableFrom(fieldTypeClass)) {
             JavassistUtil.append(body, "final long {}={}.getTime();\n", varNameLongField, valCode);
@@ -127,7 +129,7 @@ public class FieldBuilder__F_date extends FieldBuilder {
                         varNameZoneDateTimeField);
             }
             case Bytes_yyyyMMddHHmmss -> {
-                final String writeFuncName = anno.bigEndian() ? "writeShort" : "writeShortLE";
+                final String writeFuncName = bigEndian ? "writeShort" : "writeShortLE";
                 final String varNameZoneDateTimeField = varNameField + "zoneDateTime";
                 JavassistUtil.append(body, "{} {}={}.ofInstant({}.ofEpochMilli({}),{});\n",
                         zoneDateTimeClassName,
@@ -146,23 +148,23 @@ public class FieldBuilder__F_date extends FieldBuilder {
                         varNameZoneDateTimeField);
             }
             case Uint64_millisecond -> {
-                final String writeFuncName = anno.bigEndian() ? "writeLong" : "writeLongLE";
+                final String writeFuncName = bigEndian ? "writeLong" : "writeLongLE";
                 JavassistUtil.append(body, "{}.{}({});\n", FieldBuilder.varNameByteBuf, writeFuncName, varNameLongField);
             }
             case Uint64_second -> {
-                final String writeFuncName = anno.bigEndian() ? "writeLong" : "writeLongLE";
+                final String writeFuncName = bigEndian ? "writeLong" : "writeLongLE";
                 JavassistUtil.append(body, "{}.{}({}/1000L);\n", FieldBuilder.varNameByteBuf, writeFuncName, varNameLongField);
             }
             case Uint32_second -> {
-                final String writeFuncName = anno.bigEndian() ? "writeInt" : "writeIntLE";
+                final String writeFuncName = bigEndian ? "writeInt" : "writeIntLE";
                 JavassistUtil.append(body, "{}.{}((int)({}/1000L));\n", FieldBuilder.varNameByteBuf, writeFuncName, varNameLongField);
             }
             case Float64_millisecond -> {
-                final String writeFuncName = anno.bigEndian() ? "writeDouble" : "writeDoubleLE";
+                final String writeFuncName = bigEndian ? "writeDouble" : "writeDoubleLE";
                 JavassistUtil.append(body, "{}.{}((double)({}));\n", FieldBuilder.varNameByteBuf, writeFuncName, varNameLongField);
             }
             case Float64_second -> {
-                final String writeFuncName = anno.bigEndian() ? "writeDouble" : "writeDoubleLE";
+                final String writeFuncName = bigEndian ? "writeDouble" : "writeDoubleLE";
                 JavassistUtil.append(body, "{}.{}((double){}/1000d);\n", FieldBuilder.varNameByteBuf, writeFuncName, varNameLongField);
             }
         }

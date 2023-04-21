@@ -1,15 +1,13 @@
 package com.bcd.support_parser.builder;
 
-import com.bcd.support_parser.anno.F_float_integer;
-import com.bcd.support_parser.anno.F_customize;
-import com.bcd.support_parser.anno.F_skip;
-import com.bcd.support_parser.anno.SkipMode;
+import com.bcd.support_parser.anno.*;
 import com.bcd.support_parser.processor.Processor;
 import com.bcd.support_parser.processor.ProcessContext;
 import com.bcd.support_parser.util.JavassistUtil;
 import io.netty.buffer.ByteBuf;
 import javassist.CtClass;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -80,12 +78,18 @@ public class BuilderContext {
     public String prevSkipReservedIndexVarName = FieldBuilder.startIndexVarName;
     public final Set<String> indexFieldNameSet = new HashSet<>();
 
+    /**
+     * {@link T_order#order()}的字节序模式
+     * 如果本类没有使用{@link T_order}注解、则从父类继承
+     */
+    public final ByteOrder order;
+
     private void initIndexFieldNameSet() {
         String prevSkipReservedFieldName = null;
         for (Field declaredField : clazz.getDeclaredFields()) {
             final F_skip f_skip = declaredField.getAnnotation(F_skip.class);
             if (f_skip != null) {
-                switch (f_skip.mode()){
+                switch (f_skip.mode()) {
                     case ReservedFromStart -> {
                         prevSkipReservedFieldName = declaredField.getName();
                     }
@@ -100,6 +104,15 @@ public class BuilderContext {
         }
     }
 
+    private ByteOrder initOrder() {
+        final T_order t_order = (T_order) clazz.getAnnotation(T_order.class);
+        if (t_order == null) {
+            return parentContext == null ? null : parentContext.order;
+        } else {
+            return t_order.order();
+        }
+    }
+
     public BuilderContext(StringBuilder body, Class clazz, CtClass implCc, BuilderContext parentContext, Map<String, String> classVarDefineToVarName) {
         this.body = body;
         this.clazz = clazz;
@@ -107,6 +120,7 @@ public class BuilderContext {
         this.parentContext = parentContext;
         this.classVarDefineToVarName = classVarDefineToVarName;
         initIndexFieldNameSet();
+        order = initOrder();
     }
 
     public final String getProcessContextVarName() {

@@ -25,6 +25,8 @@ public class FieldBuilder__F_float_ieee754_array extends FieldBuilder {
         }
 
         final F_float_ieee754_array anno = context.field.getAnnotation(annoClass);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
+        
         final String lenRes;
         if (anno.len() == 0) {
             if (anno.lenExpr().isEmpty()) {
@@ -40,10 +42,10 @@ public class FieldBuilder__F_float_ieee754_array extends FieldBuilder {
         final String funcName;
         switch (anno.type()) {
             case Float32 -> {
-                funcName = anno.bigEndian() ? "readFloat" : "readFloatLE";
+                funcName = bigEndian ? "readFloat" : "readFloatLE";
             }
             case Float64 -> {
-                funcName = anno.bigEndian() ? "readDouble" : "readDoubleLE";
+                funcName = bigEndian ? "readDouble" : "readDoubleLE";
             }
             default -> {
                 JavassistUtil.notSupport_type(field, annoClass);
@@ -71,6 +73,7 @@ public class FieldBuilder__F_float_ieee754_array extends FieldBuilder {
         final Field field = context.field;
         final Class<?> fieldType = field.getType();
         final F_float_ieee754_array anno = context.field.getAnnotation(annoClass);
+        final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.order);
         final StringBuilder body = context.body;
         final String fieldName = field.getName();
         final String varNameInstance = FieldBuilder.varNameInstance;
@@ -89,11 +92,11 @@ public class FieldBuilder__F_float_ieee754_array extends FieldBuilder {
         final String funcParamTypeName;
         switch (anno.type()) {
             case Float32 -> {
-                funcName = anno.bigEndian() ? "writeFloat" : "writeFloatLE";
+                funcName = bigEndian ? "writeFloat" : "writeFloatLE";
                 funcParamTypeName = "float";
             }
             case Float64 -> {
-                funcName = anno.bigEndian() ? "writeDouble" : "writeDoubleLE";
+                funcName = bigEndian ? "writeDouble" : "writeDoubleLE";
                 funcParamTypeName = "double";
             }
             default -> {

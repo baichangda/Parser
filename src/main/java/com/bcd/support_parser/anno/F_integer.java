@@ -62,7 +62,7 @@ public @interface F_integer {
     char var() default '0';
 
     /**
-     * 是则大端模式、否则小端模式
+     * 字节序模式
      */
-    boolean bigEndian() default true;
+    ByteOrder order() default ByteOrder.Default;
 }

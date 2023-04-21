@@ -2,6 +2,8 @@ package com.bcd.support_parser.util;
 
 
 import com.bcd.support_parser.Parser;
+import com.bcd.support_parser.anno.ByteOrder;
+import com.bcd.support_parser.anno.T_order;
 import com.bcd.support_parser.builder.FieldBuilder;
 import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.builder.BuilderContext;
@@ -42,6 +44,37 @@ public class JavassistUtil {
 
     public static String getProcessorVarName(final Class processorClass) {
         return "_" + toFirstLowerCase(processorClass.getSimpleName());
+    }
+
+    /**
+     * @param fieldOrder
+     * @param contextOrder 可能为null
+     * @return
+     */
+    public static boolean bigEndian(ByteOrder fieldOrder, ByteOrder contextOrder) {
+        if (contextOrder == null) {
+            if (fieldOrder == ByteOrder.Default) {
+                return true;
+            } else {
+                return fieldOrder == ByteOrder.BigEndian;
+            }
+        } else {
+            /**
+             * 优先级为
+             * 1、字段注解{@link ByteOrder}!={@link ByteOrder#Default}
+             * 2、环境注解{@link ByteOrder}!={@link ByteOrder#Default}
+             * 3、字段注解{@link ByteOrder#Default}、此时值即是{@link ByteOrder#BigEndian}
+             */
+            if (fieldOrder == ByteOrder.Default) {
+                if (contextOrder == ByteOrder.Default) {
+                    return true;
+                } else {
+                    return contextOrder == ByteOrder.BigEndian;
+                }
+            } else {
+                return fieldOrder == ByteOrder.BigEndian;
+            }
+        }
     }
 
     /**

@@ -61,8 +61,8 @@ public @interface F_integer_array {
     String valExpr() default "";
 
     /**
-     * 是则大端模式、否则小端模式
+     * 字节序模式
      */
-    boolean bigEndian() default true;
+    ByteOrder order() default ByteOrder.Default;
 
 }
