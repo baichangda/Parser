@@ -1,10 +1,10 @@
 package com.bcd.support_parser;
 
 import com.bcd.support_parser.anno.*;
-import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.builder.*;
-import com.bcd.support_parser.processor.Processor;
+import com.bcd.support_parser.exception.BaseRuntimeException;
 import com.bcd.support_parser.processor.ProcessContext;
+import com.bcd.support_parser.processor.Processor;
 import com.bcd.support_parser.util.JavassistUtil;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufUtil;
@@ -27,35 +27,49 @@ import java.util.stream.Collectors;
  * 1、没有被{@link #annoSet}中注解标注的字段
  * 2、static或者final修饰的字段
  * 3、非public字段
- * <p>
+ *
  * 工作原理:
  * 使用javassist框架配合自定义注解、生成一套解析代码
- * <p>
- * 调用入口:
+ *
+ * 解析调用入口:
  * {@link #parse(Class, ByteBuf, ProcessContext)}
- * <p>
+ *
+ * 反解析调用入口:
+ * {@link #deParse(Object, ByteBuf, ProcessContext)}
+ *
  * 性能表现:
  * 由于是字节码增强技术、和手动编写代码解析效率一样
+ *
+ * 可配置方法
+ * {@link #enableGenerateClassFile()}
+ * {@link #enablePrintBuildLog()}
+ * {@link #withDefaultLogCollector_parse()}
+ * {@link #withDefaultLogCollector_deParse()}
+ * {@link #append(ByteOrder, String)}
  */
 public class Parser {
 
-    public final static Logger logger = LoggerFactory.getLogger(Parser.class);
+    private final static Logger logger = LoggerFactory.getLogger(Parser.class);
 
-    public final static FieldBuilder__F_bean fieldBuilder__f_bean = new FieldBuilder__F_bean();
-    public final static FieldBuilder__F_bean_list fieldBuilder__f_bean_list = new FieldBuilder__F_bean_list();
-    public final static FieldBuilder__F_date field_builder__f_date = new FieldBuilder__F_date();
-    public final static FieldBuilder__F_float_integer_array fieldBuilder__f_float_integer_array = new FieldBuilder__F_float_integer_array();
-    public final static FieldBuilder__F_float_integer fieldBuilder__f_float_integer = new FieldBuilder__F_float_integer();
-    public final static FieldBuilder__F_float_ieee754_array fieldBuilder__F_float_ieee754_array = new FieldBuilder__F_float_ieee754_array();
-    public final static FieldBuilder__F_float_ieee754 fieldbuilder__f_float_ieee754 = new FieldBuilder__F_float_ieee754();
-    public final static FieldBuilder__F_integer_array fieldBuilder__f_integer_array = new FieldBuilder__F_integer_array();
-    public final static FieldBuilder__F_integer fieldBuilder__f_integer_ = new FieldBuilder__F_integer();
-    public final static FieldBuilder__F_skip fieldBuilder__f_skip = new FieldBuilder__F_skip();
-    public final static FieldBuilder__F_string fieldBuilder__f_string = new FieldBuilder__F_string();
-    public final static FieldBuilder__F_customize fieldBuilder__f_customize = new FieldBuilder__F_customize();
+    private final static FieldBuilder__F_bean fieldBuilder__f_bean = new FieldBuilder__F_bean();
+    private final static FieldBuilder__F_bean_list fieldBuilder__f_bean_list = new FieldBuilder__F_bean_list();
+    private final static FieldBuilder__F_date field_builder__f_date = new FieldBuilder__F_date();
+    private final static FieldBuilder__F_float_integer_array fieldBuilder__f_float_integer_array = new FieldBuilder__F_float_integer_array();
+    private final static FieldBuilder__F_float_integer fieldBuilder__f_float_integer = new FieldBuilder__F_float_integer();
+    private final static FieldBuilder__F_float_ieee754_array fieldBuilder__F_float_ieee754_array = new FieldBuilder__F_float_ieee754_array();
+    private final static FieldBuilder__F_float_ieee754 fieldbuilder__f_float_ieee754 = new FieldBuilder__F_float_ieee754();
+    private final static FieldBuilder__F_integer_array fieldBuilder__f_integer_array = new FieldBuilder__F_integer_array();
+    private final static FieldBuilder__F_integer fieldBuilder__f_integer_ = new FieldBuilder__F_integer();
+    private final static FieldBuilder__F_skip fieldBuilder__f_skip = new FieldBuilder__F_skip();
+    private final static FieldBuilder__F_string fieldBuilder__f_string = new FieldBuilder__F_string();
+    private final static FieldBuilder__F_customize fieldBuilder__f_customize = new FieldBuilder__F_customize();
 
+    /**
+     * javassist生成类序号
+     */
+    private static int processorIndex = 0;
 
-    public final static Set<Class> annoSet = new HashSet<>();
+    private final static Set<Class> annoSet = new HashSet<>();
 
     static {
         annoSet.add(F_integer.class);
@@ -86,12 +100,13 @@ public class Parser {
      * 是否在src/main/java下面生成class文件
      * 主要用于开发测试阶段、便于查看生成的结果
      */
-    public static boolean generateClassFile = false;
+    private static boolean generateClassFile = false;
 
     /**
      * 是否打印javassist生成class的过程日志
      */
-    public static boolean printBuildLog = false;
+    private static boolean printBuildLog = false;
+
 
 
     public interface LogCollector_parse {
@@ -158,7 +173,7 @@ public class Parser {
     }
 
 
-    public static ArrayList<ByteOrderConfig> byteOrderConfigs = new ArrayList<>();
+    public static final ArrayList<ByteOrderConfig> byteOrderConfigs = new ArrayList<>();
 
     public record ByteOrderConfig(ByteOrder order, String classPrefix) implements Comparable<ByteOrderConfig> {
         @Override
@@ -169,7 +184,7 @@ public class Parser {
 
     /**
      * 配置包级别的{@link ByteOrder}定义
-     * <p>
+     *
      * 用于该包下所有带如下注解的属性覆盖
      * {@link F_float_ieee754#order()}
      * {@link F_float_ieee754_array#order()}
@@ -178,7 +193,7 @@ public class Parser {
      * {@link F_integer#order()}
      * {@link F_integer_array#order()}
      * {@link F_date#order()}
-     * <p>
+     *
      * 可以配置重复的包、优先使用前缀匹配更多的规则
      * 例如有如下目录、目录下都有class
      * com.bcd、com.bcd.test1、com.bcd.test2、com.bcd.test3、
@@ -190,7 +205,7 @@ public class Parser {
      * com.bcd、com.bcd.test3 会使用规则1
      * com.bcd.test1 会使用规则1
      * com.bcd.test2 会使用规则1
-     * <p>
+     *
      * 注意:
      * 优先级说明
      * 1、字段注解{@link ByteOrder}!={@link ByteOrder#Default}
@@ -271,7 +286,7 @@ public class Parser {
         return false;
     }
 
-    public static void buildMethodBody_parse(Class clazz, BuilderContext context) {
+    private static void buildMethodBody_parse(Class clazz, BuilderContext context) {
         //过滤掉 final、static关键字修饰、且不是public的字段
         final List<Field> fieldList = Arrays.stream(clazz.getDeclaredFields())
                 .filter(e ->
@@ -372,7 +387,7 @@ public class Parser {
 
     }
 
-    public static void buildMethodBody_deParse(Class clazz, BuilderContext context) {
+    private static void buildMethodBody_deParse(Class clazz, BuilderContext context) {
         //过滤掉 final、static关键字修饰、且不是public的字段
         final List<Field> fieldList = Arrays.stream(clazz.getDeclaredFields())
                 .filter(e ->
@@ -471,9 +486,9 @@ public class Parser {
         }
     }
 
-    static int processorIndex = 0;
 
-    public static Class buildClass(Class clazz) throws CannotCompileException, NotFoundException, IOException {
+
+    private static Class buildClass(Class clazz) throws CannotCompileException, NotFoundException, IOException {
         final String processor_class_name = Processor.class.getName();
         final String byteBufClassName = ByteBuf.class.getName();
         final String clazzName = clazz.getName();
