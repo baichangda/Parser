@@ -59,6 +59,15 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface F_date {
+    /**
+     * {@link DateMode#Bytes_yyMMddHHmmss} 协议定义6字节、分别代表 年月日时分秒
+     * {@link DateMode#Bytes_yyyyMMddHHmmss} 协议定义7字节、分别代表 年月日时分秒、年占用2字节
+     * {@link DateMode#Uint64_millisecond} 协议定义uint64、代表时间戳毫秒
+     * {@link DateMode#Uint64_second} 协议定义uint64、代表时间戳秒
+     * {@link DateMode#Uint32_second} 协议定义uint32、代表时间戳秒
+     * {@link DateMode#Float64_millisecond} 协议定义float64、代表时间戳毫秒
+     * {@link DateMode#Float64_second} 协议定义float64、代表秒、精度为0.001
+     */
     DateMode mode();
 
     /**
