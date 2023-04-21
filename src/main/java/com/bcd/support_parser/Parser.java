@@ -94,7 +94,6 @@ public class Parser {
     public static boolean printBuildLog = false;
 
 
-
     public interface LogCollector_parse {
         /**
          * 收集每个字段解析的详情
@@ -133,35 +132,21 @@ public class Parser {
 
 
     public static void withDefaultLogCollector_parse() {
-        logCollector_parse = new LogCollector_parse() {
-            @Override
-            public void collect_field(Class fieldClass, String fieldName, byte[] content, Object val, String processorClassName) {
-                logger.info("--parse field--[{}].[{}] [{}] [{}]->[{}]"
-                        , fieldClass.getSimpleName()
-                        , fieldName
-                        , processorClassName
-                        , ByteBufUtil.hexDump(content)
-                        , val
-                );
-            }
-
-        };
+        logCollector_parse = (fieldClass, fieldName, content, val, processorClassName) -> logger.info("--parse field--[{}].[{}] [{}]->[{}]"
+                , fieldClass.getSimpleName()
+                , fieldName
+                , ByteBufUtil.hexDump(content)
+                , val
+        );
     }
 
     public static void withDefaultLogCollector_deParse() {
-        logCollector_deParse = new LogCollector_deParse() {
-            @Override
-            public void collect_field(Class fieldClass, String fieldName, Object val, byte[] content, String processorClassName) {
-                logger.info("--deParse field--[{}].[{}] [{}] [{}]->[{}]"
-                        , fieldClass.getSimpleName()
-                        , fieldName
-                        , processorClassName
-                        , val
-                        , ByteBufUtil.hexDump(content)
-                );
-            }
-
-        };
+        logCollector_deParse = (fieldClass, fieldName, val, content, processorClassName) -> logger.info("--deParse field--[{}].[{}] [{}]->[{}]"
+                , fieldClass.getSimpleName()
+                , fieldName
+                , val
+                , ByteBufUtil.hexDump(content)
+        );
     }
 
     public static void enablePrintBuildLog() {
@@ -184,7 +169,7 @@ public class Parser {
 
     /**
      * 配置包级别的{@link ByteOrder}定义
-     *
+     * <p>
      * 用于该包下所有带如下注解的属性覆盖
      * {@link F_float_ieee754#order()}
      * {@link F_float_ieee754_array#order()}
@@ -193,7 +178,7 @@ public class Parser {
      * {@link F_integer#order()}
      * {@link F_integer_array#order()}
      * {@link F_date#order()}
-     *
+     * <p>
      * 可以配置重复的包、优先使用前缀匹配更多的规则
      * 例如有如下目录、目录下都有class
      * com.bcd、com.bcd.test1、com.bcd.test2、com.bcd.test3、
@@ -205,7 +190,7 @@ public class Parser {
      * com.bcd、com.bcd.test3 会使用规则1
      * com.bcd.test1 会使用规则1
      * com.bcd.test2 会使用规则1
-     *
+     * <p>
      * 注意:
      * 优先级说明
      * 1、字段注解{@link ByteOrder}!={@link ByteOrder#Default}
@@ -215,7 +200,18 @@ public class Parser {
      * @param order
      * @param classPrefix
      */
-    public static void append(ByteOrder order,String classPrefix){
+    public synchronized static void append(ByteOrder order, String classPrefix) {
+        for (int i = 0; i < byteOrderConfigs.size(); i++) {
+            final ByteOrderConfig config = byteOrderConfigs.get(i);
+            if (config.classPrefix.equals(classPrefix)) {
+                if (config.order != order) {
+                    byteOrderConfigs.set(i, new ByteOrderConfig(order, classPrefix));
+                    logger.warn("append[{},{}] rewrite[{},{}]", order, classPrefix, config.order, config.classPrefix);
+                    break;
+                }
+                return;
+            }
+        }
         byteOrderConfigs.add(new ByteOrderConfig(order, classPrefix));
         Collections.sort(byteOrderConfigs);
     }
