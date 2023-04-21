@@ -42,7 +42,7 @@ public class FieldBuilder__F_string extends FieldBuilder {
                 JavassistUtil.append(body, "final byte[] {}=new byte[{}];\n", arrVarName, lenVarName);
                 JavassistUtil.append(body, "{}.readBytes({});\n", FieldBuilder.varNameByteBuf, arrVarName);
                 JavassistUtil.append(body, "int {}=0;\n", discardLenVarName);
-                JavassistUtil.append(body, "for(int i=0;i<{};i--){\n", lenVarName);
+                JavassistUtil.append(body, "for(int i=0;i<{};i++){\n", lenVarName);
                 JavassistUtil.append(body, "if({}[i]==0){\n", arrVarName);
                 JavassistUtil.append(body, "{}++;\n", discardLenVarName);
                 JavassistUtil.append(body, "}else{\n");
