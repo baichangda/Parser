@@ -23,6 +23,8 @@ public @interface F_float_ieee754 {
     /**
      * 表达式运算结果的精度、主要针对于float、double字段
      * -1代表不进行格式化精度
+     * 注意
+     * 如果设置了精度、可能会导致反解析的结果和原始的不一样、因为可能存在精度丢失
      */
     int valPrecision() default -1;
 

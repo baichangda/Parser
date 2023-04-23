@@ -69,6 +69,7 @@ public @interface F_float_integer_array {
     /**
      * 表达式运算结果的精度、针对于数组中每个值
      * -1、代表不进行格式化精度
+     * 如果设置了精度、可能会导致反解析的结果和原始的不一样、因为可能存在精度丢失
      */
     int valPrecision() default -1;
 
