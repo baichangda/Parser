@@ -69,7 +69,7 @@ public @interface F_date {
      * {@link DateMode#Uint64_second} 协议定义uint64、代表时间戳秒
      * {@link DateMode#Uint32_second} 协议定义uint32、代表时间戳秒
      * {@link DateMode#Float64_millisecond} 协议定义float64、代表时间戳毫秒
-     * {@link DateMode#Float64_second} 协议定义float64、代表秒、精度为0.001
+     * {@link DateMode#Float64_second} 协议定义float64、代表秒、精度为0.001、小数位代表毫秒
      */
     DateMode mode();
 
