@@ -69,6 +69,11 @@ public class FieldBuilder__F_bean_list extends FieldBuilder {
         final String varNameField = JavassistUtil.getFieldVarName(context);
         final Field field = context.field;
         final F_bean_list anno = context.field.getAnnotation(F_bean_list.class);
+        final String fieldName = field.getName();
+        final String valCode = FieldBuilder.varNameInstance + "." + fieldName;
+
+        JavassistUtil.append(body, "if({}!=null){\n", FieldBuilder.varNameInstance, valCode);
+
         final Class<?> fieldType = field.getType();
         final Class<?> typeClass;
         final int fieldTypeFlag;
@@ -90,20 +95,22 @@ public class FieldBuilder__F_bean_list extends FieldBuilder {
         final String fieldVarNameTemp = varNameField + "_temp";
         switch (fieldTypeFlag) {
             case 1 -> {
-                JavassistUtil.append(body, "final {}[] {}={};\n", typeClassName, varNameField, FieldBuilder.varNameInstance + "." + field.getName());
+                JavassistUtil.append(body, "final {}[] {}={};\n", typeClassName, varNameField, valCode);
                 //在for循环外构造复用对象
                 JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", varNameField);
                 JavassistUtil.append(body, "final {} {}=({}){}[i];\n", typeClassName, fieldVarNameTemp, typeClassName, varNameField);
             }
             case 2 -> {
                 final String listClassName = List.class.getName();
-                JavassistUtil.append(body, "final {} {}={};\n", listClassName, varNameField, FieldBuilder.varNameInstance + "." + field.getName());
+                JavassistUtil.append(body, "final {} {}={};\n", listClassName, varNameField, valCode);
                 //在for循环外构造复用对象
                 JavassistUtil.append(body, "for(int i=0;i<{}.size();i++){\n", varNameField);
                 JavassistUtil.append(body, "final {} {}=({}){}.get(i);\n", typeClassName, fieldVarNameTemp, typeClassName, varNameField);
             }
         }
         JavassistUtil.append(body, "{}.deParse({},{},{});\n", parserClassName, fieldVarNameTemp, FieldBuilder.varNameByteBuf, processContextVarName);
+        JavassistUtil.append(body, "}\n");
+
         JavassistUtil.append(body, "}\n");
     }
 }

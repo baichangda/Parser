@@ -16,6 +16,8 @@ import java.lang.annotation.Target;
  * 通过如下方式解析float
  * 首先得到整型数字、然后通过{@link #valExpr()}得到浮点数
  *
+ * 反解析中
+ * 值可以为null、代表空数组
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

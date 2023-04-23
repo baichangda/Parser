@@ -9,6 +9,9 @@ import java.lang.annotation.Target;
  * 适用于任何字段
  * 跳过数个字节
  * 用在字段上面只是为了占位、解析不会对字段进行赋值、反解析也不会使用字段值
+ *
+ * 反解析中
+ * 值可以为null、值对结果无影响
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

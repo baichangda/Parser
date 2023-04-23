@@ -121,6 +121,9 @@ public class FieldBuilder__F_float_integer_array extends FieldBuilder {
         final String fieldName = field.getName();
         final String valCode = FieldBuilder.varNameInstance + "." + fieldName;
         final String varNameField = JavassistUtil.getFieldVarName(context);
+
+        JavassistUtil.append(body, "if({}!=null){\n", FieldBuilder.varNameInstance, valCode);
+
         final String varNameFieldArr;
         if (float[].class.isAssignableFrom(fieldTypeClass)) {
             varNameFieldArr = varNameField + "_arr";
@@ -179,5 +182,7 @@ public class FieldBuilder__F_float_integer_array extends FieldBuilder {
                 JavassistUtil.notSupport_singleLen(field, annoClass);
             }
         }
+
+        JavassistUtil.append(body, "}\n");
     }
 }

@@ -127,6 +127,9 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
         final String fieldName = field.getName();
         final String valCode = varNameInstance + "." + fieldName;
         final String varNameField = JavassistUtil.getFieldVarName(context);
+
+        JavassistUtil.append(body, "if({}!=null){\n", FieldBuilder.varNameInstance, valCode);
+
         if (byte[].class.isAssignableFrom(fieldTypeClass)) {
             if (singleLen == 1) {
                 if (anno.valExpr().isEmpty()) {
@@ -224,5 +227,7 @@ public class FieldBuilder__F_integer_array extends FieldBuilder {
         } else {
             JavassistUtil.notSupport_fieldType(field, annoClass);
         }
+
+        JavassistUtil.append(body, "}\n");
     }
 }

@@ -76,7 +76,9 @@ public class FieldBuilder__F_float_ieee754_array extends FieldBuilder {
         final boolean bigEndian = JavassistUtil.bigEndian(anno.order(), context.clazz);
         final StringBuilder body = context.body;
         final String fieldName = field.getName();
-        final String varNameInstance = FieldBuilder.varNameInstance;
+        final String valCode = FieldBuilder.varNameInstance + "." + fieldName;
+
+        JavassistUtil.append(body, "if({}!=null){\n", FieldBuilder.varNameInstance, valCode);
 
         final String arrayElementType;
         if (float[].class.isAssignableFrom(fieldType)) {
@@ -108,9 +110,11 @@ public class FieldBuilder__F_float_ieee754_array extends FieldBuilder {
 
         final String varNameField = JavassistUtil.getFieldVarName(context);
         String arrVarName = varNameField + "_arr";
-        JavassistUtil.append(body, "final {}[] {}={}.{};\n", arrayElementType, arrVarName, varNameInstance, fieldName);
+        JavassistUtil.append(body, "final {}[] {}={};\n", arrayElementType, arrVarName, valCode);
         JavassistUtil.append(body, "for(int i=0;i<{}.length;i++){\n", arrVarName);
         JavassistUtil.append(body, "{}.{}(({})({}[i]));\n", varNameByteBuf, funcName, funcParamTypeName, arrVarName);
+        JavassistUtil.append(body, "}\n");
+
         JavassistUtil.append(body, "}\n");
     }
 }

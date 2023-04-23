@@ -50,10 +50,10 @@ public class Packet {
         packet.header=new byte[]{0x23,0x23};
         final VehicleLoginData vehicleLoginData = new VehicleLoginData();
         vehicleLoginData.collectTime=new Date();
-        vehicleLoginData.iccid="8888";
+//        vehicleLoginData.iccid="8888";
         vehicleLoginData.subSystemNum=2;
-        vehicleLoginData.systemCodeLen=5;
-        vehicleLoginData.systemCode="123456789";
+        vehicleLoginData.systemCodeLen=0;
+//        vehicleLoginData.systemCode="";
         packet.data=vehicleLoginData;
         Parser.withDefaultLogCollector_deParse();
         Parser.withDefaultLogCollector_parse();

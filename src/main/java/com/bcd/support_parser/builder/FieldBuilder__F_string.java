@@ -49,7 +49,7 @@ public class FieldBuilder__F_string extends FieldBuilder {
                 JavassistUtil.append(body, "break;\n");
                 JavassistUtil.append(body, "}\n");
                 JavassistUtil.append(body, "}\n");
-                JavassistUtil.append(body, "{}.{}=new String({},{},{}-{},{});\n", FieldBuilder.varNameInstance, field.getName(), arrVarName,discardLenVarName, lenVarName, discardLenVarName, charsetVarName);
+                JavassistUtil.append(body, "{}.{}=new String({},{},{}-{},{});\n", FieldBuilder.varNameInstance, field.getName(), arrVarName, discardLenVarName, lenVarName, discardLenVarName, charsetVarName);
             }
             case HighAddressAppend -> {
                 final String lenVarName = varNameField + "_len";
@@ -76,10 +76,22 @@ public class FieldBuilder__F_string extends FieldBuilder {
         final StringBuilder body = context.body;
         final Field field = context.field;
         final F_string anno = field.getAnnotation(F_string.class);
+        final String fieldName = field.getName();
+        final String valCode = FieldBuilder.varNameInstance + "." + fieldName;
+        final String varNameField = JavassistUtil.getFieldVarName(context);
+        final String varNameFieldVal = varNameField + "_val";
+
+        JavassistUtil.append(body, "final String {};\n", varNameFieldVal);
+        JavassistUtil.append(body, "if({}==null){\n", valCode);
+        JavassistUtil.append(body, "{}=\"\";\n", varNameFieldVal);
+        JavassistUtil.append(body, "}else{\n", valCode);
+        JavassistUtil.append(body, "{}={};\n", varNameFieldVal, valCode);
+        JavassistUtil.append(body, "}\n", valCode);
+
         final String lenRes;
         if (anno.len() == 0) {
             if (anno.lenExpr().isEmpty()) {
-                throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have len or lenExpr", field.getDeclaringClass().getName(), field.getName(), F_skip.class.getName());
+                throw BaseRuntimeException.getException("class[{}] field[{}] anno[] must have len or lenExpr", field.getDeclaringClass().getName(), fieldName, F_skip.class.getName());
             } else {
                 lenRes = JavassistUtil.replaceLenExprToCode(anno.lenExpr(), context.varToFieldName, field);
             }
@@ -87,8 +99,7 @@ public class FieldBuilder__F_string extends FieldBuilder {
             lenRes = anno.len() + "";
         }
 
-        final String varNameField = JavassistUtil.getFieldVarName(context);
-        final String valCode = FieldBuilder.varNameInstance + "." + field.getName();
+
         String arrVarName = varNameField + "_arr";
         String arrLeaveVarName = varNameField + "_leave";
 
@@ -96,13 +107,12 @@ public class FieldBuilder__F_string extends FieldBuilder {
         final String charsetClassName = Charset.class.getName();
         final String charsetVarName = JavassistUtil.defineClassVar(context, Charset.class, "{}.forName(\"{}\")", charsetClassName, charset.name());
 
-
         switch (anno.appendMode()) {
             case NoAppend -> {
-                JavassistUtil.append(body, "{}.writeBytes({}.getBytes({}));\n", varNameByteBuf,  valCode, charsetVarName);
+                JavassistUtil.append(body, "{}.writeBytes({}.getBytes({}));\n", varNameByteBuf, varNameFieldVal, charsetVarName);
             }
             case LowAddressAppend -> {
-                JavassistUtil.append(body, "final byte[] {}={}.getBytes({});\n", arrVarName, valCode, charsetVarName);
+                JavassistUtil.append(body, "final byte[] {}={}.getBytes({});\n", arrVarName, varNameFieldVal, charsetVarName);
                 JavassistUtil.append(body, "final int {}={}-{}.length;\n", arrLeaveVarName, lenRes, arrVarName);
                 JavassistUtil.append(body, "if({}>0){\n", arrLeaveVarName);
                 JavassistUtil.append(body, "{}.writeZero({});\n", varNameByteBuf, arrLeaveVarName);
@@ -110,7 +120,7 @@ public class FieldBuilder__F_string extends FieldBuilder {
                 JavassistUtil.append(body, "{}.writeBytes({});\n", varNameByteBuf, arrVarName);
             }
             case HighAddressAppend -> {
-                JavassistUtil.append(body, "final byte[] {}={}.getBytes({});\n", arrVarName, valCode, charsetVarName);
+                JavassistUtil.append(body, "final byte[] {}={}.getBytes({});\n", arrVarName, varNameFieldVal, charsetVarName);
                 JavassistUtil.append(body, "{}.writeBytes({});\n", varNameByteBuf, arrVarName);
                 JavassistUtil.append(body, "final int {}={}-{}.length;\n", arrLeaveVarName, lenRes, arrVarName);
                 JavassistUtil.append(body, "if({}>0){\n", arrLeaveVarName);

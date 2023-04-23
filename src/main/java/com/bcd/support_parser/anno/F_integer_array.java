@@ -10,6 +10,9 @@ import java.lang.annotation.Target;
  * byte[]、short[]、int[]、long[]
  * 数组长度=总字节数/singleLen
  * {@link #len()}和{@link #lenExpr()} 二选一、代表字段所占用总字节数
+ *
+ * 反解析中
+ * 值可以为null、代表空数组
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

@@ -55,6 +55,9 @@ import java.lang.annotation.Target;
  *
  *
  * 反解析步骤与解析过程相反
+ *
+ * 反解析中
+ * 值不能为null
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

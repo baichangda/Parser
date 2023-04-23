@@ -12,6 +12,9 @@ import java.lang.annotation.Target;
  * 用户自己实现解析逻辑
  * <p>
  * {@link #builderClass()}和{@link #processorClass()} 二选一
+ *
+ * 反解析中
+ * 值可以为null、null的含义由定制逻辑自己实现
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

@@ -7,6 +7,9 @@ import java.lang.annotation.Target;
 
 /**
  * 适用于实体类字段
+ *
+ * 反解析中
+ * 值不能为null
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

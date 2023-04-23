@@ -8,6 +8,9 @@ import java.lang.annotation.Target;
 /**
  * 适用如下字段类型
  * float[]、double[]
+ *
+ * 反解析中
+ * 值可以为null、代表空数组
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
