@@ -88,14 +88,13 @@ public @interface F_date {
 
     /**
      * 字节序模式
-     * 如下模式时候
+     * 如下模式时候才有用
      * {@link DateMode#Bytes_yyyyMMddHHmmss} 此时只针对年才有大小端问题
      * {@link DateMode#Uint64_millisecond}
      * {@link DateMode#Uint64_second}
      * {@link DateMode#Uint32_second}
      * {@link DateMode#Float64_millisecond}
      * {@link DateMode#Float64_second}
-     * 是否大端模式、否则小端模式
      */
     ByteOrder order() default ByteOrder.Default;
 

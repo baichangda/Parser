@@ -29,7 +29,7 @@ public @interface F_float_integer {
      * 和{@link #len()}互斥
      * 1-32
      *
-     * 注意:当此属性生效时候、{@link #bigEndian()}无效
+     * 注意:当此属性生效时候、{@link #order()}无效
      */
     int bit() default 0;
 
